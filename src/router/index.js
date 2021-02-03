@@ -15,6 +15,46 @@ export default new Router({
             meta: { title: '自述文件' },
             children: [
                 {
+                    path: '/userList',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/user/users.vue'),
+                    meta: { title: '会员列表' }
+                },
+                {
+                    path: '/userLevel',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/user/users.vue'),
+                    meta: { title: '会员等级' }
+                },
+                {
+                    path: '/orderList',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/order/orderList.vue'),
+                    meta: { title: '订单列表' }
+                },
+                {
+                    path: '/userRecharge',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/order/userRecharge.vue'),
+                    meta: { title: '充值管理' }
+                },
+                {
+                    path: '/depositList',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/order/depositList.vue'),
+                    meta: { title: '提现管理' }
+                },
+                {
+                    path: '/dealConsole',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/order/dealConsole.vue'),
+                    meta: { title: '交易控制' }
+                },
+                {
+                    path: '/goodsList',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/goods/goodsList.vue'),
+                    meta: { title: '商品列表' }
+                },
+                {
+                    path: '/goodsCate',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/goods/goodsCate.vue'),
+                    meta: { title: '商品分类' }
+                },
+                {
                     path: '/dashboard',
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/Dashboard.vue'),
                     meta: { title: '系统首页' }
