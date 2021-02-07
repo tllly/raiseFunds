@@ -25,7 +25,7 @@
                     </el-date-picker>
                   </el-form-item>
                   <el-form-item label="状态">
-                    <el-select placeholder="所有状态" class="handle-select mr10" clearble>
+                    <el-select placeholder="所有状态" v-model="aaa" class="handle-select mr10" clearble>
                         <el-option key="1" label="真人" value="真人"></el-option>
                         <el-option key="2" label="假人" value="假人"></el-option>
                     </el-select>
@@ -75,8 +75,8 @@
                 <!-- <el-table-column prop="address" label="地址"></el-table-column> -->
                 <el-table-column label="状态" align="center" width="120">
                     <template slot-scope="scope">
-                        <el-tag :type="success">真人</el-tag>
-                        <el-tag :type="danger">代理</el-tag>
+                        <el-tag type="success">真人</el-tag>
+                        <el-tag type="danger">代理</el-tag>
                     </template>
                 </el-table-column>
 
@@ -128,11 +128,16 @@
 </template>
 
 <script>
-import { fetchData } from '../../../api/index';
+import { fetchData , postData } from '../../../api/index';
 export default {
     name: 'basetable',
     data() {
         return {
+            formInline: {
+              user: '',
+              region: ''
+            },
+            aaa:'',
             query: {
                 address: '',
                 name: '',
@@ -166,9 +171,7 @@ export default {
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
-            fetchData(this.query).then(res => {
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
+            fetchData('/xy-users/XyUsers/currentPage/1/pageSize/10').then(res => {
             });
         },
         // 触发搜索按钮
