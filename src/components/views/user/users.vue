@@ -11,41 +11,44 @@
             <el-row :gutter="20">
                 <el-col :span="3">
                     <div class="treeBox">
-                        <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+                        <el-tree :data="TreeData" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
                     </div>
                 </el-col>
                 <el-col :span="21">
                     <div class="handle-box">
                         <el-form :inline="true" :model="formInline" class="demo-form-inline">
                           <el-form-item label="用户名称">
-                            <el-input placeholder="请输入用户名称"></el-input>
+                            <el-input placeholder="请输入用户名称" v-model="searchObj.nickname"></el-input>
                           </el-form-item>
                           <el-form-item label="手机号码">
-                            <el-input placeholder="请输入手机号码"></el-input>
+                            <el-input placeholder="请输入手机号码" v-model="searchObj.tel"></el-input>
                           </el-form-item>
                           <el-form-item label="注册时间">
                             <el-date-picker
+                              v-model="daterangeValue"
                               type="daterange"
+                              value-format="yyyy-MM-dd"
                               range-separator="至"
                               start-placeholder="开始日期"
                               end-placeholder="结束日期">
                             </el-date-picker>
                           </el-form-item>
                           <el-form-item label="状态">
-                            <el-select placeholder="所有状态" v-model="aaa" class="handle-select mr10" clearble>
-                                <el-option key="1" label="真人" value="真人"></el-option>
-                                <el-option key="2" label="假人" value="假人"></el-option>
+                            <el-select placeholder="所有状态" v-model="searchObj.status" class="handle-select mr10" clearble>
+                                <el-option label="启用" value="1"></el-option>
+                                <el-option label="禁用" value="2"></el-option>
                             </el-select>
                           </el-form-item>
                           <el-form-item>
                             <el-button type="primary" @click="handleSearch">搜索</el-button>
-                            <el-button>重置</el-button>
+                            <el-button @click="resetSearch">重置</el-button>
                             <el-button>导出</el-button>
                           </el-form-item>
                         </el-form>
                     </div>
                     <el-table
                         :data="tableData"
+                        id="listTable"
                         border
                         class="table"
                         ref="multipleTable"
@@ -53,53 +56,60 @@
                         @selection-change="handleSelectionChange"
                     >
                         <!-- <el-table-column type="selection" width="55" align="center"></el-table-column> -->
-                        <el-table-column prop="id" label="ID" width="55"></el-table-column>
-                        <el-table-column prop="account" label="账号"></el-table-column>
-                        <el-table-column prop="username" label="用户名"></el-table-column>
-                        <el-table-column prop="num" label="人数"></el-table-column>
-                        <el-table-column prop="num" label="活跃人数"></el-table-column>
-                        <el-table-column prop="num" label="账户余额">
-                            <template slot-scope="scope">{{scope.row.money}}</template>
+                        <el-table-column prop="id" label="ID" width="55" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="tel" label="账号" show-overflow-tooltip width="110"></el-table-column>
+                        <el-table-column prop="username" label="用户名" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="allCount" label="人数" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="allHyCount" label="活跃人数" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="balance" label="账户余额" show-overflow-tooltip>
+                            <template slot-scope="scope">{{scope.row.balance}}</template>
                         </el-table-column>
-                        <el-table-column prop="num" label="冻结金额"></el-table-column>
-                        <el-table-column prop="num" label="利息宝"></el-table-column>
-                        <el-table-column prop="name" label="上级用户"></el-table-column>
-                        <el-table-column prop="name" label="邀请码"></el-table-column>
-                        <el-table-column prop="" label="线上充值"></el-table-column>
-                        <el-table-column prop="" label="线上提现"></el-table-column>
-                        <el-table-column prop="date" label="注册时间"></el-table-column>
-                        <el-table-column prop="IP" label="最后登录IP"></el-table-column>
-                        <!-- <el-table-column label="头像(查看大图)" align="center">
+                        <el-table-column prop="freezeBalance" label="冻结金额" show-overflow-tooltip></el-table-column>
+                        <!-- <el-table-column prop="num" label="利息宝"></el-table-column> -->
+                        <el-table-column prop="parent_name" label="上级用户" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="inviteCode" label="邀请码" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="" label="线上充值" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="" label="线上提现" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="addtime" label="注册时间" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="ip" label="最后登录IP" show-overflow-tooltip width="110"></el-table-column>
+                        <el-table-column prop="isJia" label="状态" align="center" width="100">
                             <template slot-scope="scope">
-                                <el-image
-                                    class="table-td-thumb"
-                                    :src="scope.row.thumb"
-                                    :preview-src-list="[scope.row.thumb]"
-                                ></el-image>
-                            </template>
-                        </el-table-column> -->
-                        <!-- <el-table-column prop="address" label="地址"></el-table-column> -->
-                        <el-table-column label="状态" align="center" width="120">
-                            <template slot-scope="scope">
-                                <el-tag type="success">真人</el-tag>
-                                <el-tag type="danger">代理</el-tag>
+                                <el-tag type="success" v-if="!scope.row.isJia">真人</el-tag>
+                                <el-tag v-else type="danger">代理</el-tag>
                             </template>
                         </el-table-column>
-
-                        <!-- <el-table-column prop="date" label="注册时间"></el-table-column> -->
-                        <el-table-column label="操作" width="180" align="center" fixed="right">
+                        <el-table-column label="操作" width="250" align="center" fixed="right">
                             <template slot-scope="scope">
                                 <el-button
                                     type="text"
                                     icon="el-icon-edit"
-                                    @click="handleEdit(scope.$index, scope.row)"
+                                    @click="editInfo(scope.row)"
                                 >编辑</el-button>
                                 <el-button
                                     type="text"
                                     icon="el-icon-delete"
                                     class="red"
                                     @click="handleDelete(scope.$index, scope.row)"
-                                >删除</el-button>
+                                >删除</el-button> 
+                                <el-popover
+                                  placement="top"
+                                  width="845"
+                                  :value="scope.row.visible">
+                                  <div style="margin:0px;">
+                                    <el-button size="mini" type="primary" @click="checkBill">账单</el-button>
+                                    <el-button size="mini" type="primary" @click="deductEdit">暗扣设置</el-button>
+                                    <el-button size="mini" type="primary" @click="roleSwitch">设为假人</el-button>
+                                    <el-button size="mini" type="primary" @click="agentSet">代理设置</el-button>
+                                    <el-button size="mini" type="primary" @click="accountDisable">禁用</el-button>
+                                    <el-button size="mini" type="primary" @click="accountDisable">银行卡信息</el-button>
+                                    <el-button size="mini" type="primary" @click="addressSet">地址信息</el-button>
+                                    <!-- <el-button size="mini" type="primary" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
+                                    <el-button size="mini" type="primary" @click="refreshQr">刷新二维码</el-button>
+                                    <el-button size="mini" type="primary" @click="checkTeam">查看团队</el-button>
+                                    <el-button size="mini" type="primary" @click="checkAccount">账变</el-button>
+                                  </div>
+                                  <el-button type="text" slot="reference" style="margin-left: 10px;">更多操作</el-button>
+                                </el-popover>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -107,8 +117,8 @@
                         <el-pagination
                             background
                             layout="total, prev, pager, next"
-                            :current-page="query.pageIndex"
-                            :page-size="query.pageSize"
+                            :current-page="pageIndex"
+                            :page-size="pageSize"
                             :total="pageTotal"
                             @current-change="handlePageChange"
                         ></el-pagination>
@@ -116,162 +126,225 @@
                 </el-col>
             </el-row>
         </div>
-
-        <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-            <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="用户名">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="地址">
-                    <el-input v-model="form.address"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
+        <!-- 账单弹出框 -->
+        <el-dialog title="账单" :visible.sync="billVisible" width="50%">
+            <billPop></billPop>
         </el-dialog>
+        <!-- 编辑弹出框 -->
+        <el-dialog title="编辑" :visible.sync="editVisible" width="50%">
+            <editPop v-if="editVisible" :editVisible="editVisible" @update:editVisible="val => editVisible = val" :dataItem="curDataObj" @editSuccess="editSuccess"></editPop>
+        </el-dialog>
+        <!-- 暗扣设置弹出框 -->
+        <el-dialog title="暗扣设置" :visible.sync="deductVisible" width="50%">
+            <deductPop></deductPop>
+        </el-dialog>
+        <!-- 代理设置弹出框 -->
+        <el-dialog title="代理设置" :visible.sync="agentVisible" width="50%">
+            <agentPop></agentPop>
+        </el-dialog>
+        <!-- 地址信息弹出框 -->
+        <el-dialog title="地址信息" :visible.sync="addressVisible" width="50%">
+            <agentPop></agentPop>
+        </el-dialog>
+        <!-- 团队查看弹出框 -->
+        <el-dialog title="团队" :visible.sync="teamVisible" width="80%">
+            <teamPop></teamPop>
+        </el-dialog>
+        <!-- 账目变化弹出框 -->
+        <el-dialog title="财务记录" :visible.sync="accountVisible" width="80%">
+            <accountListPop></accountListPop>
+        </el-dialog>
+
     </div>
 </template>
 
 <script>
-import { fetchData , postData } from '../../../api/index';
+import { fetchData , postData , deleteData} from '../../../api/index';
+import billPop from './components/billPop'
+import editPop from './components/editPop'
+import deductPop from './components/deductPop'
+import agentPop from './components/agentPop'
+import addressPop from './components/addressPop'
+import teamPop from './components/teamPop'
+import accountListPop from './components/accountListPop'
 export default {
     name: 'basetable',
+    components:{
+        billPop,
+        editPop,
+        deductPop,
+        agentPop,
+        teamPop,
+        accountListPop
+    },
     data() {
         return {
             formInline: {
               user: '',
               region: ''
             },
-            aaa:'',
+            daterangeValue:null,
+            pageIndex: 1,
+            pageSize: 10,
             query: {
-                address: '',
-                name: '',
-                pageIndex: 1,
-                pageSize: 10
+                nickname:'',
+                tel:'',
+                startTime:'',
+                endTime:'',
+                status:''
             },
-            tableData: [{
-                id:"fdjsk",
-                account:'1256525452',
-                name:"fdjsk",
-                num:23215,
-                money:"fdjsk",
-                thumb:"fdjsk",
-                address:"fdjsk",
-                state:"fdjsk",
-                time:"2021-10-12 20:21:00",
-                IP:"192.168.1.125"
-            }],
+            searchObj:{
+                nickname:'',
+                tel:'',
+                status:''
+            },
+            visiblefdsa:false,
+            tableData: [],
+            curDataObj:null,
             multipleSelection: [],
             delList: [],
-            editVisible: false,
+            billVisible: false, //账单弹出框
+            editVisible: false, //编辑弹出框
+            deductVisible: false,//暗扣设置弹出框
+            agentVisible: false, //代理设置
+            addressVisible: false,//地址信息
+            teamVisible: false, //团队列表
+            accountVisible: false,//账目变化
             pageTotal: 0,
-            form: {},
-            idx: -1,
-            id: -1,
-            data: [{
-              label: '一级 1',
-              children: [{
-                label: '二级 1-1',
-                children: [{
-                  label: '三级 1-1-1'
-                }]
-              }]
-            }, {
-              label: '一级 2',
-              children: [{
-                label: '二级 2-1',
-                children: [{
-                  label: '三级 2-1-1'
-                }]
-              }, {
-                label: '二级 2-2',
-                children: [{
-                  label: '三级 2-2-1'
-                }]
-              }]
-            }, {
-              label: '一级 3',
-              children: [{
-                label: '二级 3-1',
-                children: [{
-                  label: '三级 3-1-1'
-                }]
-              }, {
-                label: '二级 3-2',
-                children: [{
-                  label: '三级 3-2-1'
-                }]
-              }]
-            }],
+            TreeData: [],
             defaultProps: {
-              children: 'children',
-              label: 'label'
+              children: 'child',
+              label: 'username'
             }
         };
     },
     created() {
         this.getData();
+        this.getUserTree();
+    },
+    mounted() {
     },
     methods: {
-        // 获取 easy-mock 的模拟数据
-        getData() {
-            fetchData('/xy-users/XyUsers/currentPage/1/pageSize/10').then(res => {
-            });
+        //模拟关闭popOver
+        closePopover(item){
+            document.getElementById("listTable").click()
         },
-        // 触发搜索按钮
-        handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
+        //查看账单
+        checkBill(){
+            this.billVisible = true
+        },
+        //编辑信息
+        editInfo(item){
+            this.curDataObj = item
+            this.editVisible = true
+        },
+        //编辑成功
+        editSuccess(){
+            this.editVisible = false
+            this.$message.success('编辑成功')
             this.getData();
         },
-        // 删除操作
+        //暗扣设置
+        deductEdit(){
+            this.deductVisible = true
+        },
+        //真人假人转换
+        roleSwitch(){
+
+        },
+        //代理设置
+        agentSet(){
+            this.agentVisible = true
+        },
+        //账户禁用启用
+        accountDisable(){
+
+        },
+        //地址信息
+        addressSet(){
+            this.addressVisible = true
+        },
+        //删除
         handleDelete(index, row) {
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
-            })
-                .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
+            }).then(() => {
+                deleteData(`/xy-users/delete?guid=${row.id}`).then(res=>{
+                    if(res.code == 200){
+                        this.$message.success('删除成功');
+                        this.tableData.splice(index, 1);
+                    }
                 })
-                .catch(() => {});
+            }).catch(() => {});
+        },
+        //刷新二维码
+        refreshQr(){
+
+        },
+        //查看团队
+        checkTeam(){
+            this.teamVisible = true
+        },
+        //查看账目
+        checkAccount(){
+            this.accountVisible = true
+        },
+        // 获取 easy-mock 的模拟数据
+        getData(){
+            fetchData(`/xy-users/XyUsers/currentPage/${this.pageIndex}/pageSize/10`,this.query).then(res => {
+                this.tableData = res.data.records
+                this.pageTotal = res.data.total
+            });
+        },
+        //获取父类团队树
+        getUserTree(){
+            fetchData(`/xy-users/getParentGroup`).then(res => {
+                this.TreeData = res.data
+            });
+        },
+        // 触发搜索按钮
+        handleSearch() {
+            this.pageIndex = 1
+            this.query.nickname = this.searchObj.nickname
+            this.query.tel = this.searchObj.tel
+            this.query.status = this.searchObj.status
+            if(this.daterangeValue){
+                this.query.startTime = this.daterangeValue[0]
+                this.query.endTime = this.daterangeValue[1]
+            }
+            this.getData();
+        },
+        // 触发重置按钮
+        resetSearch() {
+            this.pageIndex = 1
+            this.query.nickname = this.searchObj.nickname = ""
+            this.query.tel = this.searchObj.tel = ""
+            this.query.status = this.searchObj.status = ""
+            this.daterangeValue = null
+            this.query.startTime = ""
+            this.query.endTime = ""
+            this.getData();
         },
         // 多选操作
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
-        // delAllSelection() {
-        //     const length = this.multipleSelection.length;
-        //     let str = '';
-        //     this.delList = this.delList.concat(this.multipleSelection);
-        //     for (let i = 0; i < length; i++) {
-        //         str += this.multipleSelection[i].name + ' ';
-        //     }
-        //     this.$message.error(`删除了${str}`);
-        //     this.multipleSelection = [];
-        // },
-        // 编辑操作
-        handleEdit(index, row) {
-            this.idx = index;
-            this.form = row;
-            this.editVisible = true;
-        },
-        // 保存编辑
-        saveEdit() {
-            this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
-        },
         // 分页导航
         handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
+            this.pageIndex = val
             this.getData();
         },
         //点击树
         handleNodeClick(data) {
-            console.log(data);
+            let _arr = []
+            this.pageTotal=1
+            if (data.child) {
+                _arr = data.child
+                this.pageTotal += data.child.length
+            }
+            _arr.push(data)
+            this.tableData = _arr
         }
     }
 };
@@ -311,5 +384,22 @@ export default {
     border: 1px solid #DCDFE6;
     border-radius: 3px;
     padding: 15px 0;
+    max-height: 650px;
+    overflow-y: scroll;
+}
+.treeBox::-webkit-scrollbar {
+    width: 4px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+.treeBox::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: rgba(19, 210, 219, .5);
+    cursor: pointer;
+}
+.treeBox::-webkit-scrollbar-track {
+    border-radius: 4px;
+    background: rgba(255,255,255, 0.2);
+    cursor: pointer;
 }
 </style>

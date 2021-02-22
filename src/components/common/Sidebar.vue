@@ -239,4 +239,8 @@ export default {
 .sidebar > ul {
     height: 100%;
 }
+/deep/ .sidebar-el-menu{
+    width: 180px !important;
+    overflow-x: hidden;
+}
 </style>

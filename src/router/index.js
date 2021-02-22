@@ -21,7 +21,7 @@ export default new Router({
                 },
                 {
                     path: '/userLevel',
-                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/user/users.vue'),
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/user/level.vue'),
                     meta: { title: '会员等级' }
                 },
                 {
