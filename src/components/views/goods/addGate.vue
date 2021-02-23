@@ -16,12 +16,14 @@
               <p>(不要设置百分比直接写0.01)</p>
               <el-input v-model="form.bili"></el-input>
             </el-form-item>
-            
-            <!-- <el-form-item label="分类LOGO" prop="catePic">
-              <el-input type="number" v-model="form.catePic"></el-input>
-            </el-form-item> -->
+            <el-form-item label="分类LOGO" prop="catePic">
+              <!-- <el-input type="number" v-model="form.catePic"></el-input> -->
+              <img v-if="form.catePic" @click="uploadImg" :src="form.catePic" style="width: 100px;height: 100px;">
+              <el-button v-else type="primary" @click="uploadImg">上传图片</el-button>
+              <input type="file" name="" style="display: none" id="uploadFile" @change="imgSelect">
+              <input type="hidden" v-model="form.catePic">
+            </el-form-item>
             <el-form-item label="分类简介" prop="cateInfo">
-              <!-- <quill-editor ref="myTextEditor" v-model="form.cateInfo" :options="editorOption"></quill-editor> -->
               <el-input v-model="form.cateInfo"></el-input>
             </el-form-item>
             <el-form-item label="最低金额限制" prop="min">
@@ -37,27 +39,17 @@
 </template>
 
 <script>
-  import { fetchData , postData , updateData} from '../../../api/index';
-  // import 'quill/dist/quill.core.css';
-  // import 'quill/dist/quill.snow.css';
-  // import 'quill/dist/quill.bubble.css';
-  // import { quillEditor } from 'vue-quill-editor';
+  import { fetchData , postData , updateData , imgUpload} from '../../../api/index';
 export default {
     name: 'addGate',
-    // components: {
-    //     quillEditor
-    // },
     data() {
         return {
             editId:null,
-            editorOption: {
-                placeholder: '请输入商品描述'
-            },
             form: {
               name:'',
               bili:'',
               min:0,
-              catePic:'4561231',
+              catePic:null,
               cateInfo:'',
             },
             cateList:[],
@@ -97,6 +89,20 @@ export default {
           this.form.cateInfo = res.data.cateInfo
           this.form.id = res.data.id
         });
+      },
+      //选择图片
+      uploadImg(){
+        document.getElementById('uploadFile').click()
+      },
+      imgSelect(obj){
+        let file = obj.currentTarget.files[0]
+        let fileParam = new FormData()
+        fileParam.append('file', file)
+        imgUpload(`/api/addCommonUpload`,fileParam).then(res => {
+          if(res.code == 200){
+            this.form.catePic = res.data
+          }
+        })
       },
       onSubmit(formName){
         this.$refs[formName].validate((valid) => {

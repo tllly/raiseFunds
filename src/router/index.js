@@ -75,6 +75,47 @@ export default new Router({
                     meta: { title: '编辑商品分类' }
                 },
                 {
+                    path: '/noticeList',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/indexText/noticeList.vue'),
+                    meta: { title: '公告列表' }
+                },
+                {
+                    path: '/noticeAdd',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/indexText/noticeAdd.vue'),
+                    meta: { title: '添加公告' }
+                },
+                {
+                    path: '/upDateNotice',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/indexText/noticeAdd.vue'),
+                    meta: { title: '编辑公告' }
+                },
+                {
+                    path: '/bannerList',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/indexText/bannerList.vue'),
+                    meta: { title: '轮播图列表' }
+                },
+                {
+                    path: '/bannerAdd',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/indexText/bannerAdd.vue'),
+                    meta: { title: '添加轮播图' }
+                },
+                {
+                    path: '/upDatebanner',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/indexText/bannerAdd.vue'),
+                    meta: { title: '编辑轮播图' }
+                },
+                {
+                    path: '/roleList',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/authority/roleList.vue'),
+                    meta: { title: '角色列表' }
+                },
+                {
+                    path: '/sUser',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/authority/userList.vue'),
+                    meta: { title: '系统用户' }
+                },
+
+                {
                     path: '/dashboard',
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/Dashboard.vue'),
                     meta: { title: '系统首页' }

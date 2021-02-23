@@ -114,6 +114,36 @@ export default {
                         }
                     ]
                 },
+                {
+                    icon: 'el-icon-lx-calendar',
+                    index: '4',
+                    title: '首页文本',
+                    subs: [
+                        {
+                            index: 'noticeList',
+                            title: '公告列表'
+                        },
+                        {
+                            index: 'bannerList',
+                            title: '轮播图列表'
+                        }
+                    ]
+                },
+                {
+                    icon: 'el-icon-lx-calendar',
+                    index: '5',
+                    title: '权限管理',
+                    subs: [
+                        {
+                            index: 'roleList',
+                            title: '角色列表'
+                        },
+                        {
+                            index: 'sUser',
+                            title: '系统用户列表'
+                        }
+                    ]
+                },
                 // {
                 //     icon: 'el-icon-lx-cascades',
                 //     index: 'table',

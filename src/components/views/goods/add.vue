@@ -23,9 +23,12 @@
             <el-form-item label="商品单价" prop="goodsPrice">
               <el-input type="number" v-model="form.goodsPrice"></el-input>
             </el-form-item>
-            <!-- <el-form-item label="商品图片" prop="goodsPic">
-              <el-input type="number" v-model="form.goodsPic"></el-input>
-            </el-form-item> -->
+            <el-form-item label="商品图片" prop="goodsPic">
+              <img v-if="form.goodsPic" @click="uploadImg" :src="form.goodsPic" style="width: 100px;height: 100px;">
+              <el-button v-else type="primary" @click="uploadImg">上传图片</el-button>
+              <input type="file" name="" style="display: none" id="uploadFile" @change="imgSelect">
+              <input type="hidden" v-model="form.goodsPic">
+            </el-form-item>
             <el-form-item label="商品描述" prop="goodsInfo">
               <quill-editor ref="myTextEditor" v-model="form.goodsInfo" :options="editorOption"></quill-editor>
             </el-form-item>
@@ -39,7 +42,7 @@
 </template>
 
 <script>
-  import { fetchData , postData , updateData} from '../../../api/index';
+  import { fetchData , postData , updateData , imgUpload} from '../../../api/index';
   import 'quill/dist/quill.core.css';
   import 'quill/dist/quill.snow.css';
   import 'quill/dist/quill.bubble.css';
@@ -60,7 +63,7 @@ export default {
               goodsName:'',
               shopName:'',
               goodsPrice:0,
-              goodsPic:'4561231',
+              goodsPic:null,
               goodsInfo:'',
             },
             cateList:[],
@@ -113,6 +116,20 @@ export default {
           this.form.id = res.data.id
           this.getTypeList()
         });
+      },
+      //选择图片
+      uploadImg(){
+        document.getElementById('uploadFile').click()
+      },
+      imgSelect(obj){
+        let file = obj.currentTarget.files[0]
+        let fileParam = new FormData()
+        fileParam.append('file', file)
+        imgUpload(`/api/addCommonUpload`,fileParam).then(res => {
+          if(res.code == 200){
+            this.form.goodsPic = res.data
+          }
+        })
       },
       onSubmit(formName){
         this.$refs[formName].validate((valid) => {
