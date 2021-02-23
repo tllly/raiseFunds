@@ -53,7 +53,6 @@
                         class="table"
                         ref="multipleTable"
                         header-cell-class-name="table-header"
-                        @selection-change="handleSelectionChange"
                     >
                         <!-- <el-table-column type="selection" width="55" align="center"></el-table-column> -->
                         <el-table-column prop="id" label="ID" width="55" show-overflow-tooltip></el-table-column>
@@ -96,7 +95,7 @@
                                   width="845"
                                   :value="scope.row.visible">
                                   <div style="margin:0px;">
-                                    <el-button size="mini" type="primary" @click="checkBill">账单</el-button>
+                                    <el-button size="mini" type="primary" @click="checkBill(scope.row)">账单</el-button>
                                     <el-button size="mini" type="primary" @click="deductEdit">暗扣设置</el-button>
                                     <el-button size="mini" type="primary" @click="roleSwitch">设为假人</el-button>
                                     <el-button size="mini" type="primary" @click="agentSet">代理设置</el-button>
@@ -128,7 +127,7 @@
         </div>
         <!-- 账单弹出框 -->
         <el-dialog title="账单" :visible.sync="billVisible" width="50%">
-            <billPop></billPop>
+            <billPop v-if="billVisible" :dataItem="curDataObj"></billPop>
         </el-dialog>
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="50%">
@@ -230,7 +229,8 @@ export default {
             document.getElementById("listTable").click()
         },
         //查看账单
-        checkBill(){
+        checkBill(item){
+            this.curDataObj = item
             this.billVisible = true
         },
         //编辑信息
@@ -327,9 +327,9 @@ export default {
             this.getData();
         },
         // 多选操作
-        handleSelectionChange(val) {
-            this.multipleSelection = val;
-        },
+        // handleSelectionChange(val) {
+        //     this.multipleSelection = val;
+        // },
         // 分页导航
         handlePageChange(val) {
             this.pageIndex = val

@@ -9,8 +9,10 @@
 </template>
 
 <script>
+    import { fetchData , postData , updateData} from '../../../../api/index';
 export default {
     name: 'billPop',
+    props:['dataItem'],
     data() {
         return {
             tableData: [{
@@ -41,10 +43,16 @@ export default {
         };
     },
     created() {
-        
+        this.getBillData()
     },
     methods: {
-        
+        getBillData(){
+            fetchData(`/xy-users/getUserBill?userId=${this.dataItem.id}`).then(res => {
+                debugger
+                // this.tableData = res.data.records
+                // this.pageTotal = res.data.total
+            });
+        }
     }
 };
 </script>

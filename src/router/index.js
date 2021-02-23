@@ -50,9 +50,29 @@ export default new Router({
                     meta: { title: '商品列表' }
                 },
                 {
+                    path: '/goodsAdd',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/goods/add.vue'),
+                    meta: { title: '添加商品' }
+                },
+                {
+                    path: '/goodsEdit',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/goods/add.vue'),
+                    meta: { title: '编辑商品' }
+                },
+                {
                     path: '/goodsCate',
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/goods/goodsCate.vue'),
                     meta: { title: '商品分类' }
+                },
+                {
+                    path: '/addCate',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/goods/addGate.vue'),
+                    meta: { title: '添加商品分类' }
+                },
+                {
+                    path: '/upDateCate',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/goods/addGate.vue'),
+                    meta: { title: '编辑商品分类' }
                 },
                 {
                     path: '/dashboard',

@@ -70,10 +70,10 @@ export default {
                             index: 'userList',
                             title: '会员列表'
                         },
-                        {
-                            index: 'userLevel',
-                            title: '会员等级'
-                        }
+                        // {
+                        //     index: 'userLevel',
+                        //     title: '会员等级'
+                        // }
                     ]
                 },
                 {
