@@ -121,7 +121,7 @@ export default {
                     subs: [
                         {
                             index: 'noticeList',
-                            title: '公告列表'
+                            title: '文本管理'
                         },
                         {
                             index: 'bannerList',

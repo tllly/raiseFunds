@@ -1,23 +1,20 @@
 <template>
     <div>
         <el-form ref="form" :model="form" :rules="rules" label-width="130px">
-          <el-form-item label="收货人姓名">
-            <el-input v-model="form.name"></el-input>
+          <el-form-item label="开户人">
+            <el-input v-model="form.username"></el-input>
           </el-form-item>
-          <el-form-item label="收货手机" prop="tel">
+          <el-form-item label="开户银行" prop="bankname">
+            <el-input v-model="form.bankname"></el-input>
+          </el-form-item>
+          <el-form-item label="开户电话" prop="tel">
             <el-input v-model="form.tel"></el-input>
           </el-form-item>
-          <el-form-item label="省市区" prop="province">
-              <el-cascader
-                  ref="myCascader"
-                  v-model="ssqArr"
-                  :options="areaOption"
-                  @change="handleChange">
-              </el-cascader>
-              <input type="hidden" v-model="form.province">
+          <el-form-item label="银行卡号" prop="cardnum">
+            <el-input v-model="form.cardnum"></el-input>
           </el-form-item>
-          <el-form-item label="详细地址" prop="address">
-            <el-input v-model="form.address"></el-input>
+          <el-form-item label="开户地址" prop="site">
+            <el-input v-model="form.site"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit('form')">提交</el-button>
@@ -31,32 +28,30 @@
   import { fetchData , postData , updateData} from '../../../../api/index';
   import areaCode from "@/utils/areaCode"
 export default {
-    name: 'deductPop',
+    name: 'bankCardPop',
     props:['dataItem'],
     data() {
         return {
             form: {
-              name: '',
+              username: '',
+              bankname:'',
               tel:'',
-              address:'',
               uid:'',
-              province:'',
-              city:'',
-              county:'',
-              area:''
+              cardnum:'',
+              site:''
             },
             ssqArr:[],
             areaOption:areaCode.areavalue, //地址编码选项
             addressId:'',
             rules:{
+              bankname:[
+                { required: true, message: '请输入开户银行', trigger: 'blur' },
+              ],
               tel:[
-                { required: true, message: '请输入收货手机', trigger: 'blur' },
+                { required: true, message: '请输入开户电话', trigger: 'blur' },
               ],
-              address:[
-                { required: true, message: '请输入详细地址', trigger: 'blur' },
-              ],
-              province:[
-                { required: true, message: '请选择省市区', trigger: 'change' },
+              cardnum:[
+                { required: true, message: '请输入银行卡号', trigger: 'blur' },
               ]
             },
         };
@@ -70,35 +65,32 @@ export default {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if(this.addressId){
-              updateData(`/xy-member-address/update`,this.form).then(res => {
-                this.$emit('addressSuccess')
+              updateData(`/xy-bankinfo/update`,this.form).then(res => {
+                this.$emit('bankCardSuccess')
               });
             }else{
-              postData(`/xy-member-address/add`,this.form).then(res => {
-                this.$emit('addressSuccess')
+              postData(`/xy-bankinfo/add`,this.form).then(res => {
+                this.$emit('bankCardSuccess')
               });
             }
           }
         });
       },
       getAddressByUid(){
-        fetchData(`/xy-member-address/find?uid=${this.dataItem.id}`).then(res => {
+        fetchData(`/xy-bankinfo/find?uid=${this.dataItem.id}`).then(res => {
             if(res.data && res.data.id){
               this.addressId = res.data.id
               this.form.id = res.data.id
-              this.form.name = res.data.name
+              this.form.username = res.data.username
+              this.form.bankname = res.data.bankname
               this.form.tel = res.data.tel
-              this.form.address = res.data.address
-              this.form.province = parseInt(res.data.province)
-              this.form.city = parseInt(res.data.city)
-              this.form.county = parseInt(res.data.county)
-              this.form.area = res.data.area
-              this.ssqArr = [this.form.province ,this.form.city,this.form.county]
+              this.form.cardnum = res.data.cardnum
+              this.form.site = res.data.site
             }
         });
       },
       cancel(){
-        this.$emit('update:addressVisible',false)
+        this.$emit('update:bankCardVisible',false)
       },
       handleChange(val){
         this.form.province = val[0]

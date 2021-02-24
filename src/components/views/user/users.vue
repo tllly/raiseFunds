@@ -56,8 +56,8 @@
                     >
                         <!-- <el-table-column type="selection" width="55" align="center"></el-table-column> -->
                         <el-table-column prop="id" label="ID" width="55" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="tel" label="账号" show-overflow-tooltip width="110"></el-table-column>
-                        <el-table-column prop="username" label="用户名" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="username" label="账号" show-overflow-tooltip width="110"></el-table-column>
+                        <el-table-column prop="nickname" label="用户名" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="allCount" label="人数" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="allHyCount" label="活跃人数" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="balance" label="账户余额" show-overflow-tooltip>
@@ -71,10 +71,11 @@
                         <el-table-column prop="" label="线上提现" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="addtime" label="注册时间" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="ip" label="最后登录IP" show-overflow-tooltip width="110"></el-table-column>
-                        <el-table-column prop="isJia" label="状态" align="center" width="100">
+                        <el-table-column prop="isJia" label="状态" align="center" width="150">
                             <template slot-scope="scope">
                                 <el-tag type="success" v-if="scope.row.isJia == 1">真人</el-tag>
                                 <el-tag v-else type="danger">假人</el-tag>
+                                <el-tag style="margin-left: 5px;" type="" effect="dark" v-if="scope.row.isAgent == 1">代理</el-tag>
                             </template>
                         </el-table-column>
                         <el-table-column label="操作" width="250" align="center" fixed="right">
@@ -96,16 +97,17 @@
                                   :value="scope.row.visible">
                                   <div style="margin:0px;">
                                     <el-button size="mini" type="primary" @click="checkBill(scope.row)">账单</el-button>
-                                    <!-- <el-button size="mini" type="primary" @click="deductEdit">暗扣设置</el-button> -->
-                                    <el-button size="mini" type="primary" @click="roleSwitch(scope.row)">{{scope.row.isJia == 0?'设为真人':'设为假人'}}</el-button>
-                                    <el-button size="mini" type="primary" @click="agentSet">代理设置</el-button>
+                                    <el-button size="mini" type="success" @click="deductEdit(scope.row)">暗扣设置</el-button>
+                                    <el-button size="mini" type="danger" @click="roleSwitch(scope.row)">{{scope.row.isJia == 0?'设为真人':'设为假人'}}</el-button>
+                                    <el-button size="mini" type="warning" @click="agentSet(scope.row)" v-if="scope.row.isAgent == 0">代理设置</el-button>
+                                    <el-button size="mini" type="warning" @click="agentCancel(scope.row)" v-else>取消代理</el-button>
                                     <el-button size="mini" type="primary" @click="accountDisable(scope.row)">{{scope.row.status == 1?'禁用':'启动'}}</el-button>
-                                    <el-button size="mini" type="primary" @click="bankCardInfo">银行卡信息</el-button>
-                                    <el-button size="mini" type="primary" @click="addressSet">地址信息</el-button>
+                                    <el-button size="mini" type="success" @click="bankCardInfo(scope.row)">银行卡信息</el-button>
+                                    <el-button size="mini" type="danger" @click="addressSet(scope.row)">地址信息</el-button>
                                     <!-- <el-button size="mini" type="primary" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
-                                    <el-button size="mini" type="primary" @click="refreshQr">刷新二维码</el-button>
-                                    <el-button size="mini" type="primary" @click="checkTeam">查看团队</el-button>
-                                    <el-button size="mini" type="primary" @click="checkAccount">账变</el-button>
+                                    <el-button size="mini" type="warning" @click="refreshQr">刷新二维码</el-button>
+                                    <el-button size="mini" type="primary" @click="checkTeam(scope.row)">查看团队</el-button>
+                                    <el-button size="mini" type="success" @click="checkAccount">账变</el-button>
                                   </div>
                                   <el-button type="text" slot="reference" style="margin-left: 10px;">更多操作</el-button>
                                 </el-popover>
@@ -135,19 +137,23 @@
         </el-dialog>
         <!-- 暗扣设置弹出框 -->
         <el-dialog title="暗扣设置" :visible.sync="deductVisible" width="50%">
-            <deductPop></deductPop>
+            <deductPop v-if="deductVisible" :deductVisible="deductVisible" @update:deductVisible="val => deductVisible = val" :dataItem="curDataObj" @deductSuccess="deductSuccess"></deductPop>
         </el-dialog>
         <!-- 代理设置弹出框 -->
         <el-dialog title="代理设置" :visible.sync="agentVisible" width="50%">
-            <agentPop></agentPop>
+            <agentPop v-if="agentVisible" :agentVisible="agentVisible" @update:agentVisible="val => agentVisible = val" :dataItem="curDataObj" @agentSuccess="agentSuccess"></agentPop>
         </el-dialog>
         <!-- 地址信息弹出框 -->
         <el-dialog title="地址信息" :visible.sync="addressVisible" width="50%">
-            <addressPop></addressPop>
+            <addressPop v-if="addressVisible" :addressVisible="addressVisible" @update:addressVisible="val => addressVisible = val" :dataItem="curDataObj" @addressSuccess="addressSuccess"></addressPop>
+        </el-dialog>
+        <!-- 银行卡信息弹出框 -->
+        <el-dialog title="银行卡信息" :visible.sync="bankCardVisible" width="50%">
+            <bankCardPop v-if="bankCardVisible" :bankCardVisible="bankCardVisible" @update:bankCardVisible="val => bankCardVisible = val" :dataItem="curDataObj" @bankCardSuccess="bankCardSuccess"></bankCardPop>
         </el-dialog>
         <!-- 团队查看弹出框 -->
         <el-dialog title="团队" :visible.sync="teamVisible" width="80%">
-            <teamPop></teamPop>
+            <teamPop v-if="teamVisible" :teamVisible="teamVisible" @update:teamVisible="val => teamVisible = val" :dataItem="curDataObj"></teamPop>
         </el-dialog>
         <!-- 账目变化弹出框 -->
         <el-dialog title="财务记录" :visible.sync="accountVisible" width="80%">
@@ -164,6 +170,7 @@ import editPop from './components/editPop'
 import deductPop from './components/deductPop'
 import agentPop from './components/agentPop'
 import addressPop from './components/addressPop'
+import bankCardPop from './components/bankCardPop'
 import teamPop from './components/teamPop'
 import accountListPop from './components/accountListPop'
 export default {
@@ -174,6 +181,7 @@ export default {
         deductPop,
         agentPop,
         addressPop,
+        bankCardPop,
         teamPop,
         accountListPop
     },
@@ -208,13 +216,14 @@ export default {
             deductVisible: false,//暗扣设置弹出框
             agentVisible: false, //代理设置
             addressVisible: false,//地址信息
+            bankCardVisible: false,//银行卡信息
             teamVisible: false, //团队列表
             accountVisible: false,//账目变化
             pageTotal: 0,
             TreeData: [],
             defaultProps: {
               children: 'child',
-              label: 'username'
+              label: 'nickname'
             }
         };
     },
@@ -245,9 +254,22 @@ export default {
             this.$message.success('编辑成功')
             this.getData();
         },
+        //设置暗扣成功
+        deductSuccess(){
+            this.deductVisible = false
+            this.$message.success('操作成功')
+            this.getData();
+        },
         //暗扣设置
-        deductEdit(){
+        deductEdit(item){
+            this.curDataObj = item
             this.deductVisible = true
+        },
+        //设置代理成功
+        agentSuccess(){
+            this.agentVisible = false
+            this.$message.success('操作成功')
+            this.getData();
         },
         //真人假人转换
         roleSwitch(item){
@@ -262,8 +284,21 @@ export default {
             });
         },
         //代理设置
-        agentSet(){
+        agentSet(item){
+            this.curDataObj = item
             this.agentVisible = true
+        },
+        //代理取消
+        agentCancel(item){
+            let data = {
+                id:item.id,
+                isAgent:0
+            }
+            updateData(`/xy-users/update`,data).then(res => {
+              this.closePopover()
+              this.$message.success('操作成功')
+              this.getData()
+            });
         },
         //账户禁用启用
         accountDisable(item){
@@ -277,12 +312,27 @@ export default {
               this.getData()
             });
         },
-        bankCardInfo(){
-            this.$message.error('没有信息')
+        //银行卡信息
+        bankCardInfo(item){
+            this.curDataObj = item
+            this.bankCardVisible = true
+        },
+        //银行卡信息设置成功
+        bankCardSuccess(){
+            this.bankCardVisible = false
+            this.$message.success('操作成功')
+            this.getData();
         },
         //地址信息
-        addressSet(){
+        addressSet(item){
+            this.curDataObj = item
             this.addressVisible = true
+        },
+        //地址设置成功
+        addressSuccess(){
+            this.addressVisible = false
+            this.$message.success('操作成功')
+            this.getData();
         },
         //删除
         handleDelete(index, row) {
@@ -303,7 +353,8 @@ export default {
             this.$message.success('刷新成功');
         },
         //查看团队
-        checkTeam(){
+        checkTeam(item){
+            this.curDataObj = item
             this.teamVisible = true
         },
         //查看账目

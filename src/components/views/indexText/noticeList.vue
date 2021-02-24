@@ -38,9 +38,11 @@
             >
                 <el-table-column prop="id" label="ID" width="90" align="center"></el-table-column>
                 <el-table-column prop="title" label="标题"  width="500" show-overflow-tooltip></el-table-column>
-                <!-- <el-table-column prop="bili" label="比例">
-                    <template slot-scope="scope">￥{{scope.row.bili}}</template>
-                </el-table-column> -->
+                <el-table-column label="内容简要" width="500" show-overflow-tooltip>
+                    <template slot-scope="scope">
+                        <div v-html="scope.row.content" class="htmlContent"></div>
+                    </template>
+                </el-table-column>
                 <!-- <el-table-column prop="cateInfo" label="简介" show-overflow-tooltip></el-table-column> -->
                 <el-table-column prop="createTime" label="发表时间"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
@@ -171,5 +173,11 @@ export default {
     margin: auto;
     width: 40px;
     height: 40px;
+}
+.htmlContent{
+    white-space:nowrap;
+    word-break: break-all;
+    height: 25px;
+    overflow: hidden;
 }
 </style>

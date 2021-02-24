@@ -52,13 +52,13 @@
             >
                 <el-table-column prop="code" label="订单号"  align="center"></el-table-column>
                 <el-table-column prop="nickname" label="用户名"  show-overflow-tooltip></el-table-column>
-                <el-table-column prop="goodsName" label="商品名称">
+                <el-table-column prop="goodsName" label="商品名称" show-overflow-tooltip>
                     <template slot-scope="scope">{{scope.row.goodsName}}</template>
                 </el-table-column>
-                <el-table-column prop="goodsName" label="商品单价">
+                <el-table-column prop="goodsName" label="商品单价" show-overflow-tooltip>
                     <template slot-scope="scope">￥{{scope.row.goodsPrice}}</template>
                 </el-table-column>
-                <el-table-column prop="goodsCount" label="交易数量">
+                <el-table-column prop="goodsCount" label="交易数量" show-overflow-tooltip>
                     <template slot-scope="scope">{{scope.row.goodsCount}}</template>
                 </el-table-column>
                 <el-table-column prop="num" label="交易数额"  show-overflow-tooltip></el-table-column>
@@ -80,16 +80,21 @@
                 <el-table-column label="操作" width="180" align="center">
                     <!-- <template slot-scope="scope">
                         <el-button
+                            v-if="scope.row.status == 0"
                             type="text"
-                            icon="el-icon-edit"
-                            @click="handleEdit(scope.$index, scope.row)"
-                        >编辑</el-button>
+                            @click="qzfk(scope.row)"
+                        >强制付款</el-button>
                         <el-button
+                            v-if="scope.row.status == 0"
                             type="text"
-                            icon="el-icon-delete"
                             class="red"
-                            @click="handleDelete(scope.$index, scope.row)"
-                        >删除</el-button>
+                            @click="qxdd(scope.row)"
+                        >取消订单</el-button>
+                        <el-button
+                            v-if="scope.row.status == 5"
+                            type="text"
+                            @click="jywc(scope.row)"
+                        >手动解冻</el-button>
                     </template> -->
                 </el-table-column>
             </el-table>
@@ -109,7 +114,7 @@
 </template>
 
 <script>
-import { fetchData , deleteData } from '../../../api/index';
+import { fetchData , deleteData , updateData } from '../../../api/index';
 export default {
     name: 'orderList',
     data() {
@@ -202,6 +207,52 @@ export default {
         handlePageChange(val) {
             this.pageIndex = val
             this.getData();
+        },
+        //强制付款
+        qzfk(row){
+            let data ={
+                id:row.id,
+                status:5
+            }
+            this.updateStatus(data)
+        },
+        //取消订单
+        qxdd(row){
+            let data ={
+                id:row.id,
+                status:2
+            }
+            this.updateStatus(data)
+        },
+        //手动解冻
+        sdjd(row){
+            let data ={
+                id:row.id,
+                status:2
+            }
+            this.updateStatus(data)
+        },
+        //取消订单
+        qxdd(row){
+            let data ={
+                id:row.id,
+                status:4
+            }
+            this.updateStatus(data)
+        },
+        //交易完成
+        jywc(row){
+            let data ={
+                id:row.id,
+                status:1
+            }
+            this.updateStatus(data)
+        },
+        updateStatus(data){
+            updateData(`/xy-convey/update`,data).then(res => {
+                this.$message.success('操作成功');
+                this.getData();
+            });
         }
     }
 };
