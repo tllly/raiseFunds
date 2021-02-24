@@ -8,7 +8,7 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-          <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+          <el-form ref="form" :model="form" :rules="rules" label-width="120px">
             <el-form-item label="商品分类" prop="cid">
               <el-select placeholder="选择分类" v-model="form.cid" clearble>
                 <el-option v-for="(item,index) in cateList" :key="index" :label="item.name" :value="item.id"></el-option>
@@ -20,8 +20,26 @@
             <el-form-item label="店铺名称" prop="shopName">
               <el-input v-model="form.shopName"></el-input>
             </el-form-item>
+            <el-form-item label="商家所在区域" prop="province">
+              <el-cascader
+                  ref="myCascader"
+                  v-model="ssqArr"
+                  :options="areaOption"
+                  @change="handleChange">
+              </el-cascader>
+              <input type="hidden" v-model="form.province">
+            </el-form-item>
+            <el-form-item label="商家详细地址" prop="shopAddr">
+              <el-input v-model="form.shopAddr"></el-input>
+            </el-form-item>
             <el-form-item label="商品单价" prop="goodsPrice">
               <el-input type="number" v-model="form.goodsPrice"></el-input>
+            </el-form-item>
+            <el-form-item label="商品佣金比率" prop="commission">
+              <el-input type="number" v-model="form.commission"></el-input>
+            </el-form-item>
+            <el-form-item label="送达天数" prop="day">
+              <el-input type="number" v-model="form.day"></el-input>
             </el-form-item>
             <el-form-item label="商品图片" prop="goodsPic">
               <img v-if="form.goodsPic" @click="uploadImg" :src="form.goodsPic" style="width: 100px;height: 100px;">
@@ -47,6 +65,7 @@
   import 'quill/dist/quill.snow.css';
   import 'quill/dist/quill.bubble.css';
   import { quillEditor } from 'vue-quill-editor';
+  import areaCode from "@/utils/areaCode"
 export default {
     name: 'editPop',
     components: {
@@ -62,10 +81,18 @@ export default {
               cid:'',
               goodsName:'',
               shopName:'',
+              shopAddr:'',
               goodsPrice:0,
+              commission:'',
+              day:'',
               goodsPic:null,
               goodsInfo:'',
+              province:'',
+              city:'',
+              county:''
             },
+            ssqArr:[],
+            areaOption:areaCode.areavalue, //地址编码选项
             cateList:[],
             rules: {
               cid:[
@@ -77,8 +104,20 @@ export default {
               shopName: [
                 { required: true, message: '请输入店铺名称', trigger: 'blur' }
               ],
+              shopAddr: [
+                { required: true, message: '请输入商家详细地址', trigger: 'blur' }
+              ],
+              province:[
+                { required: true, message: '请选择商家所在区域', trigger: 'change' }
+              ],
               goodsPrice: [
                 { required: true, message: '请输入商品单价', trigger: 'blur' }
+              ],
+              commission:[
+                { required: true, message: '请输入商品佣金比率', trigger: 'blur' }
+              ],
+              day:[
+                { required: true, message: '请输入送达天数', trigger: 'blur' }
               ],
               goodsPic: [
                 { required: true, message: '请上传商品图片', trigger: 'blur' }
@@ -110,7 +149,14 @@ export default {
           this.form.cid = res.data.cid
           this.form.goodsName = res.data.goodsName
           this.form.shopName = res.data.shopName
+          this.form.shopAddr = res.data.shopAddr
           this.form.goodsPrice = res.data.goodsPrice
+          this.form.commission = res.data.commission
+          this.form.day = res.data.day
+          this.form.province = parseInt(res.data.province)
+          this.form.city = parseInt(res.data.city)
+          this.form.county = parseInt(res.data.county)
+          this.ssqArr = [this.form.province,this.form.city,this.form.county]
           this.form.goodsPic = res.data.goodsPic
           this.form.goodsInfo = res.data.goodsInfo
           this.form.id = res.data.id
@@ -147,6 +193,15 @@ export default {
             }
           }
         });
+      },
+      handleChange(val){
+        this.form.province = val[0]
+        this.form.city = val[1]
+        this.form.county = val[2]
+        // let labelArr =  this.$refs['myCascader'].getCheckedNodes()[0].pathLabels
+        // if (labelArr[2]) {
+        //   this.form.area = labelArr[2]
+        // }
       },
       cancel(){
         this.$router.go(-1)
