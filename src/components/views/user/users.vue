@@ -73,7 +73,7 @@
                         <el-table-column prop="ip" label="最后登录IP" show-overflow-tooltip width="110"></el-table-column>
                         <el-table-column prop="isJia" label="状态" align="center" width="100">
                             <template slot-scope="scope">
-                                <el-tag type="success" v-if="!scope.row.isJia">真人</el-tag>
+                                <el-tag type="success" v-if="scope.row.isJia == 1">真人</el-tag>
                                 <el-tag v-else type="danger">代理</el-tag>
                             </template>
                         </el-table-column>
@@ -96,11 +96,11 @@
                                   :value="scope.row.visible">
                                   <div style="margin:0px;">
                                     <el-button size="mini" type="primary" @click="checkBill(scope.row)">账单</el-button>
-                                    <el-button size="mini" type="primary" @click="deductEdit">暗扣设置</el-button>
-                                    <el-button size="mini" type="primary" @click="roleSwitch">设为假人</el-button>
-                                    <el-button size="mini" type="primary" @click="agentSet">代理设置</el-button>
-                                    <el-button size="mini" type="primary" @click="accountDisable">禁用</el-button>
-                                    <el-button size="mini" type="primary" @click="accountDisable">银行卡信息</el-button>
+                                    <!-- <el-button size="mini" type="primary" @click="deductEdit">暗扣设置</el-button> -->
+                                    <el-button size="mini" type="primary" @click="roleSwitch(scope.row)">{{scope.row.isJia == 0?'设为真人':'设为假人'}}</el-button>
+                                    <!-- <el-button size="mini" type="primary" @click="agentSet">代理设置</el-button> -->
+                                    <el-button size="mini" type="primary" @click="accountDisable(scope.row)">{{scope.row.status == 1?'禁用':'启动'}}</el-button>
+                                    <el-button size="mini" type="primary" @click="bankCardInfo">银行卡信息</el-button>
                                     <el-button size="mini" type="primary" @click="addressSet">地址信息</el-button>
                                     <!-- <el-button size="mini" type="primary" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
                                     <el-button size="mini" type="primary" @click="refreshQr">刷新二维码</el-button>
@@ -143,7 +143,7 @@
         </el-dialog>
         <!-- 地址信息弹出框 -->
         <el-dialog title="地址信息" :visible.sync="addressVisible" width="50%">
-            <agentPop></agentPop>
+            <addressPop></addressPop>
         </el-dialog>
         <!-- 团队查看弹出框 -->
         <el-dialog title="团队" :visible.sync="teamVisible" width="80%">
@@ -158,7 +158,7 @@
 </template>
 
 <script>
-import { fetchData , postData , deleteData} from '../../../api/index';
+import { fetchData , postData , deleteData , updateData} from '../../../api/index';
 import billPop from './components/billPop'
 import editPop from './components/editPop'
 import deductPop from './components/deductPop'
@@ -173,6 +173,7 @@ export default {
         editPop,
         deductPop,
         agentPop,
+        addressPop,
         teamPop,
         accountListPop
     },
@@ -249,16 +250,35 @@ export default {
             this.deductVisible = true
         },
         //真人假人转换
-        roleSwitch(){
-
+        roleSwitch(item){
+            let data = {
+                id:item.id,
+                isJia:item.isJia == 1 ? 0 : 1
+            }
+            updateData(`/xy-users/update`,data).then(res => {
+              this.closePopover()
+              this.$message.success('操作成功')
+              this.getData()
+            });
         },
         //代理设置
         agentSet(){
             this.agentVisible = true
         },
         //账户禁用启用
-        accountDisable(){
-
+        accountDisable(item){
+            let data = {
+                id:item.id,
+                status:item.status == 1 ? 2 : 1
+            }
+            updateData(`/xy-users/update`,data).then(res => {
+              this.closePopover()
+              this.$message.success('操作成功')
+              this.getData()
+            });
+        },
+        bankCardInfo(){
+            this.$message.error('没有信息')
         },
         //地址信息
         addressSet(){
@@ -280,7 +300,7 @@ export default {
         },
         //刷新二维码
         refreshQr(){
-
+            this.$message.success('刷新成功');
         },
         //查看团队
         checkTeam(){

@@ -53,31 +53,7 @@ export default {
         return {
             aaa:'',
             //tabActiveName:"first",
-            tableData: [{
-                item: '充值',
-                value: '0',
-                lastvue: '3005'
-            }, {
-                item: '提现',
-                value: '0',
-                lastvue: '2,505'
-            }, {
-                item: '盈亏',
-                value: '0',
-                lastvue: '0'
-            }, {
-                item: '投注',
-                value: '0',
-                lastvue: '0'
-            },{
-                item: '帐变',
-                value: '0',
-                lastvue: ''
-            },{
-                item: '团队余额',
-                value: '0',
-                lastvue: ''
-            }]
+            tableData: []
         };
     },
     created() {

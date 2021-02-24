@@ -117,7 +117,7 @@ export default new Router({
 
                 {
                     path: '/dashboard',
-                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/Dashboard.vue'),
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/home/index.vue'),
                     meta: { title: '系统首页' }
                 },
                 {
