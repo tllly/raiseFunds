@@ -9,57 +9,164 @@
         </div>
         <div class="container">
             <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-              <el-form-item label="银行列表" prop="level">
-                <el-select v-model="form.level" placeholder="请选择">
-                  <el-option label="白银会员" :value="0"></el-option>
-                  <el-option label="黄金会员" :value="1"></el-option>
-                  <el-option label="铂金会员" :value="2"></el-option>
-                  <el-option label="钻石会员" :value="3"></el-option>
-                  <el-option label="蓝宝石会员" :value="4"></el-option>
-              </el-select>
+              <el-form-item label="银行卡列表" prop="bankId">
+                <el-select v-model="form.bankId" placeholder="请选择" @change="selectBankChange">
+                  <el-option v-for="(item,index) in bankList" :label="item.bankname" :value="item.id"></el-option>
+                </el-select>
+                <el-button style="margin-left: 20px;" type="primary" @click="addBankCard">添加银行卡</el-button>
               </el-form-item>
-              <el-form-item label="收款银行卡号" prop="account">
-                <el-input v-model="form.account" disabled></el-input>
+              <el-form-item label="收款银行卡号">
+                <el-input v-model="curBank.cardnum" disabled></el-input>
               </el-form-item>
-              <el-form-item label="收款人" prop="phone">
-                <el-input v-model="form.phone" disabled></el-input>
+              <el-form-item label="收款人">
+                <el-input v-model="curBank.username" disabled></el-input>
               </el-form-item>
-              <el-form-item label="所属银行" prop="balance">
-                <el-input v-model="form.balance" disabled></el-input>
+              <el-form-item label="所属银行">
+                <el-input v-model="curBank.bankname" disabled></el-input>
               </el-form-item>
-              <el-form-item label="银行地址" prop="freezeBalance">
-                <el-input v-model="form.freezeBalance" disabled></el-input>
+              <el-form-item label="银行地址">
+                <el-input v-model="curBank.site" disabled></el-input>
               </el-form-item>
-              <el-form-item label="团队交易佣金">
-                <el-input type="number" v-model="form.casePwd"></el-input>
+              <el-form-item label="团队交易佣金" prop="content">
+                <el-input type="number" v-model="form.content"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="onSubmit('form')">确认</el-button>
-                <el-button @click="cancel">取消</el-button>
+                <!-- <el-button @click="cancel">取消</el-button> -->
               </el-form-item>
             </el-form>
         </div>
+        <el-dialog title="添加银行卡" :visible.sync="bankVisible" width="50%">
+            <el-form ref="formBank" :model="formBank" :rules="rulesBank" label-width="120px">
+              <el-form-item label="收款银行卡号" prop="cardnum">
+                <el-input v-model="formBank.cardnum"></el-input>
+              </el-form-item>
+              <el-form-item label="收款人姓名" prop="username">
+                <el-input v-model="formBank.username"></el-input>
+              </el-form-item>
+              <el-form-item label="所属银行" prop="bankname">
+                <el-input v-model="formBank.bankname"></el-input>
+              </el-form-item>
+              <el-form-item label="银行地址" prop="site">
+                <el-input v-model="formBank.site"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="confirmAddBank('formBank')">确认</el-button>
+                <el-button @click="cancelAddbank">取消</el-button>
+              </el-form-item>
+            </el-form>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-import { fetchData } from '../../../api/index';
+import { fetchData , postData } from '../../../api/index';
 export default {
     name: 'dealConsole',
     data() {
         return {
-            form:{},
-            rules:{},
+            form:{
+                bankId:'',
+                content:''
+            },
+            rules:{
+                bankId:[
+                    { required: true, message: '请选择银行卡', trigger: 'change' },
+                ],
+                content: [
+                    { required: true, message: '请输入团队交易佣金', trigger: 'blur' }
+                ],
+            },
+            bankList:[],
+            curBank:{},
+
+            formBank:{
+                cardnum:'',
+                username:'',
+                bankname:'',
+                site:'',
+                uid:0,
+            }, //添加银行卡
+            rulesBank:{
+                cardnum:[
+                    { required: true, message: '请输入银行卡号', trigger: 'blur' },
+                ],
+                username: [
+                    { required: true, message: '请输入收款人姓名', trigger: 'blur' }
+                ],
+                bankname: [
+                    { required: true, message: '请输入所属银行', trigger: 'blur' }
+                ],
+                site: [
+                    { required: true, message: '请输入开户行地址', trigger: 'blur' }
+                ],
+            },
+            bankVisible:false
         };
     },
     created() {
+        this.getData()
+        this.checkYongJinSys()
     },
     methods: {
-        cancel(){
-
+        // 获取银行卡列表数据数据
+        getData() {
+            fetchData(`/xy-bankinfo/XyBankinfo/currentPage/1/pageSize/100?userId=0`).then(res => {
+                let dataArr = res.data.records
+                for (var i = 0; i < dataArr.length; i++) {
+                    if(dataArr[i].isCheck == 1){
+                        this.curBank = dataArr[i]
+                        this.form.bankId = dataArr[i].id
+                        break
+                    }
+                }
+                this.bankList = res.data.records
+            });
         },
-        onSubmit(){
-
+        //查询交易佣金
+        checkYongJinSys(){
+            fetchData(`/xy-index-msg/find?id=14`).then(res => {
+                this.form.content = res.data.content
+            });
+        },
+        //选择银行
+        selectBankChange(val){
+            for (var i = 0; i < this.bankList.length; i++) {
+                if(this.bankList[i].id == val){
+                    this.curBank = this.bankList[i]
+                    break
+                }
+            }
+        },
+        //添加银行卡
+        addBankCard(){
+            this.bankVisible = true
+        },
+        confirmAddBank(formName){
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    postData('/xy-bankinfo/add',this.formBank).then(res=>{
+                        this.bankVisible = false
+                        this.getData()
+                    })
+                }
+            })
+        },
+        cancelAddbank(){
+            this.$refs['formBank'].resetFields()
+            this.bankVisible = false
+        },
+        cancel(){
+            this.$router.go(-1)
+        },
+        onSubmit(formName){
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    fetchData(`/xy-bankinfo/upHomeBank?bankId=${this.form.bankId}&content=${this.form.content}`).then(res=>{
+                        this.$message.success('操作成功')
+                    })
+                }
+            })
         }
     }
 };

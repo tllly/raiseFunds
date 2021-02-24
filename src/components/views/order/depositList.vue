@@ -87,24 +87,26 @@
                         <el-tag v-else type="success">普通充值</el-tag>
                     </template>
                 </el-table-column> -->
-                <el-table-column prop="endtime" label="二维码"  show-overflow-tooltip></el-table-column>
+                <!-- <el-table-column prop="endtime" label="二维码"  show-overflow-tooltip></el-table-column> -->
                 <el-table-column prop="status" label="订单状态"  show-overflow-tooltip>
-                    <template slot-scope="scope">
+                    <!-- <template slot-scope="scope">
                         <span v-if="scope.row.status == 1">待处理</span>
                         <span v-if="scope.row.status == 2">审核通过</span>
                         <span v-if="scope.row.status == 3">审核不通过</span>
-                    </template>
+                    </template> -->
                 </el-table-column>
                 <el-table-column label="操作" width="180" align="center">
-                    <!-- <template slot-scope="scope">
+                    <template slot-scope="scope" v-if="scope.row.status == '待处理'">
                         <el-button
                             type="text"
+                            @click="agree(scope.row)"
                         >通过</el-button>
                         <el-button
                             type="text"
                             class="red"
+                            @click="refuse(scope.row)"
                         >驳回</el-button>
-                    </template> -->
+                    </template>
                 </el-table-column>
             </el-table>
             <div class="pagination">
@@ -123,7 +125,7 @@
 </template>
 
 <script>
-import { fetchData , deleteData } from '../../../api/index';
+import { fetchData , deleteData , updateData} from '../../../api/index';
 export default {
     name: 'depositList',
     data() {
@@ -216,6 +218,26 @@ export default {
         handlePageChange(val) {
             this.pageIndex = val
             this.getData();
+        },
+        agree(row){
+            let data ={
+                id:row.id,
+                status:2
+            }
+            updateData(`/xy-deposit/update`,data).then(res => {
+                this.$message.success('操作成功');
+                this.getData();
+            });
+        },
+        refuse(row){
+            let data ={
+                id:row.id,
+                status:3
+            }
+            updateData(`/xy-deposit/update`,data).then(res => {
+                this.$message.success('操作成功');
+                this.getData();
+            });
         }
     }
 };

@@ -74,7 +74,7 @@
                         <el-table-column prop="isJia" label="状态" align="center" width="100">
                             <template slot-scope="scope">
                                 <el-tag type="success" v-if="scope.row.isJia == 1">真人</el-tag>
-                                <el-tag v-else type="danger">代理</el-tag>
+                                <el-tag v-else type="danger">假人</el-tag>
                             </template>
                         </el-table-column>
                         <el-table-column label="操作" width="250" align="center" fixed="right">
@@ -98,7 +98,7 @@
                                     <el-button size="mini" type="primary" @click="checkBill(scope.row)">账单</el-button>
                                     <!-- <el-button size="mini" type="primary" @click="deductEdit">暗扣设置</el-button> -->
                                     <el-button size="mini" type="primary" @click="roleSwitch(scope.row)">{{scope.row.isJia == 0?'设为真人':'设为假人'}}</el-button>
-                                    <!-- <el-button size="mini" type="primary" @click="agentSet">代理设置</el-button> -->
+                                    <el-button size="mini" type="primary" @click="agentSet">代理设置</el-button>
                                     <el-button size="mini" type="primary" @click="accountDisable(scope.row)">{{scope.row.status == 1?'禁用':'启动'}}</el-button>
                                     <el-button size="mini" type="primary" @click="bankCardInfo">银行卡信息</el-button>
                                     <el-button size="mini" type="primary" @click="addressSet">地址信息</el-button>
