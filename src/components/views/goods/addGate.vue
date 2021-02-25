@@ -23,7 +23,7 @@
               <input type="file" name="" style="display: none" id="uploadFile" @change="imgSelect">
               <input type="hidden" v-model="form.catePic">
             </el-form-item>
-            <el-form-item label="商品背景图" prop="backPic">
+            <el-form-item label="分类背景图" prop="backPic">
               <!-- <el-input type="number" v-model="form.catePic"></el-input> -->
               <img v-if="form.backPic" @click="uploadImgback" :src="form.backPic" style="width: 100px;height: 100px;">
               <el-button v-else type="primary" @click="uploadImgback">上传图片</el-button>
@@ -75,7 +75,7 @@ export default {
                 { required: true, message: '请上传分类LOGO', trigger: 'change' }
               ],
               backPic:[
-                { required: true, message: '请上传商品背景图', trigger: 'change' }
+                { required: true, message: '请上传分类背景图', trigger: 'change' }
               ],
               cateInfo: [
                 { required: true, message: '请输入分类简介', trigger: 'blur' }
