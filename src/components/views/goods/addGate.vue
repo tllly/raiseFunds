@@ -23,6 +23,13 @@
               <input type="file" name="" style="display: none" id="uploadFile" @change="imgSelect">
               <input type="hidden" v-model="form.catePic">
             </el-form-item>
+            <el-form-item label="商品背景图" prop="backPic">
+              <!-- <el-input type="number" v-model="form.catePic"></el-input> -->
+              <img v-if="form.backPic" @click="uploadImgback" :src="form.backPic" style="width: 100px;height: 100px;">
+              <el-button v-else type="primary" @click="uploadImgback">上传图片</el-button>
+              <input type="file" name="" style="display: none" id="uploadFileback" @change="backimgSelect">
+              <input type="hidden" v-model="form.backPic">
+            </el-form-item>
             <el-form-item label="分类简介" prop="cateInfo">
               <el-input v-model="form.cateInfo"></el-input>
             </el-form-item>
@@ -50,6 +57,7 @@ export default {
               bili:'',
               min:0,
               catePic:null,
+              backPic:null,
               cateInfo:'',
             },
             cateList:[],
@@ -64,7 +72,10 @@ export default {
                 { required: true, message: '请输入最低金额限制', trigger: 'blur' }
               ],
               catePic: [
-                { required: true, message: '请上传分类LOGO', trigger: 'blur' }
+                { required: true, message: '请上传分类LOGO', trigger: 'change' }
+              ],
+              backPic:[
+                { required: true, message: '请上传商品背景图', trigger: 'change' }
               ],
               cateInfo: [
                 { required: true, message: '请输入分类简介', trigger: 'blur' }
@@ -86,6 +97,7 @@ export default {
           this.form.bili = res.data.bili
           this.form.min = res.data.min
           this.form.catePic = res.data.catePic
+          this.form.backPic = res.data.backPic
           this.form.cateInfo = res.data.cateInfo
           this.form.id = res.data.id
         });
@@ -94,6 +106,9 @@ export default {
       uploadImg(){
         document.getElementById('uploadFile').click()
       },
+      uploadImgback(){
+        document.getElementById('uploadFileback').click()
+      },
       imgSelect(obj){
         let file = obj.currentTarget.files[0]
         let fileParam = new FormData()
@@ -101,6 +116,16 @@ export default {
         imgUpload(`/api/addCommonUpload`,fileParam).then(res => {
           if(res.code == 200){
             this.form.catePic = res.data
+          }
+        })
+      },
+      backimgSelect(obj){
+        let file = obj.currentTarget.files[0]
+        let fileParam = new FormData()
+        fileParam.append('file', file)
+        imgUpload(`/api/addCommonUpload`,fileParam).then(res => {
+          if(res.code == 200){
+            this.form.backPic = res.data
           }
         })
       },

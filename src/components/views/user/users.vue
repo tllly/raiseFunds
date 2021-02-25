@@ -107,7 +107,7 @@
                                     <!-- <el-button size="mini" type="primary" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
                                     <el-button size="mini" type="warning" @click="refreshQr">刷新二维码</el-button>
                                     <el-button size="mini" type="primary" @click="checkTeam(scope.row)">查看团队</el-button>
-                                    <el-button size="mini" type="success" @click="checkAccount">账变</el-button>
+                                    <el-button size="mini" type="success" @click="checkAccount(scope.row)">账变</el-button>
                                   </div>
                                   <el-button type="text" slot="reference" style="margin-left: 10px;">更多操作</el-button>
                                 </el-popover>
@@ -156,8 +156,8 @@
             <teamPop v-if="teamVisible" :teamVisible="teamVisible" @update:teamVisible="val => teamVisible = val" :dataItem="curDataObj"></teamPop>
         </el-dialog>
         <!-- 账目变化弹出框 -->
-        <el-dialog title="财务记录" :visible.sync="accountVisible" width="80%">
-            <accountListPop></accountListPop>
+        <el-dialog title="交易记录" :visible.sync="accountVisible" width="80%">
+            <accountListPop v-if="accountVisible" :accountVisible="accountVisible" @update:accountVisible="val => accountVisible = val" :dataItem="curDataObj"></accountListPop>
         </el-dialog>
 
     </div>
@@ -358,7 +358,8 @@ export default {
             this.teamVisible = true
         },
         //查看账目
-        checkAccount(){
+        checkAccount(item){
+            this.curDataObj = item
             this.accountVisible = true
         },
         // 获取 easy-mock 的模拟数据
