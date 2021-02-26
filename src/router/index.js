@@ -114,7 +114,26 @@ export default new Router({
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/authority/userList.vue'),
                     meta: { title: '系统用户' }
                 },
-
+                {
+                    path: '/activityRecord',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/activity/recordList.vue'),
+                    meta: { title: '活动记录' }
+                },
+                {
+                    path: '/activeRecharge',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/activity/activeRecharge.vue'),
+                    meta: { title: '充值活动' }
+                },
+                {
+                    path: '/activeSign',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/activity/activeSign.vue'),
+                    meta: { title: '签到活动' }
+                },
+                {
+                    path: '/activeNew',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/activity/activeNew.vue'),
+                    meta: { title: '新用户活动' }
+                },
                 {
                     path: '/dashboard',
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/home/index.vue'),

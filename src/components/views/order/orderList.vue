@@ -78,13 +78,12 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="180" align="center">
-                    <!-- <template slot-scope="scope">
+                    <template slot-scope="scope">
                         <el-button
-                            v-if="scope.row.status == 0"
                             type="text"
-                            @click="qzfk(scope.row)"
-                        >强制付款</el-button>
-                        <el-button
+                            @click="checkwl(scope.row)"
+                        >查看物流</el-button>
+                        <!-- <el-button
                             v-if="scope.row.status == 0"
                             type="text"
                             class="red"
@@ -94,8 +93,8 @@
                             v-if="scope.row.status == 5"
                             type="text"
                             @click="jywc(scope.row)"
-                        >手动解冻</el-button>
-                    </template> -->
+                        >手动解冻</el-button> -->
+                    </template>
                 </el-table-column>
             </el-table>
             <div class="pagination">
@@ -109,7 +108,26 @@
                 ></el-pagination>
             </div>
         </div>
-        
+        <el-dialog title="物流信息" :visible.sync="wuliuVisible" width="50%">
+            <div>
+                <!-- <p class="wlTitle">物流信息：</p> -->
+                <div style="padding: 0 20px;">
+                    <el-timeline>
+                        <el-timeline-item
+                          v-for="(activity, index) in TracesList"
+                          :key="index"
+                          :color="index == 0 ? '#5680fa' : ''"
+                          size="large"
+                          :timestamp="activity.date + ' ' + activity.time">
+                          {{activity.content}}  ({{activity.status}})
+                        </el-timeline-item>
+                    </el-timeline>
+                </div>
+                <div v-if="TracesList.length == 0" style="padding: 100px 0;color:#999999;text-align: center;">
+                    暂无物流跟踪信息
+                </div>
+          </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -138,6 +156,20 @@ export default {
                 endTime:'',
             },
             tableData: [],
+            TracesList: [{
+                AcceptTime:'fdsafd',
+                AcceptStation:'fdsafdsa'
+            },{
+                AcceptTime:'fdsafd',
+                AcceptStation:'fdsafdsa'
+            },{
+                AcceptTime:'fdsafd',
+                AcceptStation:'fdsafdsa'
+            },{
+                AcceptTime:'fdsafd',
+                AcceptStation:'fdsafdsa'
+            }],
+            wuliuVisible:false,
             editVisible: false,
             addVisible: false
         };
@@ -207,6 +239,12 @@ export default {
         handlePageChange(val) {
             this.pageIndex = val
             this.getData();
+        },
+        checkwl(row){
+            fetchData(`/xy-express-log/all?id=${row.id}`,this.query).then(res => {
+                this.TracesList = res.data.reverse()
+                this.wuliuVisible = true
+            });
         },
         //强制付款
         qzfk(row){
@@ -286,5 +324,43 @@ export default {
     margin: auto;
     width: 40px;
     height: 40px;
+}
+.wlTitle{
+    font-size: 16px;
+    color: #333333;
+    margin-top: -20px;
+    padding: 0 10px;
+    margin-bottom: 20px;
+}
+/deep/ .el-dialog__title{
+    font-size: 18px;
+    color: #666666;
+}
+/deep/ .el-dialog__header{
+    border-bottom: 1px solid #e1e1e1;
+}
+/deep/ .el-timeline-item__content{
+    color: #999999;
+    font-size: 14px;
+}
+/deep/ .el-timeline-item__timestamp{
+    color: #999999;
+    font-size: 14px;
+}
+/deep/ .el-timeline li:first-child .el-timeline-item__content{
+    color: #5680fa
+}
+/deep/ .el-timeline li:first-child .el-timeline-item__timestamp{
+    color: #5680fa
+}
+/deep/ .el-timeline li:first-child .el-timeline-item__node::after{
+    content: " ";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border:1px solid #5680fa;
 }
 </style>

@@ -132,6 +132,29 @@ export default {
                 {
                     icon: 'el-icon-lx-calendar',
                     index: '5',
+                    title: '活动管理',
+                    subs: [
+                        {
+                            index: 'noticeList',
+                            title: '活动记录列表'
+                        },
+                        {
+                            index: 'activeRecharge',
+                            title: '充值活动'
+                        },
+                        {
+                            index: 'activeSign',
+                            title: '签到活动'
+                        },
+                        {
+                            index: 'activeNew',
+                            title: '新用户活动'
+                        }
+                    ]
+                },
+                {
+                    icon: 'el-icon-lx-calendar',
+                    index: '6',
                     title: '权限管理',
                     subs: [
                         {

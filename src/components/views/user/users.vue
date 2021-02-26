@@ -97,7 +97,7 @@
                                   :value="scope.row.visible">
                                   <div style="margin:0px;">
                                     <el-button size="mini" type="primary" @click="checkBill(scope.row)">账单</el-button>
-                                    <el-button size="mini" type="success" @click="deductEdit(scope.row)">暗扣设置</el-button>
+                                    <!-- <el-button size="mini" type="success" @click="deductEdit(scope.row)">暗扣设置</el-button> -->
                                     <el-button size="mini" type="danger" @click="roleSwitch(scope.row)">{{scope.row.isJia == 0?'设为真人':'设为假人'}}</el-button>
                                     <el-button size="mini" type="warning" @click="agentSet(scope.row)" v-if="scope.row.isAgent == 0">代理设置</el-button>
                                     <el-button size="mini" type="warning" @click="agentCancel(scope.row)" v-else>取消代理</el-button>
