@@ -12,33 +12,33 @@
                 <el-col :span="6">
                     <div class="store-total-container store-total-item1">
                         <div>商品总量</div>
-                        <div>640</div>
-                        <div>今日新增商品 <span class="num2">0</span></div>
-                        <div>昨日新增商品 2</div>
+                        <div>{{goodsData.count}}</div>
+                        <div>今日新增商品 <span class="num2">{{goodsData.today}}</span></div>
+                        <div>昨日新增商品 {{goodsData.yesterday}}</div>
                     </div>
                 </el-col>
                 <el-col :span="6">
                     <div class="store-total-container store-total-item2">
                         <div>用户总量</div>
-                        <div>259</div>
-                        <div>今日新增用户 <span class="num2">0</span></div>
-                        <div>昨日新增用户 2</div>
+                        <div>{{userssData.count}}</div>
+                        <div>今日新增用户 <span class="num2">{{userssData.today}}</span></div>
+                        <div>昨日新增用户 {{userssData.yesterday}}</div>
                     </div>
                 </el-col>
                 <el-col :span="6">
                     <div class="store-total-container store-total-item3">
                         <div>订单总量</div>
-                        <div>2</div>
-                        <div>今日新增用户 <span class="num2">1</span></div>
-                        <div>昨日新增用户 0</div>
+                        <div>{{ordersData.count}}</div>
+                        <div>今日新增用户 <span class="num2">{{ordersData.today}}</span></div>
+                        <div>昨日新增用户 {{ordersData.yesterday}}</div>
                     </div>
                 </el-col>
                 <el-col :span="6">
                     <div class="store-total-container store-total-item4">
                         <div>订单总金额</div>
-                        <div>156254</div>
-                        <div>今日新增订单总金额 <span class="num2">4562</span></div>
-                        <div>昨日新增订单总金额 0</div>
+                        <div>{{orderMoneyData.count.toFixed(2)}}</div>
+                        <div>今日新增订单总金额 <span class="num2">{{orderMoneyData.today.toFixed(2)}}</span></div>
+                        <div>昨日新增订单总金额 {{orderMoneyData.yesterday.toFixed(2)}}</div>
                     </div>
                 </el-col>
             </el-row>
@@ -46,39 +46,39 @@
                 <el-col :span="4">
                     <div class="store-total-container store-total-item5">
                         <div>用户充值</div>
-                        <div>156256485</div>
-                        <div>今日新增充值 <span class="num2">4561245</span></div>
-                        <div>昨日新增充值 456123</div>
+                        <div>{{rechargeMoney.count.toFixed(2)}}</div>
+                        <div>今日新增充值 <span class="num2">{{rechargeMoney.today.toFixed(2)}}</span></div>
+                        <div>昨日新增充值 {{rechargeMoney.yesterday.toFixed(2)}}</div>
                     </div>
                 </el-col>
                 <el-col :span="4">
                     <div class="store-total-container store-total-item6">
                         <div>用户提现</div>
-                        <div>123456</div>
-                        <div>今日新增提现 <span class="num2">4525</span></div>
-                        <div>昨日新增提现 235</div>
+                        <div>{{depositMoney.count.toFixed(2)}}</div>
+                        <div>今日新增提现 <span class="num2">{{depositMoney.today.toFixed(2)}}</span></div>
+                        <div>昨日新增提现 {{depositMoney.yesterday.toFixed(2)}}</div>
                     </div>
                 </el-col>
                 <el-col :span="4">
                     <div class="store-total-container store-total-item7">
                         <div>抢单佣金</div>
-                        <div>456</div>
-                        <div>今日新增佣金 <span class="num2">152</span></div>
-                        <div>昨日新增佣金 0</div>
+                        <div>{{conveyReward.count.toFixed(2)}}</div>
+                        <div>今日新增佣金 <span class="num2">{{conveyReward.today.toFixed(2)}}</span></div>
+                        <div>昨日新增佣金 {{conveyReward.yesterday.toFixed(2)}}</div>
                     </div>
                 </el-col>
                 <el-col :span="4">
                     <div class="store-total-container store-total-item8">
                         <div>下级返佣</div>
-                        <div>0</div>
-                        <div>今日新增佣金 <span class="num2">0</span></div>
-                        <div>昨日新增佣金 0</div>
+                        <div>{{childReward.count.toFixed(2)}}</div>
+                        <div>今日新增佣金 <span class="num2">{{childReward.today.toFixed(2)}}</span></div>
+                        <div>昨日新增佣金 {{childReward.yesterday.toFixed(2)}}</div>
                     </div>
                 </el-col>
                 <el-col :span="8">
                     <div class="store-total-container store-total-item9">
                         <div>用户总余额</div>
-                        <div>45678645</div>
+                        <div>{{userBanlance.count.toFixed(2)}}</div>
                         <div>&nbsp;</div>
                         <div>&nbsp;</div>
                     </div>
@@ -89,22 +89,91 @@
 </template>
 
 <script>
+    import { fetchData , postData , updateData } from '../../../api/index';
     export default {
         name: 'dashboard',
         data() {
             return {
-                
+                goodsData:{},
+                userssData:{},
+                ordersData:{},
+                orderMoneyData:{},
+                rechargeMoney:{},
+                depositMoney:{},
+                conveyReward:{},
+                childReward:{},
+                userBanlance:{}
             }
         },
         computed: {
 
         },
         created(){
-            this.handleListener();
-            this.changeDate();
+            this.getGoodsData()
+            this.getUsersData()
+            this.getOrdersData()
+            this.getOrdersMoney()
+            this.getRechargeMoney()
+            this.getDepositMoney()
+            this.getConveyReward()
+            this.getChildReward()
+            this.getUserBanlance()
         },
         methods: {
-
+            //获取商品总量
+            getGoodsData(){
+                fetchData('/home/getGoodCount').then(res => {
+                    this.goodsData = res.data
+                })
+            },
+            //获取用户总量
+            getUsersData(){
+                fetchData('/home/getUserCount').then(res => {
+                    this.userssData = res.data
+                })
+            },
+            //获取订单总量
+            getOrdersData(){
+                fetchData('/home/getConveyCount').then(res => {
+                    this.ordersData = res.data
+                })
+            },
+            //获取订单总金额
+            getOrdersMoney(){
+                fetchData('/home/getConveyMoney').then(res => {
+                    this.orderMoneyData = res.data
+                })
+            },
+            //获取充值金额表
+            getRechargeMoney(){
+                fetchData('/home/getRechargeMoney').then(res => {
+                    this.rechargeMoney = res.data
+                })
+            },
+            //获取用户提现
+            getDepositMoney(){
+                fetchData('/home/getDepositMoney').then(res => {
+                    this.depositMoney = res.data
+                })
+            },
+            //获取抢单佣金
+            getConveyReward(){
+                fetchData('/home/getConveyReward').then(res => {
+                    this.conveyReward = res.data
+                })
+            },
+            //获取下级返佣
+            getChildReward(){
+                fetchData('/home/getChildReward').then(res => {
+                    this.childReward = res.data
+                })
+            },
+            //获取用户总余额
+            getUserBanlance(){
+                fetchData('/home/getUserBanlance').then(res => {
+                    this.userBanlance = res.data
+                })
+            }
         }
     }
 

@@ -409,9 +409,10 @@ export default {
         },
         //点击树
         handleNodeClick(data) {
+            this.tableData = []
             let _arr = []
             this.pageTotal=1
-            if (data.child) {
+            if (data.child && data.child.length > 0) {
                 _arr = data.child
                 this.pageTotal += data.child.length
             }

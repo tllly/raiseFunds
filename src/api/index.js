@@ -32,7 +32,10 @@ export const postData = (url,query) => {
     return request({
         url: url,
         method: 'POST',
-        data: query
+        data: query,
+        headers: {
+            "Accept": "application/json"
+        }
     })
 }
 
