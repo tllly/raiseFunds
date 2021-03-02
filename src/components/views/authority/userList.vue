@@ -63,13 +63,22 @@
                 </el-table-column>
                 <el-table-column prop="createTime" label="创建时间"></el-table-column>
                 <el-table-column prop="loginTime" label="登录时间"></el-table-column>
-                <el-table-column label="操作" width="180" align="center">
+                <el-table-column label="操作" width="200" align="center">
                     <template slot-scope="scope">
                         <el-button
                             type="text"
                             icon="el-icon-edit"
                             @click="handleEdit(scope.$index, scope.row)"
                         >编辑</el-button>
+                        <el-button
+                            type="text"
+                            @click="passwordE(scope.row)"
+                        >密码</el-button>
+                        <el-button
+                            type="text"
+                            :class="scope.row.status == 1 ? 'red' : ''"
+                            @click="switchState(scope.row)"
+                        >{{scope.row.status == 1 ? '冻结' : '启用'}}</el-button>
                         <el-button
                             type="text"
                             icon="el-icon-delete"
@@ -92,22 +101,27 @@
         </div>
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="50%">
-            <editPop v-if="editVisible" :editVisible="editVisible" @update:editVisible="val => editVisible = val" :dataItem="curDataObj" @editSuccess="editSuccess"></editPop>
+            <addUserPop v-if="editVisible" :editVisible="editVisible" @update:editVisible="val => editVisible = val" :dataItem="curDataObj" @editSuccess="editSuccess"></addUserPop>
         </el-dialog>
         <!-- 新增弹出框 -->
         <el-dialog title="新增" :visible.sync="addVisible" width="50%">
-            <editPop v-if="addVisible" :addVisible="addVisible" @update:addVisible="val => addVisible = val" @addSuccess="addSuccess"></editPop>
+            <addUserPop v-if="addVisible" :addVisible="addVisible" @update:addVisible="val => addVisible = val" @addSuccess="addSuccess"></addUserPop>
+        </el-dialog>
+        <!-- 修改密码弹出框 -->
+        <el-dialog title="密码修改" :visible.sync="passwordVisible" width="50%">
+            <passwordPop v-if="passwordVisible" :passwordVisible="passwordVisible" @update:passwordVisible="val => passwordVisible = val" @passwordSuccess="passwordSuccess" :dataItem="curDataObj"></passwordPop>
         </el-dialog>
     </div>
 </template>
 
 <script>
-import { fetchData , deleteData } from '../../../api/index';
-import editPop from './components/editPop'
+import { fetchData , deleteData , updateData} from '../../../api/index';
+import addUserPop from './components/addUserPop'
+import passwordPop from './components/passwordPop'
 export default {
     name: 'userList',
     components:{
-        editPop
+        passwordPop
     },
     data() {
         return {
@@ -132,9 +146,11 @@ export default {
                 endTime:'',
             },
             tableData: [],
+            curDataObj:null,
             //cateList:[],
             editVisible: false,
-            addVisible: false
+            addVisible: false,
+            passwordVisible: false
         };
     },
     created() {
@@ -180,7 +196,36 @@ export default {
         },
         addGoods(){
             //this.$router.push('/goodsAdd')
+            this.curDataObj = null
             this.addVisible = true
+        },
+        addSuccess(){
+            this.$message.success('添加成功');
+            this.addVisible = false
+            this.getData()
+        },
+        editSuccess(){
+            this.$message.success('编辑成功');
+            this.editVisible = false
+            this.getData()
+        },
+        switchState(row){
+            let data = {
+                id:row.id,
+                status:row.status == 1 ? 2 : 1
+            }
+            updateData(`/sysUser/update`,data).then(res => {
+                this.$message.success('操作成功');
+                this.getData()
+            });
+        },
+        passwordE(row){
+            this.curDataObj = row
+            this.passwordVisible = true
+        },
+        passwordSuccess(){
+            this.$message.success('操作成功');
+            this.passwordVisible = false
         },
         // 删除操作
         handleDelete(index, row) {
@@ -188,16 +233,17 @@ export default {
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             }).then(() => {
-                // deleteData(`/xy-goods-list/delete?guid=${row.id}`).then(res=>{
-                //     if(res.code == 200){
-                //         this.$message.success('删除成功');
-                //         this.tableData.splice(index, 1);
-                //     }
-                // })
+                deleteData(`/sysUser/delete?guid=${row.id}`).then(res=>{
+                    if(res.code == 200){
+                        this.$message.success('删除成功');
+                        this.tableData.splice(index, 1);
+                    }
+                })
             }).catch(() => {});
         },
         // 编辑操作
         handleEdit(index, row) {
+            this.curDataObj = row
             //this.$router.push({path:'/goodsEdit',query: {id:row.id}})
             this.editVisible = true
         },

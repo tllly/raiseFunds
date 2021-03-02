@@ -10,17 +10,17 @@
         <div class="container">
             <div class="handle-box">
                 <el-form :inline="true" :model="formInline" class="demo-form-inline">
-                  <el-form-item label="用户账号">
-                    <el-input placeholder="请输入用户账号" v-model="searchObj.account"></el-input>
+                  <el-form-item label="权限名称">
+                    <el-input placeholder="请输入权限名称" v-model="searchObj.RoleName"></el-input>
                   </el-form-item>
-                  <el-form-item label="联系手机">
-                    <el-input placeholder="请输入联系手机" v-model="searchObj.phone"></el-input>
+                  <el-form-item label="权限描述">
+                    <el-input placeholder="请输入权限描述" v-model="searchObj.des"></el-input>
                   </el-form-item>
                   <el-form-item label="使用状态">
                     <el-select placeholder="所有状态" v-model="searchObj.status" class="handle-select mr10" clearble>
                         <el-option label="所有状态" value=""></el-option>
-                        <el-option label="正常" value="1"></el-option>
-                        <el-option label="冻结" value="2"></el-option>
+                        <el-option label="启用" value="1"></el-option>
+                        <el-option label="禁用" value="2"></el-option>
                     </el-select>
                   </el-form-item>
                   <el-form-item label="注册时间">
@@ -50,24 +50,36 @@
                 ref="multipleTable"
                 header-cell-class-name="table-header"
             >
-                <el-table-column prop="roleName" label="权限信息"></el-table-column>
-                <el-table-column prop="createTime" label="创建时间"  show-overflow-tooltip></el-table-column>
-                <el-table-column prop="state" label="使用状态">
+                <el-table-column prop="roleName" label="权限信息">
                     <template slot-scope="scope">
-                        <span v-if="scope.row.state == 1">正常</span>
-                        <span v-if="scope.row.state == 2">冻结</span>
+                        <p>权限名称：{{scope.row.roleName}}</p>
+                        <p>权限描述：{{scope.row.des}}</p>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="createTime" label="创建时间"  show-overflow-tooltip></el-table-column>
+                <el-table-column prop="status" label="使用状态">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.status == 1">正常</span>
+                        <span v-if="scope.row.status == 2">启用</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button
                             type="text"
-                            icon="el-icon-edit"
                             @click="handleEdit(scope.$index, scope.row)"
                         >编辑</el-button>
                         <el-button
                             type="text"
-                            icon="el-icon-delete"
+                            @click="grant(scope.row)"
+                        >授权</el-button>
+                        <el-button
+                            type="text"
+                            :class="scope.row.status == 1 ? 'red' : ''"
+                            @click="switchState(scope.row)"
+                        >{{scope.row.status == 1 ? '禁用' : '启用'}}</el-button>
+                        <el-button
+                            type="text"
                             class="red"
                             @click="handleDelete(scope.$index, scope.row)"
                         >删除</el-button>
@@ -93,16 +105,22 @@
         <el-dialog title="新增" :visible.sync="addVisible" width="50%">
             <editPop v-if="addVisible" :addVisible="addVisible" @update:addVisible="val => addVisible = val" @addSuccess="addSuccess"></editPop>
         </el-dialog>
+        <!-- 授权弹出框 -->
+        <el-dialog title="授权" :visible.sync="menuVisible" width="50%">
+            <menuTree v-if="menuVisible" :menuVisible="menuVisible" @update:menuVisible="val => menuVisible = val" :dataItem="curDataObj" @menuSuccess="menuSuccess"></menuTree>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-import { fetchData , deleteData } from '../../../api/index';
-import editPop from './components/editPop'
+import { fetchData , deleteData , updateData} from '../../../api/index';
+import editPop from './components/addRole'
+import menuTree from './components/menuTree'
 export default {
     name: 'userList',
     components:{
-        editPop
+        editPop,
+        menuTree
     },
     data() {
         return {
@@ -115,21 +133,23 @@ export default {
             pageTotal: 0,
             daterangeValue:null,
             searchObj:{
-                account:'',
-                phone:'',
+                RoleName:'',
+                des:'',
                 status:''
             },
             query: {
-                account:'',
-                phone:'',
+                RoleName:'',
+                des:'',
                 status:'',
                 startTime:'',
                 endTime:'',
             },
             tableData: [],
+            curDataObj: null,
             //cateList:[],
             editVisible: false,
-            addVisible: false
+            addVisible: false,
+            menuVisible: false
         };
     },
     created() {
@@ -154,8 +174,8 @@ export default {
         // 触发搜索按钮
         handleSearch() {
             this.pageIndex = 1
-            this.query.account = this.searchObj.account
-            this.query.phone = this.searchObj.phone
+            this.query.RoleName = this.searchObj.RoleName
+            this.query.des = this.searchObj.des
             this.query.status = this.searchObj.status
             if(this.daterangeValue){
                 this.query.startTime = this.daterangeValue[0]
@@ -166,8 +186,8 @@ export default {
         // 触发重置按钮
         resetSearch() {
             this.pageIndex = 1
-            this.query.account = this.searchObj.account = ""
-            this.query.phone = this.searchObj.phone = ""
+            this.query.RoleName = this.searchObj.RoleName = ""
+            this.query.des = this.searchObj.des = ""
             this.query.status = this.searchObj.status = ""
             this.daterangeValue = null
             this.query.startTime = ""
@@ -176,6 +196,7 @@ export default {
         },
         addGoods(){
             //this.$router.push('/goodsAdd')
+            this.curDataObj = null
             this.addVisible = true
         },
         // 删除操作
@@ -184,18 +205,48 @@ export default {
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             }).then(() => {
-                // deleteData(`/xy-goods-list/delete?guid=${row.id}`).then(res=>{
-                //     if(res.code == 200){
-                //         this.$message.success('删除成功');
-                //         this.tableData.splice(index, 1);
-                //     }
-                // })
+                deleteData(`/sys-role/delete?guid=${row.id}`).then(res=>{
+                    if(res.code == 200){
+                        this.$message.success('删除成功');
+                        this.tableData.splice(index, 1);
+                    }
+                })
             }).catch(() => {});
         },
         // 编辑操作
         handleEdit(index, row) {
-            //this.$router.push({path:'/goodsEdit',query: {id:row.id}})
+            this.curDataObj = row
             this.editVisible = true
+        },
+        addSuccess(){
+            this.$message.success('添加成功');
+            this.addVisible = false
+            this.getData()
+        },
+        editSuccess(){
+            this.$message.success('编辑成功');
+            this.editVisible = false
+            this.getData()
+        },
+        //授权
+        grant(row){
+            this.curDataObj = row
+            this.menuVisible = true
+        },
+        //授权操作成功
+        menuSuccess(){
+            this.menuVisible = false
+            this.$message.success('操作成功');
+        },
+        switchState(row){
+            let data = {
+                id:row.id,
+                status:row.status == 1 ? 2 : 1
+            }
+            updateData(`/sys-role/update`,data).then(res => {
+                this.$message.success('操作成功');
+                this.getData()
+            });
         },
         // 分页导航
         handlePageChange(val) {

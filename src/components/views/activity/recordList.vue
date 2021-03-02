@@ -8,9 +8,9 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-            <div class="handle-box">
+            <!-- <div class="handle-box">
                 <el-form :inline="true" :model="formInline" class="demo-form-inline">
-                  <!-- <el-form-item label="商品名称">
+                  <el-form-item label="商品名称">
                     <el-input placeholder="请输入商品名称" v-model="searchObj.goodName"></el-input>
                   </el-form-item>
                   <el-form-item label="商品分类">
@@ -23,12 +23,12 @@
                     <el-button type="primary" @click="handleSearch">搜索</el-button>
                     <el-button @click="resetSearch">重置</el-button>
                     <el-button>导出</el-button>
-                  </el-form-item> -->
+                  </el-form-item>
                   <el-form-item style="float: right;">
                       <el-button type="primary" @click="addGoods">新增</el-button>
                   </el-form-item>
                 </el-form>
-            </div>
+            </div> -->
             <el-table
                 :data="cateList"
                 border
