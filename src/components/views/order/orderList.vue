@@ -83,6 +83,11 @@
                             type="text"
                             @click="checkwl(scope.row)"
                         >查看物流</el-button>
+                        <el-button
+                            type="text"
+                            @click="editTime(scope.row)"
+                            v-if="scope.row.status == 1 && scope.row.isCheck == 1"
+                        >修改到货时间</el-button>
                         <!-- <el-button
                             v-if="scope.row.status == 0"
                             type="text"
@@ -128,6 +133,17 @@
                 </div>
           </div>
         </el-dialog>
+        <el-dialog title="修改到货时间" :visible.sync="timeVisible" width="35%">
+            <el-form  label-width="80px">
+                <el-form-item label="签收天数">
+                    <el-input placeholder="请输入用户名称" v-model="dateValue" style="width: 200px;"></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" @click="onSubmit('form')">确定</el-button>
+                  <el-button @click="cancel">取消</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
     </div>
 </template>
 
@@ -169,9 +185,12 @@ export default {
                 AcceptTime:'fdsafd',
                 AcceptStation:'fdsafdsa'
             }],
-            wuliuVisible:false,
+            wuliuVisible: false,
             editVisible: false,
-            addVisible: false
+            addVisible: false,
+            timeVisible: false, //修改到货时间
+            dateValue:'',
+            dateId:''
         };
     },
     created() {
@@ -230,6 +249,24 @@ export default {
                 // })
             }).catch(() => {});
         },
+        onSubmit(){
+            if(!this.dateValue){
+                this.$message.error('请输入签收天数');
+                return
+            }
+            let data = {
+                id:this.dateId,
+                day:this.dateValue
+            }
+            updateData(`/xy-convey/update`,data).then(res => {
+              this.$message.success('操作成功')
+              this.getData();
+              this.timeVisible = false
+            });
+        },
+        cancel(){
+            this.timeVisible = false
+        },
         // 编辑操作
         handleEdit(index, row) {
             //this.$router.push({path:'/goodsEdit',query: {id:row.id}})
@@ -245,6 +282,12 @@ export default {
                 this.TracesList = res.data.reverse()
                 this.wuliuVisible = true
             });
+        },
+        //修改到货时间
+        editTime(row){
+            this.dateValue = row.day
+            this.dateId = row.id
+            this.timeVisible = true
         },
         //强制付款
         qzfk(row){

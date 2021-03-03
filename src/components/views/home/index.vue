@@ -8,6 +8,11 @@
             </el-breadcrumb>
         </div>
         <div class="container">
+            <div style="padding: 0 0 15px;">
+                <el-tag :effect="type === '' ? 'dark':''" type="" style="margin-right: 15px;cursor: pointer;" @click="switchData('')">所有数据</el-tag>
+                <el-tag :effect="type === 0 ? 'dark':''" type="" style="margin-right: 15px;cursor: pointer;" @click="switchData(0)">真人数据</el-tag>
+                <el-tag :effect="type === 1 ? 'dark':''" type="" style="margin-right: 15px;cursor: pointer;" @click="switchData(1)">假人数据</el-tag>
+            </div>
             <el-row :gutter="20">
                 <el-col :span="6">
                     <div class="store-total-container store-total-item1">
@@ -102,7 +107,8 @@
                 depositMoney:{},
                 conveyReward:{},
                 childReward:{},
-                userBanlance:{}
+                userBanlance:{},
+                type:''
             }
         },
         computed: {
@@ -120,57 +126,69 @@
             this.getUserBanlance()
         },
         methods: {
+            switchData(type){
+                this.type = type
+                this.getGoodsData()
+                this.getUsersData()
+                this.getOrdersData()
+                this.getOrdersMoney()
+                this.getRechargeMoney()
+                this.getDepositMoney()
+                this.getConveyReward()
+                this.getChildReward()
+                this.getUserBanlance()
+            },
             //获取商品总量
             getGoodsData(){
-                fetchData('/home/getGoodCount').then(res => {
+                fetchData('/home/getGoodCount?type='+this.type).then(res => {
                     this.goodsData = res.data
                 })
             },
             //获取用户总量
             getUsersData(){
-                fetchData('/home/getUserCount').then(res => {
+                fetchData('/home/getUserCount?type='+this.type).then(res => {
                     this.userssData = res.data
                 })
             },
             //获取订单总量
             getOrdersData(){
-                fetchData('/home/getConveyCount').then(res => {
+                fetchData('/home/getConveyCount?type='+this.type).then(res => {
                     this.ordersData = res.data
                 })
             },
             //获取订单总金额
             getOrdersMoney(){
-                fetchData('/home/getConveyMoney').then(res => {
+                fetchData('/home/getConveyMoney?type='+this.type).then(res => {
                     this.orderMoneyData = res.data
                 })
             },
             //获取充值金额表
             getRechargeMoney(){
-                fetchData('/home/getRechargeMoney').then(res => {
+                fetchData('/home/getRechargeMoney?type='+this.type).then(res => {
                     this.rechargeMoney = res.data
                 })
             },
             //获取用户提现
             getDepositMoney(){
-                fetchData('/home/getDepositMoney').then(res => {
+                fetchData('/home/getDepositMoney?type='+this.type).then(res => {
                     this.depositMoney = res.data
                 })
             },
             //获取抢单佣金
             getConveyReward(){
-                fetchData('/home/getConveyReward').then(res => {
+                fetchData('/home/getConveyReward?type='+this.type).then(res => {
                     this.conveyReward = res.data
                 })
             },
             //获取下级返佣
             getChildReward(){
-                fetchData('/home/getChildReward').then(res => {
+                fetchData('/home/getChildReward?type='+this.type).then(res => {
                     this.childReward = res.data
                 })
             },
             //获取用户总余额
             getUserBanlance(){
-                fetchData('/home/getUserBanlance').then(res => {
+                fetchData('/home/getUserBanlance?type='+this.type).then(res => {
                     this.userBanlance = res.data
                 })
             }

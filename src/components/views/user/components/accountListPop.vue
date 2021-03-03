@@ -45,6 +45,13 @@
                     <span v-if="scope.row.type == 5">推广返佣</span>
                     <span v-if="scope.row.type == 6">下级交易返佣</span>
                     <span v-if="scope.row.type == 7">提现</span>
+                    <span v-if="scope.row.type == 8">活动</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="state" label="收支类型">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.status == 2">支出</span>
+                    <span v-if="scope.row.status == 1">收入</span>
                 </template>
             </el-table-column>
             <el-table-column prop="state" label="状态">
@@ -94,7 +101,7 @@ export default {
         };
     },
     created() {
-        this.query.uid = this.dataItem.uid
+        this.query.uid = this.dataItem.id
         this.getData()
     },
     methods: {

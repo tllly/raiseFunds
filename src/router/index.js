@@ -120,6 +120,16 @@ export default new Router({
                     meta: { title: '活动记录' }
                 },
                 {
+                    path: '/activityType',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/activity/activeType.vue'),
+                    meta: { title: '活动类型' }
+                },
+                {
+                    path: '/whiteList',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/whiteList/index.vue'),
+                    meta: { title: '白名单管理' }
+                },
+                {
                     path: '/activeRecharge',
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/activity/activeRecharge.vue'),
                     meta: { title: '充值活动' }

@@ -30,6 +30,20 @@
               <el-form-item label="团队交易佣金" prop="content">
                 <el-input type="number" v-model="form.content"></el-input>
               </el-form-item>
+              <el-form-item label="推荐好友返佣">
+                <div v-for="(item,index) in ruleArr" :key="index">
+                    邀请好友
+                    <el-input v-model="item.min" size="mini" style="width: 80px;"></el-input> 至
+                    <el-input v-model="item.max" size="mini" style="width: 80px;"></el-input>
+                    人&nbsp;&nbsp;&nbsp;
+                    反佣百分比
+                    <el-input v-model="item.count" size="mini" style="width: 150px;"></el-input>
+                    %&nbsp;&nbsp;&nbsp;
+                    <i class="el-icon-delete" style="color: red;cursor: pointer;" @click="reduceRule(index)"></i>&nbsp;
+                    <i class="el-icon-circle-plus-outline" style="color: #409EFF;cursor: pointer;" @click="addRule"></i>
+                </div>
+                <i class="el-icon-circle-plus-outline" style="color: #409EFF;cursor: pointer;" v-if="ruleArr.length == 0" @click="addRule"></i>
+              </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="onSubmit('form')">确认</el-button>
                 <!-- <el-button @click="cancel">取消</el-button> -->
@@ -101,7 +115,14 @@ export default {
                     { required: true, message: '请输入开户行地址', trigger: 'blur' }
                 ],
             },
-            bankVisible:false
+            bankVisible:false,
+            ruleArr:[
+                {
+                  min:10,
+                  max:50,
+                  count:3
+                }
+            ]
         };
     },
     created() {
@@ -137,6 +158,18 @@ export default {
                     break
                 }
             }
+        },
+        //添加规则
+        addRule(){
+            this.ruleArr.push({
+              min:'',
+              max:'',
+              count:''
+            })
+        },
+          //删除规则
+        reduceRule(index){
+            this.ruleArr.splice(index, 1);
         },
         //添加银行卡
         addBankCard(){

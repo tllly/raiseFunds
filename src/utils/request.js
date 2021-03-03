@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import { Message } from 'element-ui';
 const service = axios.create({
     // process.env.NODE_ENV === 'development' 来判断是否开发环境
     baseURL: '/api',
@@ -17,7 +17,13 @@ service.interceptors.request.use( config => {
 
 service.interceptors.response.use(response => {
     if(response.status === 200){
-        return response.data;
+        
+        if(response.data.code == 200){
+            return response.data;
+        }else{
+            Message.error(response.data.viewMsg);
+            return Promise.reject();
+        }
     }else{
         Promise.reject();
     }

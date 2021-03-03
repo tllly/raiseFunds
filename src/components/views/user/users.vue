@@ -93,7 +93,7 @@
                                 >删除</el-button> 
                                 <el-popover
                                   placement="top"
-                                  width="845"
+                                  width="880"
                                   :value="scope.row.visible">
                                   <div style="margin:0px;">
                                     <el-button size="mini" type="primary" @click="checkBill(scope.row)">账单</el-button>
@@ -108,6 +108,7 @@
                                     <el-button size="mini" type="warning" @click="refreshQr">刷新二维码</el-button>
                                     <el-button size="mini" type="primary" @click="checkTeam(scope.row)">查看团队</el-button>
                                     <el-button size="mini" type="success" @click="checkAccount(scope.row)">账变</el-button>
+                                    <el-button size="mini" type="danger" @click="bindSysBank(scope.row)">绑定系统银行卡</el-button>
                                   </div>
                                   <el-button type="text" slot="reference" style="margin-left: 10px;">更多操作</el-button>
                                 </el-popover>
@@ -158,6 +159,20 @@
         <!-- 账目变化弹出框 -->
         <el-dialog title="交易记录" :visible.sync="accountVisible" width="80%">
             <accountListPop v-if="accountVisible" :accountVisible="accountVisible" @update:accountVisible="val => accountVisible = val" :dataItem="curDataObj"></accountListPop>
+        </el-dialog>
+        <!-- 绑定系统银行卡弹出框 -->
+        <el-dialog title="绑定系统银行卡" :visible.sync="sysBankVisible" width="50%">
+            <el-form ref="bankform" :model="bankform" label-width="120px">
+              <el-form-item label="选择银行卡">
+                <el-select v-model="bankform.sysBankId" placeholder="请选择">
+                  <el-option v-for="(item,index) in bankList" :label="item.bankname" :value="item.id"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="sysBankSubmit">提交</el-button>
+                <el-button @click="sysBankcancel">取消</el-button>
+              </el-form-item>
+            </el-form>
         </el-dialog>
 
     </div>
@@ -219,6 +234,12 @@ export default {
             bankCardVisible: false,//银行卡信息
             teamVisible: false, //团队列表
             accountVisible: false,//账目变化
+            sysBankVisible: false,//系统银行卡
+            bankList:[],//系统银行卡列表
+            bankform:{
+                sysBankId:'',
+                id:''
+            },
             pageTotal: 0,
             TreeData: [],
             defaultProps: {
@@ -230,6 +251,7 @@ export default {
     created() {
         this.getData();
         this.getUserTree();
+        this.getSysBankList();
     },
     mounted() {
     },
@@ -300,6 +322,16 @@ export default {
               this.getData()
             });
         },
+        //绑定系统银行卡
+        sysBankSubmit(){
+            updateData(`/xy-users/update`,this.bankform).then(res => {
+              this.$message.success('操作成功')
+              this.sysBankVisible = false
+            });
+        },
+        sysBankcancel(){
+            this.sysBankVisible = false
+        },
         //账户禁用启用
         accountDisable(item){
             let data = {
@@ -361,6 +393,25 @@ export default {
         checkAccount(item){
             this.curDataObj = item
             this.accountVisible = true
+        },
+        //获取系统银行卡列表
+        getSysBankList(){
+            fetchData(`/xy-bankinfo/XyBankinfo/currentPage/1/pageSize/100?userId=0`).then(res => {
+                this.bankList = res.data.records
+            });
+        },
+        //绑定系统银行卡
+        bindSysBank(item){
+            this.curDataObj = item
+            this.bankform.id = item.id
+            this.getUserObj(item.id)
+        },
+        //获取用户信息
+        getUserObj(id){
+            fetchData(`/xy-users/find?id=${id}`).then(res => {
+                this.bankform.sysBankId = res.data.sysBankId
+                this.sysBankVisible = true
+            });
         },
         // 获取 easy-mock 的模拟数据
         getData(){

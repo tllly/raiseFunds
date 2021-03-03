@@ -30,34 +30,31 @@
                 </el-form>
             </div> -->
             <el-table
-                :data="cateList"
+                :data="tableData"
                 border
                 class="table"
                 ref="multipleTable"
                 header-cell-class-name="table-header"
             >
-                <el-table-column prop="id" label="分类ID" width="90" align="center"></el-table-column>
-                <el-table-column prop="name" label="分类名称"  width="500" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="bili" label="比例">
-                    <template slot-scope="scope">￥{{scope.row.bili}}</template>
-                </el-table-column>
-                <el-table-column prop="cateInfo" label="简介" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="createTime" label="添加时间"></el-table-column>
-                <el-table-column label="操作" width="180" align="center">
+                <el-table-column prop="uid" label="用户ID"></el-table-column>
+                <el-table-column prop="atype" label="活动类型" align="center">
                     <template slot-scope="scope">
-                        <el-button
-                            type="text"
-                            icon="el-icon-edit"
-                            @click="handleEdit(scope.$index, scope.row)"
-                        >编辑</el-button>
-                        <el-button
-                            type="text"
-                            icon="el-icon-delete"
-                            class="red"
-                            @click="handleDelete(scope.$index, scope.row)"
-                        >删除</el-button>
+                        <span v-if="scope.row.atype == 1">签到</span>
+                        <span v-if="scope.row.atype == 2">新人红包</span>
+                        <span v-if="scope.row.atype == 3">充值活动</span>
                     </template>
                 </el-table-column>
+                <el-table-column prop="btype" label="奖励类型" show-overflow-tooltip>
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.btype == 1">余额</span>
+                        <span v-if="scope.row.btype == 2">积分</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="reward" label="奖励值">
+                    <template slot-scope="scope">{{scope.row.reward}}</template>
+                </el-table-column>
+                
+                <el-table-column prop="createTime" label="添加时间"></el-table-column>
             </el-table>
             <div class="pagination">
                 <el-pagination
@@ -94,43 +91,28 @@ export default {
                 goodName:'',
                 type:''
             },
-            //tableData: [],
+            tableData: [],
             cateList:[],
             editVisible: false,
         };
     },
     created() {
-        // this.getData();
-        this.getTypeList();
+        this.getData();
     },
     methods: {
         // 获取 easy-mock 的模拟数据
-        // getData() {
-        //     fetchData(`/xy-goods-list/XyGoodsList/currentPage/${this.pageIndex}/pageSize/10`,this.query).then(res => {
-        //         this.tableData = res.data.records
-        //         this.pageTotal = res.data.total
-        //     });
-        // },
+        getData() {
+            fetchData(`/xy-sign-log/XySignLog/currentPage/${this.pageIndex}/pageSize/10`,this.query).then(res => {
+                this.tableData = res.data.records
+                this.pageTotal = res.data.total
+            });
+        },
         // 获取商品分类列表
         getTypeList(){
             fetchData(`/xy-goods-cate/XyGoodsCate/currentPage/1/pageSize/1000`).then(res => {
                 this.cateList = res.data.records
             });
         },
-        // // 触发搜索按钮
-        // handleSearch() {
-        //     this.pageIndex = 1
-        //     this.query.goodName = this.searchObj.goodName
-        //     this.query.type = this.searchObj.type
-        //     this.getData();
-        // },
-        // // 触发重置按钮
-        // resetSearch() {
-        //     this.pageIndex = 1
-        //     this.query.goodName = this.searchObj.goodName = ""
-        //     this.query.type = this.searchObj.type = ""
-        //     this.getData();
-        // },
         addGoods(){
             this.$router.push('/addCate')
         },

@@ -48,7 +48,7 @@ export default {
             this.$refs.login.validate(valid => {
                 if (valid) {
                     postData('/api/admin/login',this.param).then(res=>{
-                        if(res.data && res.code == 0){
+                        if(res.data && res.code == 200){
                             vue.$message.success('登录成功');
                             var curtime = new Date().getTime(); // 获取当前时间 ，转换成JSON字符串序列 
                             var valueDate = JSON.stringify({

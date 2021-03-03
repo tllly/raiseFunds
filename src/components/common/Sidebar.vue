@@ -135,21 +135,25 @@ export default {
                     title: '活动管理',
                     subs: [
                         {
-                            index: 'noticeList',
+                            index: 'activityRecord',
                             title: '活动记录列表'
                         },
                         {
-                            index: 'activeRecharge',
-                            title: '充值活动'
-                        },
-                        {
-                            index: 'activeSign',
-                            title: '签到活动'
-                        },
-                        {
-                            index: 'activeNew',
-                            title: '新用户活动'
+                            index: 'activityType',
+                            title: '活动类型'
                         }
+                        // {
+                        //     index: 'activeRecharge',
+                        //     title: '充值活动'
+                        // },
+                        // {
+                        //     index: 'activeSign',
+                        //     title: '签到活动'
+                        // },
+                        // {
+                        //     index: 'activeNew',
+                        //     title: '新用户活动'
+                        // }
                     ]
                 },
                 {
@@ -164,6 +168,17 @@ export default {
                         {
                             index: 'sUser',
                             title: '系统用户列表'
+                        }
+                    ]
+                },
+                {
+                    icon: 'el-icon-lx-calendar',
+                    index: '7',
+                    title: '白名单管理',
+                    subs: [
+                        {
+                            index: 'whiteList',
+                            title: '白名单列表'
                         }
                     ]
                 },
