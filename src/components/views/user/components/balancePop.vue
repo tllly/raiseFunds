@@ -2,21 +2,21 @@
     <div style="margin-top: -20px;">
       <el-tabs v-model="activeName">
         <el-tab-pane label="余额操作" name="first">
-          <el-form ref="form" :model="balanceform" :rules="rules" label-width="80px">
+          <el-form ref="balanceform" :model="balanceform" :rules="rules" label-width="80px">
             <el-form-item label="当前余额">
               {{dataItem.balance}}
             </el-form-item>
-            <el-form-item label="操作类型">
+            <el-form-item label="操作类型" prop="type">
               <el-select v-model="balanceform.type" placeholder="请选择">
                 <el-option label="加余额" :value="1"></el-option>
                 <el-option label="减余额" :value="2"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="操作额度">
+            <el-form-item label="操作额度" prop="sum">
               <el-input type="numble" v-model="balanceform.sum" style="width: 215px;"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSubmit('form')">提交</el-button>
+              <el-button type="primary" @click="onSubmit('balanceform')">提交</el-button>
               <el-button @click="cancel">取消</el-button>
             </el-form-item>
           </el-form>

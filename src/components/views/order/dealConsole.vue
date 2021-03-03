@@ -30,7 +30,7 @@
               <el-form-item label="团队交易佣金" prop="content">
                 <el-input type="number" v-model="form.content"></el-input>
               </el-form-item>
-              <el-form-item label="推荐好友返佣">
+              <!-- <el-form-item label="推荐好友返佣">
                 <div v-for="(item,index) in ruleArr" :key="index">
                     邀请好友
                     <el-input v-model="item.min" size="mini" style="width: 80px;"></el-input> 至
@@ -43,7 +43,7 @@
                     <i class="el-icon-circle-plus-outline" style="color: #409EFF;cursor: pointer;" @click="addRule"></i>
                 </div>
                 <i class="el-icon-circle-plus-outline" style="color: #409EFF;cursor: pointer;" v-if="ruleArr.length == 0" @click="addRule"></i>
-              </el-form-item>
+              </el-form-item> -->
               <el-form-item>
                 <el-button type="primary" @click="onSubmit('form')">确认</el-button>
                 <!-- <el-button @click="cancel">取消</el-button> -->
