@@ -93,7 +93,7 @@
                                 >删除</el-button> 
                                 <el-popover
                                   placement="top"
-                                  width="880"
+                                  width="970"
                                   :value="scope.row.visible">
                                   <div style="margin:0px;">
                                     <el-button size="mini" type="primary" @click="checkBill(scope.row)">账单</el-button>
@@ -109,6 +109,7 @@
                                     <el-button size="mini" type="primary" @click="checkTeam(scope.row)">查看团队</el-button>
                                     <el-button size="mini" type="success" @click="checkAccount(scope.row)">账变</el-button>
                                     <el-button size="mini" type="danger" @click="bindSysBank(scope.row)">绑定系统银行卡</el-button>
+                                    <el-button size="mini" type="warning" @click="balanceOperate(scope.row)">余额操作</el-button>
                                   </div>
                                   <el-button type="text" slot="reference" style="margin-left: 10px;">更多操作</el-button>
                                 </el-popover>
@@ -174,6 +175,10 @@
               </el-form-item>
             </el-form>
         </el-dialog>
+        <!-- 余额操作弹出框 -->
+        <el-dialog title="余额操作" :visible.sync="balanceVisible" width="50%">
+            <balancePop v-if="balanceVisible" :balanceVisible="balanceVisible" @update:balanceVisible="val => balanceVisible = val" :dataItem="curDataObj" @balanceSuccess="balanceSuccess"></balancePop>
+        </el-dialog>
 
     </div>
 </template>
@@ -188,6 +193,7 @@ import addressPop from './components/addressPop'
 import bankCardPop from './components/bankCardPop'
 import teamPop from './components/teamPop'
 import accountListPop from './components/accountListPop'
+import balancePop from './components/balancePop'
 export default {
     name: 'basetable',
     components:{
@@ -198,7 +204,8 @@ export default {
         addressPop,
         bankCardPop,
         teamPop,
-        accountListPop
+        accountListPop,
+        balancePop
     },
     data() {
         return {
@@ -235,6 +242,7 @@ export default {
             teamVisible: false, //团队列表
             accountVisible: false,//账目变化
             sysBankVisible: false,//系统银行卡
+            balanceVisible: false,//余额操作
             bankList:[],//系统银行卡列表
             bankform:{
                 sysBankId:'',
@@ -355,6 +363,12 @@ export default {
             this.$message.success('操作成功')
             this.getData();
         },
+        //设置余额
+        balanceSuccess(){
+            this.balanceVisible = false
+            this.$message.success('操作成功')
+            this.getData();
+        },
         //地址信息
         addressSet(item){
             this.curDataObj = item
@@ -405,6 +419,11 @@ export default {
             this.curDataObj = item
             this.bankform.id = item.id
             this.getUserObj(item.id)
+        },
+        //余额操作
+        balanceOperate(item){
+            this.curDataObj = item
+            this.balanceVisible = true
         },
         //获取用户信息
         getUserObj(id){

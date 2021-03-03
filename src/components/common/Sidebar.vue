@@ -182,6 +182,17 @@ export default {
                         }
                     ]
                 },
+                {
+                    icon: 'el-icon-lx-calendar',
+                    index: '8',
+                    title: '消息管理',
+                    subs: [
+                        {
+                            index: 'messageList',
+                            title: '消息列表'
+                        }
+                    ]
+                },
                 // {
                 //     icon: 'el-icon-lx-cascades',
                 //     index: 'table',

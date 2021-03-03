@@ -145,6 +145,11 @@ export default new Router({
                     meta: { title: '新用户活动' }
                 },
                 {
+                    path: '/messageList',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/message/index.vue'),
+                    meta: { title: '消息管理' }
+                },
+                {
                     path: '/dashboard',
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/home/index.vue'),
                     meta: { title: '系统首页' }
