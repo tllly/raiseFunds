@@ -59,17 +59,19 @@
                         <el-table-column prop="username" label="账号" show-overflow-tooltip width="110"></el-table-column>
                         <el-table-column prop="nickname" label="用户名" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="allCount" label="人数" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="allHyCount" label="活跃人数" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="balance" label="账户余额" show-overflow-tooltip>
+                        <el-table-column prop="allHyCount" label="在线人数" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="balance" label="账号余额" show-overflow-tooltip>
                             <template slot-scope="scope">{{scope.row.balance}}</template>
                         </el-table-column>
+                        <el-table-column prop="reserveNum" width="100" label="已预订金额" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="freezeBalance" label="冻结金额" show-overflow-tooltip></el-table-column>
                         <!-- <el-table-column prop="num" label="利息宝"></el-table-column> -->
-                        <el-table-column prop="parent_name" label="上级用户" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="inviteCode" label="邀请码" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="" label="线上充值" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="" label="线上提现" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="parent_name" label="上级用户" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="rechargeNum" label="当日充值" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="depositNum" label="当日提现" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="addtime" label="注册时间" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="addtime" label="注册地址" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="ip" label="最后登录IP" show-overflow-tooltip width="110"></el-table-column>
                         <el-table-column prop="isJia" label="状态" align="center" width="150">
                             <template slot-scope="scope">

@@ -9,9 +9,9 @@
         </div>
         <div class="container">
             <div style="padding: 0 0 15px;">
-                <el-tag :effect="type === '' ? 'dark':''" type="" style="margin-right: 15px;cursor: pointer;" @click="switchData('')">所有数据</el-tag>
-                <el-tag :effect="type === 0 ? 'dark':''" type="" style="margin-right: 15px;cursor: pointer;" @click="switchData(0)">真人数据</el-tag>
-                <el-tag :effect="type === 1 ? 'dark':''" type="" style="margin-right: 15px;cursor: pointer;" @click="switchData(1)">假人数据</el-tag>
+                <el-button :type="type === '' ? 'primary':''" style="margin-right: 15px;cursor: pointer;" @click="switchData('')">所有数据</el-button>
+                <el-button :type="type === 0 ? 'primary':''" style="margin-right: 15px;cursor: pointer;" @click="switchData(0)">真人数据</el-button>
+                <el-button :type="type === 1 ? 'primary':''" style="margin-right: 15px;cursor: pointer;" @click="switchData(1)">假人数据</el-button>
             </div>
             <el-row :gutter="20">
                 <el-col :span="6">
@@ -41,9 +41,9 @@
                 <el-col :span="6">
                     <div class="store-total-container store-total-item4">
                         <div>订单总金额</div>
-                        <div>{{orderMoneyData.count.toFixed(2)}}</div>
-                        <div>今日新增订单总金额 <span class="num2">{{orderMoneyData.today.toFixed(2)}}</span></div>
-                        <div>昨日新增订单总金额 {{orderMoneyData.yesterday.toFixed(2)}}</div>
+                        <div>{{orderMoneyData.count?orderMoneyData.count.toFixed(2):0}}</div>
+                        <div>今日新增订单总金额 <span class="num2">{{orderMoneyData.today?orderMoneyData.today.toFixed(2):0}}</span></div>
+                        <div>昨日新增订单总金额 {{orderMoneyData.yesterday?orderMoneyData.yesterday.toFixed(2):0}}</div>
                     </div>
                 </el-col>
             </el-row>
@@ -51,39 +51,39 @@
                 <el-col :span="4">
                     <div class="store-total-container store-total-item5">
                         <div>用户充值</div>
-                        <div>{{rechargeMoney.count.toFixed(2)}}</div>
-                        <div>今日新增充值 <span class="num2">{{rechargeMoney.today.toFixed(2)}}</span></div>
-                        <div>昨日新增充值 {{rechargeMoney.yesterday.toFixed(2)}}</div>
+                        <div>{{rechargeMoney.count?rechargeMoney.count.toFixed(2):0}}</div>
+                        <div>今日新增充值 <span class="num2">{{rechargeMoney.today?rechargeMoney.today.toFixed(2):0}}</span></div>
+                        <div>昨日新增充值 {{rechargeMoney.yesterday?rechargeMoney.yesterday.toFixed(2):0}}</div>
                     </div>
                 </el-col>
                 <el-col :span="4">
                     <div class="store-total-container store-total-item6">
                         <div>用户提现</div>
-                        <div>{{depositMoney.count.toFixed(2)}}</div>
-                        <div>今日新增提现 <span class="num2">{{depositMoney.today.toFixed(2)}}</span></div>
-                        <div>昨日新增提现 {{depositMoney.yesterday.toFixed(2)}}</div>
+                        <div>{{depositMoney.count?depositMoney.count.toFixed(2):0}}</div>
+                        <div>今日新增提现 <span class="num2">{{depositMoney.today?depositMoney.today.toFixed(2):0}}</span></div>
+                        <div>昨日新增提现 {{depositMoney.yesterday?depositMoney.yesterday.toFixed(2):0}}</div>
                     </div>
                 </el-col>
                 <el-col :span="4">
                     <div class="store-total-container store-total-item7">
                         <div>抢单佣金</div>
-                        <div>{{conveyReward.count.toFixed(2)}}</div>
-                        <div>今日新增佣金 <span class="num2">{{conveyReward.today.toFixed(2)}}</span></div>
-                        <div>昨日新增佣金 {{conveyReward.yesterday.toFixed(2)}}</div>
+                        <div>{{conveyReward.count?conveyReward.count.toFixed(2):0}}</div>
+                        <div>今日新增佣金 <span class="num2">{{conveyReward.today?conveyReward.today.toFixed(2):0}}</span></div>
+                        <div>昨日新增佣金 {{conveyReward.yesterday?conveyReward.yesterday.toFixed(2):0}}</div>
                     </div>
                 </el-col>
                 <el-col :span="4">
                     <div class="store-total-container store-total-item8">
                         <div>下级返佣</div>
-                        <div>{{childReward.count.toFixed(2)}}</div>
-                        <div>今日新增佣金 <span class="num2">{{childReward.today.toFixed(2)}}</span></div>
-                        <div>昨日新增佣金 {{childReward.yesterday.toFixed(2)}}</div>
+                        <div>{{childReward.count?childReward.count.toFixed(2):0}}</div>
+                        <div>今日新增佣金 <span class="num2">{{childReward.today?childReward.today.toFixed(2):0}}</span></div>
+                        <div>昨日新增佣金 {{childReward.yesterday?childReward.yesterday.toFixed(2):0}}</div>
                     </div>
                 </el-col>
                 <el-col :span="8">
                     <div class="store-total-container store-total-item9">
                         <div>用户总余额</div>
-                        <div>{{userBanlance.count.toFixed(2)}}</div>
+                        <div>{{userBanlance.count?userBanlance.count.toFixed(2):0}}</div>
                         <div>&nbsp;</div>
                         <div>&nbsp;</div>
                     </div>

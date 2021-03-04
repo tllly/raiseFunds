@@ -10,11 +10,15 @@
         <div class="container">
           <el-form ref="form" :model="form" :rules="rules" label-width="80px">
             <el-form-item label="公告标题" prop="title">
-              <el-input v-model="form.title"></el-input>
+              <el-input v-model="form.title" :disabled="editId"></el-input>
+            </el-form-item>
+            <el-form-item label="发布时间" prop="createTime" v-if="editId">
+             <el-date-picker v-model="form.createTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请选择发布时间"></el-date-picker>
             </el-form-item>
             <el-form-item label="公告内容" prop="content">
               <quill-editor ref="myTextEditor" v-model="form.content" :options="editorOption"></quill-editor>
             </el-form-item>
+
             <el-form-item>
               <el-button type="primary" @click="onSubmit('form')">发布公告</el-button>
               <el-button @click="cancel">取消</el-button>
@@ -44,11 +48,15 @@ export default {
             },
             form: {
               title:'',
+              createTime:'',
               content:'',
             },
             rules: {
               title:[
                 { required: true, message: '请输入公告标题', trigger: 'blur' },
+              ],
+              createTime:[
+                { required: true, message: '请选择时间', trigger: 'change' },
               ],
               content: [
                 { required: true, message: '请输入公告内容', trigger: 'blur' }
@@ -70,6 +78,7 @@ export default {
           this.form.title = res.data.title
           this.form.content = res.data.content
           this.form.id = res.data.id
+          this.form.createTime = res.data.createTime
         });
       },
       onSubmit(formName){

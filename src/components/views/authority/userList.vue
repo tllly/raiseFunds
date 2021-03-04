@@ -121,6 +121,7 @@ import passwordPop from './components/passwordPop'
 export default {
     name: 'userList',
     components:{
+        addUserPop,
         passwordPop
     },
     data() {
