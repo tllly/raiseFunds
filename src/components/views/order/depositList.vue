@@ -46,13 +46,19 @@
                   </el-form-item> -->
                 </el-form>
             </div>
+            <div style="margin: -20px 0 10px;">
+                <!-- <el-button type="primary">批量通过</el-button> -->
+                <el-button type="danger" @click="checkList">批量驳回</el-button>
+            </div>
             <el-table
                 :data="tableData"
                 border
                 class="table"
                 ref="multipleTable"
                 header-cell-class-name="table-header"
+                @selection-change="handleSelectionChange"
             >
+                <el-table-column type="selection" label="全选" width="55" :selectable="checkSelect"></el-table-column>
                 <el-table-column prop="code" label="订单号"  align="center"></el-table-column>
                 <el-table-column prop="username" label="提现用户"  show-overflow-tooltip></el-table-column>
                 <el-table-column prop="num" label="提现金额"  show-overflow-tooltip>
@@ -70,7 +76,7 @@
                 <el-table-column prop="username" label="开户名称">
                     <template slot-scope="scope">{{scope.row.username}}</template>
                 </el-table-column>
-                <el-table-column prop="cardnum" label="银行卡号 ">
+                <el-table-column prop="cardnum" label="银行卡号" width="200">
                     <template slot-scope="scope">{{scope.row.cardnum}}</template>
                 </el-table-column>
                 <el-table-column prop="tel" label="联系电话"  show-overflow-tooltip></el-table-column>
@@ -100,11 +106,13 @@
                         <el-button
                             type="text"
                             @click="agree(scope.row)"
+                            v-if="loginUserObj.agentId == 0"
                         >通过</el-button>
                         <el-button
                             type="text"
                             class="red"
                             @click="refuse(scope.row)"
+                            v-if="loginUserObj.agentId == 0"
                         >驳回</el-button>
                     </template>
                 </el-table-column>
@@ -130,6 +138,7 @@ export default {
     name: 'depositList',
     data() {
         return {
+            loginUserObj:JSON.parse(localStorage.getItem('userObj')).val,//当前登录用户对象
             formInline: {
               user: '',
               region: ''
@@ -150,7 +159,8 @@ export default {
             },
             tableData: [],
             editVisible: false,
-            addVisible: false
+            addVisible: false,
+            multipleSelection:[]
         };
     },
     created() {
@@ -163,6 +173,33 @@ export default {
             fetchData(`/xy-deposit/XyDeposit/currentPage/${this.pageIndex}/pageSize/10`,this.query).then(res => {
                 this.tableData = res.data.records
                 this.pageTotal = res.data.total
+            });
+        },
+        handleSelectionChange(val){
+            let _arr = []
+            val.forEach(item => {
+                _arr.push(item.id)
+            })
+            this.multipleSelection = _arr
+        },
+        checkSelect (row,index) {
+            let isChecked = true;
+            if (row.status == '待处理') {
+                isChecked = true
+            } else {
+                isChecked = false
+            }
+            return isChecked
+        },
+        checkList(){
+            if(this.multipleSelection.length == 0){
+                this.$message.error('请选择操作项');
+                return;
+            }
+            updateData(`/xy-deposit/checkList?ids=${this.multipleSelection.join(',')}&type=3`).then(res => {
+                this.multipleSelection = []
+                this.$message.success('操作成功');
+                this.getData();
             });
         },
         // 获取商品分类列表

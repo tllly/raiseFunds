@@ -150,6 +150,28 @@ export default new Router({
                     meta: { title: '消息管理' }
                 },
                 {
+                    path: '/integralGood',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/integral/index.vue'),
+                    meta: { title: '积分商品列表' }
+                },
+                {
+                    path: '/integralAdd',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/integral/add.vue'),
+                    meta: { title: '添加积分商品' }
+                },
+                {
+                    path: '/integralRecord',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/integral/orderList.vue'),
+                    meta: { title: '商品积分记录' }
+                },
+                {
+                    path: '/messageList',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/message/index.vue'),
+                    meta: { title: '消息管理' }
+                },
+
+
+                {
                     path: '/dashboard',
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/home/index.vue'),
                     meta: { title: '系统首页' }

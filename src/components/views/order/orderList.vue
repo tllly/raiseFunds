@@ -86,7 +86,7 @@
                         <el-button
                             type="text"
                             @click="editTime(scope.row)"
-                            v-if="scope.row.status == 1 && scope.row.isCheck == 1"
+                            v-if="scope.row.status == 1 && scope.row.isCheck == 1 && loginUserObj.agentId == 0"
                         >修改到货时间</el-button>
                         <!-- <el-button
                             v-if="scope.row.status == 0"
@@ -135,8 +135,11 @@
         </el-dialog>
         <el-dialog title="修改到货时间" :visible.sync="timeVisible" width="35%">
             <el-form  label-width="80px">
-                <el-form-item label="签收天数">
+                <!-- <el-form-item label="签收天数">
                     <el-input placeholder="请输入用户名称" v-model="dateValue" style="width: 200px;"></el-input>
+                </el-form-item> -->
+                <el-form-item label="到货日期" prop="createTime">
+                 <el-date-picker v-model="signTime" type="datetime" :picker-options="pickerOptions" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请选择"></el-date-picker>
                 </el-form-item>
                 <el-form-item>
                   <el-button type="primary" @click="onSubmit('form')">确定</el-button>
@@ -153,6 +156,7 @@ export default {
     name: 'orderList',
     data() {
         return {
+            loginUserObj:JSON.parse(localStorage.getItem('userObj')).val,//当前登录用户对象
             formInline: {
               user: '',
               region: ''
@@ -189,8 +193,13 @@ export default {
             editVisible: false,
             addVisible: false,
             timeVisible: false, //修改到货时间
-            dateValue:'',
-            dateId:''
+            signTime:'',
+            dateId:'',
+            pickerOptions: { //控制时间范围
+                disabledDate (time) {
+                    return time.getTime() < (Date.now() - (24 * 60 * 60 * 1000))
+                }
+            }
         };
     },
     created() {
@@ -250,13 +259,13 @@ export default {
             }).catch(() => {});
         },
         onSubmit(){
-            if(!this.dateValue){
-                this.$message.error('请输入签收天数');
+            if(!this.signTime){
+                this.$message.error('请输入到货日期');
                 return
             }
             let data = {
                 id:this.dateId,
-                day:this.dateValue
+                signTime:this.signTime
             }
             updateData(`/xy-convey/update`,data).then(res => {
               this.$message.success('操作成功')
@@ -285,7 +294,7 @@ export default {
         },
         //修改到货时间
         editTime(row){
-            this.dateValue = row.day
+            this.signTime = row.signTime
             this.dateId = row.id
             this.timeVisible = true
         },

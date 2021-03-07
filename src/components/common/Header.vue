@@ -15,18 +15,45 @@
                     </el-tooltip>
                 </div> -->
                 <!-- 消息中心 -->
-                <!-- <div class="btn-bell">
+                <div class="btn-bell">
                     <el-tooltip
                         effect="dark"
                         :content="message?`有${message}条未读消息`:`消息中心`"
                         placement="bottom"
                     >
-                        <router-link to="/tabs">
+                        <router-link to="/messageList">
+                            <span style="font-size: 14px;color: #ffffff;margin-right: 3px;">消息</span>
                             <i class="el-icon-bell"></i>
                         </router-link>
                     </el-tooltip>
                     <span class="btn-bell-badge" v-if="message"></span>
-                </div> -->
+                </div>
+                <div class="btn-bell">
+                    <el-tooltip
+                        effect="dark"
+                        :content="rechargeNum?`有${rechargeNum}条未读消息`:`消息中心`"
+                        placement="bottom"
+                    >
+                        <router-link to="/userRecharge">
+                            <span style="font-size: 14px;color: #ffffff;margin-right: 3px;">充值</span>
+                            <i class="el-icon-bell"></i>
+                        </router-link>
+                    </el-tooltip>
+                    <span class="btn-bell-badge" v-if="rechargeNum"></span>
+                </div>
+                <div class="btn-bell">
+                    <el-tooltip
+                        effect="dark"
+                        :content="depositNum?`有${depositNum}条未读消息`:`消息中心`"
+                        placement="bottom"
+                    >
+                        <router-link to="/depositList">
+                            <span style="font-size: 14px;color: #ffffff;margin-right: 3px;">提现</span>
+                            <i class="el-icon-bell"></i>
+                        </router-link>
+                    </el-tooltip>
+                    <span class="btn-bell-badge" v-if="depositNum"></span>
+                </div>
                 <!-- 用户头像 -->
                 <div class="user-avator">
                     <img src="../../assets/img/img.jpg" />
@@ -50,13 +77,16 @@
 </template>
 <script>
 import bus from '../common/bus';
+import { fetchData , postData , updateData , imgUpload} from '../../api/index';
 export default {
     data() {
         return {
             collapse: false,
             fullscreen: false,
             name: 'linxin',
-            message: 2
+            message: 0,
+            depositNum:0,
+            rechargeNum:0
         };
     },
     computed: {
@@ -72,6 +102,13 @@ export default {
                 localStorage.removeItem('userObj');
                 this.$router.push('/login');
             }
+        },
+        getHeadData(){
+            fetchData(`/home/getHeadCount`).then(res => {
+              this.message = res.data[0]
+              this.rechargeNum = res.data[1]
+              this.depositNum = res.data[2]
+            });
         },
         // 侧边栏折叠
         collapseChage() {
@@ -106,10 +143,16 @@ export default {
             this.fullscreen = !this.fullscreen;
         }
     },
+    created(){
+        this.getHeadData()
+    },
     mounted() {
         if (document.body.clientWidth < 1500) {
             this.collapseChage();
         }
+        setInterval(()=>{
+            this.getHeadData()
+        },1000*60)
     }
 };
 </script>
@@ -150,11 +193,13 @@ export default {
 .btn-bell,
 .btn-fullscreen {
     position: relative;
-    width: 30px;
     height: 30px;
     text-align: center;
     border-radius: 15px;
     cursor: pointer;
+}
+.btn-bell{
+    margin-right: 30px;
 }
 .btn-bell-badge {
     position: absolute;

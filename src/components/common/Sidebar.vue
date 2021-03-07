@@ -116,6 +116,21 @@ export default {
                 },
                 {
                     icon: 'el-icon-lx-calendar',
+                    index: '9',
+                    title: '积分商城',
+                    subs: [
+                        {
+                            index: 'integralGood',
+                            title: '积分商品列表'
+                        },
+                        {
+                            index: 'integralRecord',
+                            title: '商品积分记录'
+                        }
+                    ]
+                },
+                {
+                    icon: 'el-icon-lx-calendar',
                     index: '4',
                     title: '首页文本',
                     subs: [

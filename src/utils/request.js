@@ -20,6 +20,9 @@ service.interceptors.response.use(response => {
         
         if(response.data.code == 200){
             return response.data;
+        }else if(response.data.code == 1004){
+            localStorage.removeItem('userObj');
+            window.location.href = "/";
         }else{
             Message.error(response.data.viewMsg);
             return Promise.reject();

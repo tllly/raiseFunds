@@ -1,9 +1,18 @@
 <template>
-    <div>
+    <div style="margin-top: -40px;">
+        <el-tabs v-model="activeIndex" @tab-click="handleClick">
+            <el-tab-pane label="近3天" name="3"></el-tab-pane>
+            <el-tab-pane label="近7天" name="7"></el-tab-pane>
+        </el-tabs>
         <el-table :data="tableData" style="width: 100%">
-            <el-table-column prop="item" label="#" width="180"></el-table-column>
-            <el-table-column prop="value" label="总" width="180"></el-table-column>
-            <el-table-column prop="lastvue" label="当日"> </el-table-column>
+            <el-table-column prop="time" label="时间"></el-table-column>
+            <el-table-column prop="integral" label="积分"></el-table-column>
+            <el-table-column prop="newPeople" label="新人红包"> </el-table-column>
+            <el-table-column prop="reserveNum" label="已预订金额"> </el-table-column>
+            <el-table-column prop="commission" label="佣金"> </el-table-column>
+            <el-table-column prop="recharge" label="充值"> </el-table-column>
+            <el-table-column prop="deposit" label="提现"> </el-table-column>
+            <el-table-column prop="balance" label="账号余额" width="200"> </el-table-column>
         </el-table>
     </div>
 </template>
@@ -15,7 +24,8 @@ export default {
     props:['dataItem'],
     data() {
         return {
-            tableData: []
+            tableData: [],
+            activeIndex:'3'
         };
     },
     created() {
@@ -23,49 +33,44 @@ export default {
     },
     methods: {
         getBillData(){
-            fetchData(`/xy-users/getUserBill?userId=${this.dataItem.id}`).then(res => {
-                let arr = [{
-                    item: '充值',
-                    value: res.data.allRecharge.toFixed(2),
-                    lastvue: res.data.todayRecharge.toFixed(2)
-                }, {
-                    item: '提现',
-                    value: res.data.allDeposit.toFixed(2),
-                    lastvue: res.data.todayDeposit.toFixed(2)
-                }, {
-                    item: '盈亏',
-                    value: res.data.allProfit.toFixed(2),
-                    lastvue: res.data.todayProfit.toFixed(2)
-                }, {
-                    item: '投注',
-                    value: res.data.allBet.toFixed(2),
-                    lastvue: res.data.todayBet.toFixed(2)
-                },{
-                    item: '帐变',
-                    value: res.data.zchange.toFixed(2),
-                    lastvue: ""
-                },{
-                    item: '团队余额',
-                    value: res.data.teamMoney.toFixed(2),
-                    lastvue:""
-                }]
+            fetchData(`/xy-users/getUserBill?uid=${this.dataItem.id}&date=${this.activeIndex}`).then(res => {
+                // let arr = [{
+                //     item: '充值',
+                //     value: res.data.allRecharge.toFixed(2),
+                //     lastvue: res.data.todayRecharge.toFixed(2)
+                // }, {
+                //     item: '提现',
+                //     value: res.data.allDeposit.toFixed(2),
+                //     lastvue: res.data.todayDeposit.toFixed(2)
+                // }, {
+                //     item: '盈亏',
+                //     value: res.data.allProfit.toFixed(2),
+                //     lastvue: res.data.todayProfit.toFixed(2)
+                // }, {
+                //     item: '投注',
+                //     value: res.data.allBet.toFixed(2),
+                //     lastvue: res.data.todayBet.toFixed(2)
+                // },{
+                //     item: '帐变',
+                //     value: res.data.zchange.toFixed(2),
+                //     lastvue: ""
+                // },{
+                //     item: '团队余额',
+                //     value: res.data.teamMoney.toFixed(2),
+                //     lastvue:""
+                // }]
+                let arr = res.data.list
+                arr.push({})
+                res.data.sumBill.balance = ("总计余额：" + res.data.sumBill.balance)
+                arr.push(res.data.sumBill)
                 this.tableData = arr
-                // let aa = {
-                //     allBet: 0,
-                //     allDeposit: 0,
-                //     allProfit: 18620,
-                //     allRecharge: 0,
-                //     id: 1567,
-                //     teamMoney: 1754177.0199999956,
-                //     todayBet: 0,
-                //     todayDeposit: 0,
-                //     todayProfit: 0,
-                //     todayRecharge: 0,
-                //     zchange: 0
-                // }
-                // this.tableData = res.data.records
-                // this.pageTotal = res.data.total
             });
+        },
+        handleClick(){
+            // setTimeout(()=>{
+                
+            // },10)
+            this.getBillData()
         }
     }
 };

@@ -97,11 +97,13 @@
                         <el-button
                             type="text"
                             @click="agree(scope.row)"
+                            v-if="loginUserObj.agentId == 0"
                         >通过</el-button>
                         <el-button
                             type="text"
                             class="red"
                             @click="refuse(scope.row)"
+                            v-if="loginUserObj.agentId == 0"
                         >驳回</el-button>
                     </template>
                 </el-table-column>
@@ -127,6 +129,7 @@ export default {
     name: 'userRecharge',
     data() {
         return {
+            loginUserObj:JSON.parse(localStorage.getItem('userObj')).val,//当前登录用户对象
             formInline: {
               user: '',
               region: ''

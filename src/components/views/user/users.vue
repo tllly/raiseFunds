@@ -80,40 +80,44 @@
                                 <el-tag style="margin-left: 5px;" type="" effect="dark" v-if="scope.row.isAgent == 1">代理</el-tag>
                             </template>
                         </el-table-column>
-                        <el-table-column label="操作" width="250" align="center" fixed="right">
+                        <el-table-column label="操作" width="350" align="center" fixed="right">
                             <template slot-scope="scope">
                                 <el-button
                                     type="text"
                                     icon="el-icon-edit"
                                     @click="editInfo(scope.row)"
+                                    v-if="loginUserObj.agentId == 0"
                                 >编辑</el-button>
                                 <el-button
                                     type="text"
                                     icon="el-icon-delete"
                                     class="red"
                                     @click="handleDelete(scope.$index, scope.row)"
-                                >删除</el-button> 
+                                    v-if="loginUserObj.agentId == 0"
+                                >删除</el-button>
+                                <el-button size="text" type="primary" @click="checkBill(scope.row)">账单</el-button>
+                                <el-button size="text" type="primary" @click="checkTeam(scope.row)">查看团队</el-button>
                                 <el-popover
                                   placement="top"
                                   width="970"
                                   :value="scope.row.visible">
                                   <div style="margin:0px;">
-                                    <el-button size="mini" type="primary" @click="checkBill(scope.row)">账单</el-button>
+                                    
                                     <!-- <el-button size="mini" type="success" @click="deductEdit(scope.row)">暗扣设置</el-button> -->
                                     <el-button size="mini" type="danger" @click="roleSwitch(scope.row)">{{scope.row.isJia == 0?'设为真人':'设为假人'}}</el-button>
                                     <el-button size="mini" type="warning" @click="agentSet(scope.row)" v-if="scope.row.isAgent == 0">代理设置</el-button>
-                                    <el-button size="mini" type="warning" @click="agentCancel(scope.row)" v-else>取消代理</el-button>
+                                    <el-button size="mini" type="warning" @click="agentCancel(scope.row)"  v-else>取消代理</el-button>
                                     <el-button size="mini" type="primary" @click="accountDisable(scope.row)">{{scope.row.status == 1?'禁用':'启动'}}</el-button>
                                     <el-button size="mini" type="success" @click="bankCardInfo(scope.row)">银行卡信息</el-button>
                                     <el-button size="mini" type="danger" @click="addressSet(scope.row)">地址信息</el-button>
                                     <!-- <el-button size="mini" type="primary" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
                                     <el-button size="mini" type="warning" @click="refreshQr">刷新二维码</el-button>
-                                    <el-button size="mini" type="primary" @click="checkTeam(scope.row)">查看团队</el-button>
+                                    
                                     <el-button size="mini" type="success" @click="checkAccount(scope.row)">账变</el-button>
                                     <el-button size="mini" type="danger" @click="bindSysBank(scope.row)">绑定系统银行卡</el-button>
                                     <el-button size="mini" type="warning" @click="balanceOperate(scope.row)">余额操作</el-button>
                                   </div>
-                                  <el-button type="text" slot="reference" style="margin-left: 10px;">更多操作</el-button>
+                                  <el-button type="text" slot="reference" style="margin-left: 10px;" v-if="loginUserObj.agentId == 0">更多操作</el-button>
                                 </el-popover>
                             </template>
                         </el-table-column>
@@ -211,6 +215,7 @@ export default {
     },
     data() {
         return {
+            loginUserObj:JSON.parse(localStorage.getItem('userObj')).val,//当前登录用户对象
             formInline: {
               user: '',
               region: ''
@@ -259,6 +264,8 @@ export default {
         };
     },
     created() {
+        // let aa = this.loginUserObj
+        // debugger
         this.getData();
         this.getUserTree();
         this.getSysBankList();

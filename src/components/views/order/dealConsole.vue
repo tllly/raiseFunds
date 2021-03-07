@@ -45,7 +45,7 @@
                 <i class="el-icon-circle-plus-outline" style="color: #409EFF;cursor: pointer;" v-if="ruleArr.length == 0" @click="addRule"></i>
               </el-form-item> -->
               <el-form-item>
-                <el-button type="primary" @click="onSubmit('form')">确认</el-button>
+                <el-button type="primary" @click="onSubmit('form')" v-if="loginUserObj.agentId == 0">确认</el-button>
                 <!-- <el-button @click="cancel">取消</el-button> -->
               </el-form-item>
             </el-form>
@@ -79,6 +79,7 @@ export default {
     name: 'dealConsole',
     data() {
         return {
+            loginUserObj:JSON.parse(localStorage.getItem('userObj')).val,//当前登录用户对象
             form:{
                 bankId:'',
                 content:''
