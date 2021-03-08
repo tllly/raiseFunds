@@ -25,9 +25,9 @@
           <!-- <el-form-item label="登录密码">
             <el-input v-model="form.pwd"></el-input>
           </el-form-item> -->
-          <el-form-item label="交易密码">
+          <!-- <el-form-item label="交易密码">
             <el-input v-model="form.casePwd"></el-input>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="上级Id">
             <el-input v-model="form.parentId"></el-input>
           </el-form-item>
