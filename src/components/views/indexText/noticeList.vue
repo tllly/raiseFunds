@@ -37,7 +37,12 @@
                 header-cell-class-name="table-header"
             >
                 <el-table-column prop="id" label="ID" width="90" align="center"></el-table-column>
-                <el-table-column prop="title" label="标题"  width="500" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="title" label="标题"  width="300" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="pic" label="背景图"  width="200" show-overflow-tooltip>
+                    <template slot-scope="scope">
+                        <img :src="scope.row.pic" style="width: 100px;height: 49px;" @click="onPreview(scope.row.pic)">
+                    </template>
+                </el-table-column>
                 <el-table-column label="内容简要" width="500" show-overflow-tooltip>
                     <template slot-scope="scope">
                         <div v-html="scope.row.content" class="htmlContent"></div>
@@ -72,19 +77,29 @@
                 ></el-pagination>
             </div>
         </div>
+        <el-image-viewer 
+         v-if="showViewer" 
+         :on-close="closeViewer" 
+         :url-list="[url]" />
     </div>
 </template>
 
 <script>
 import { fetchData , deleteData } from '../../../api/index';
+import ElImageViewer from 'element-ui/packages/image/src/image-viewer';
 export default {
     name: 'noticeList',
+    components: {
+        ElImageViewer
+    },
     data() {
         return {
             formInline: {
               user: '',
               region: ''
             },
+            showViewer: false, // 显示查看器
+            url:'',
             pageIndex: 1,
             pageSize: 10,
             pageTotal: 0,
@@ -108,6 +123,18 @@ export default {
         this.getTypeList();
     },
     methods: {
+        onPreview(val) {
+            if(!val){
+              this.$message.error('暂无图片')
+              return
+            }
+            this.url = val
+            this.showViewer = true
+        },
+          // 关闭查看器
+        closeViewer() {
+            this.showViewer = false
+        },
         // 获取商品分类列表
         getTypeList(){
             fetchData(`/xy-index-msg/XyIndexMsg/currentPage/${this.pageIndex}/pageSize/10`).then(res => {

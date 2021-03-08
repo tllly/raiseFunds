@@ -86,7 +86,8 @@ export default {
             name: 'linxin',
             message: 0,
             depositNum:0,
-            rechargeNum:0
+            rechargeNum:0,
+            timeer:null
         };
     },
     computed: {
@@ -150,10 +151,13 @@ export default {
         if (document.body.clientWidth < 1500) {
             this.collapseChage();
         }
-        setInterval(()=>{
+        this.timeer = setInterval(()=>{
             this.getHeadData()
         },1000*60)
-    }
+    },
+    beforeDestroy: function() {
+        clearInterval(this.timeer)
+    },
 };
 </script>
 <style scoped>

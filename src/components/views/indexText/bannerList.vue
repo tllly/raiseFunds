@@ -23,7 +23,7 @@
                 header-cell-class-name="table-header"
             >
                 <el-table-column prop="image" label="图片">
-                    <template slot-scope="scope"><img :src="scope.row.image" style="width: 100px;height: 49px;"></template>
+                    <template slot-scope="scope"><img :src="scope.row.image" style="width: 100px;height: 49px;" @click="onPreview(scope.row.image)"></template>
                 </el-table-column>
                 <el-table-column prop="url" label="url"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
@@ -53,19 +53,29 @@
                 ></el-pagination>
             </div>
         </div>
+        <el-image-viewer 
+         v-if="showViewer" 
+         :on-close="closeViewer" 
+         :url-list="[url]" />
     </div>
 </template>
 
 <script>
 import { fetchData , deleteData } from '../../../api/index';
+import ElImageViewer from 'element-ui/packages/image/src/image-viewer';
 export default {
     name: 'noticeList',
+    components: {
+        ElImageViewer
+    },
     data() {
         return {
             formInline: {
               user: '',
               region: ''
             },
+            showViewer: false, // 显示查看器
+            url:'',
             pageIndex: 1,
             pageSize: 10,
             pageTotal: 0,
@@ -89,6 +99,18 @@ export default {
         this.getTypeList();
     },
     methods: {
+        onPreview(val) {
+            if(!val){
+              this.$message.error('暂无图片')
+              return
+            }
+            this.url = val
+            this.showViewer = true
+        },
+          // 关闭查看器
+        closeViewer() {
+            this.showViewer = false
+        },
         // 获取商品分类列表
         getTypeList(){
             fetchData(`/xy-banner/XyBanner/currentPage/${this.pageIndex}/pageSize/10`).then(res => {

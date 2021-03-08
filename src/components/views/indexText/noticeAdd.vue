@@ -8,7 +8,7 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-          <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+          <el-form ref="form" :model="form" :rules="rules" label-width="100px">
             <el-form-item label="公告标题" prop="title">
               <el-input v-model="form.title" :disabled="editId"></el-input>
             </el-form-item>
@@ -17,6 +17,12 @@
             </el-form-item>
             <el-form-item label="公告内容" prop="content">
               <quill-editor ref="myTextEditor" v-model="form.content" :options="editorOption"></quill-editor>
+            </el-form-item>
+            <el-form-item label="背景图片" prop="pic">
+              <img v-if="form.pic" @click="uploadImg" :src="form.pic" style="width: 100px;height: 49px;">
+              <el-button v-else type="primary" @click="uploadImg">上传图片</el-button>
+              <input type="file" name="" style="display: none" id="uploadFile" @change="imgSelect">
+              <input type="hidden" v-model="form.pic">
             </el-form-item>
 
             <el-form-item>
@@ -29,7 +35,7 @@
 </template>
 
 <script>
-  import { fetchData , postData , updateData} from '../../../api/index';
+  import { fetchData , postData , updateData , imgUpload} from '../../../api/index';
   import 'quill/dist/quill.core.css';
   import 'quill/dist/quill.snow.css';
   import 'quill/dist/quill.bubble.css';
@@ -48,8 +54,9 @@ export default {
             },
             form: {
               title:'',
-              createTime:'',
+              createTime:null,
               content:'',
+              pic:''
             },
             rules: {
               title:[
@@ -57,6 +64,9 @@ export default {
               ],
               createTime:[
                 { required: true, message: '请选择时间', trigger: 'change' },
+              ],
+              pic:[
+                { required: true, message: '请选择背景图片', trigger: 'change' },
               ],
               content: [
                 { required: true, message: '请输入公告内容', trigger: 'blur' }
@@ -79,7 +89,22 @@ export default {
           this.form.content = res.data.content
           this.form.id = res.data.id
           this.form.createTime = res.data.createTime
+          this.form.pic = res.data.pic
         });
+      },
+      //选择图片
+      uploadImg(){
+        document.getElementById('uploadFile').click()
+      },
+      imgSelect(obj){
+        let file = obj.currentTarget.files[0]
+        let fileParam = new FormData()
+        fileParam.append('file', file)
+        imgUpload(`/api/addCommonUpload`,fileParam).then(res => {
+          if(res.code == 200){
+            this.form.pic = res.data
+          }
+        })
       },
       onSubmit(formName){
         this.$refs[formName].validate((valid) => {
