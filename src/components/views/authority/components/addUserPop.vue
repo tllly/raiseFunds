@@ -4,6 +4,12 @@
           <el-form-item label="登录用户账号" prop="account">
             <el-input v-model="form.account"></el-input>
           </el-form-item>
+          <el-form-item label="密码" prop="password" v-if="!dataItem">
+            <el-input v-model="form.password"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码" prop="repassword" v-if="!dataItem">
+            <el-input v-model="form.repassword"></el-input>
+          </el-form-item>
           <el-form-item label="用户联系手机" prop="phone">
             <el-input v-model="form.phone"></el-input>
           </el-form-item>
@@ -40,7 +46,8 @@ export default {
               account:'',
               phone:'',
               mail:'',
-              password:'123456',
+              password:'',
+              repassword:'',
               userDesc:'',
               roles:null,
               id:''
@@ -50,6 +57,12 @@ export default {
             rules: {
               account:[
                 { required: true, message: '请输入用户账号', trigger: 'blur' },
+              ],
+              password:[
+                { required: true, message: '请输入密码', trigger: 'blur' },
+              ],
+              repassword:[
+                { required: true, message: '请输入确认密码', trigger: 'blur' },
               ],
             }
         };
@@ -63,6 +76,10 @@ export default {
     },
     methods: {
       onSubmit(formName){
+        if(this.password != this.repassword){
+          this.$message.error('密码不一致');
+          return
+        }
         this.$refs[formName].validate((valid) => {
           if (valid) {
             let selectedArr = this.roleArr.filter(item => this.checkList.indexOf(item.roleName) > -1)

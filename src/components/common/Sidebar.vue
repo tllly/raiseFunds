@@ -18,7 +18,7 @@
                             <span slot="title">{{ item.title }}</span>
                         </template>
                         <template v-for="subItem in item.subs">
-                            <el-submenu
+                            <!-- <el-submenu
                                 v-if="subItem.subs"
                                 :index="subItem.index"
                                 :key="subItem.index"
@@ -29,9 +29,8 @@
                                     :key="i"
                                     :index="threeItem.index"
                                 >{{ threeItem.title }}</el-menu-item>
-                            </el-submenu>
+                            </el-submenu> -->
                             <el-menu-item
-                                v-else
                                 :index="subItem.index"
                                 :key="subItem.index"
                             >{{ subItem.title }}</el-menu-item>

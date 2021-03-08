@@ -22,7 +22,7 @@
                   <el-form-item>
                     <el-button type="primary" @click="handleSearch">搜索</el-button>
                     <el-button @click="resetSearch">重置</el-button>
-                    <el-button>导出</el-button>
+                    <!-- <el-button>导出</el-button> -->
                   </el-form-item>
                   <el-form-item style="float: right;">
                       <el-button type="primary" @click="addGoods">新增</el-button>
