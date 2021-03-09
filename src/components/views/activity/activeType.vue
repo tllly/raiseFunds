@@ -22,6 +22,7 @@
                             type="text"
                             icon="el-icon-edit"
                             @click="handleEdit(scope.row)"
+                            v-has="'HDLXBJ'"
                         >编辑</el-button>
                     </template>
                 </el-table-column>

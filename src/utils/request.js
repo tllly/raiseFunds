@@ -3,7 +3,7 @@ import { Message } from 'element-ui';
 const service = axios.create({
     // process.env.NODE_ENV === 'development' 来判断是否开发环境
     baseURL: '/api',
-    //baseURL: 'http://81.71.27.180:8080/',
+    // baseURL: 'http://192.168.1.125:9200/',
     //baseURL: 'http://192.168.1.165:8400/',
     timeout: 5000
 })

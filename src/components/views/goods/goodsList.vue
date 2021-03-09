@@ -25,7 +25,7 @@
                     <!-- <el-button>导出</el-button> -->
                   </el-form-item>
                   <el-form-item style="float: right;">
-                      <el-button type="primary" @click="addGoods">新增</el-button>
+                      <el-button type="primary" @click="addGoods"  v-has="'SPGLTJ'">新增</el-button>
                   </el-form-item>
                 </el-form>
             </div>
@@ -49,12 +49,14 @@
                             type="text"
                             icon="el-icon-edit"
                             @click="handleEdit(scope.$index, scope.row)"
+                            v-has="'SPGLBJ'"
                         >编辑</el-button>
                         <el-button
                             type="text"
                             icon="el-icon-delete"
                             class="red"
                             @click="handleDelete(scope.$index, scope.row)"
+                            v-has="'SPGLSC'"
                         >删除</el-button>
                     </template>
                 </el-table-column>

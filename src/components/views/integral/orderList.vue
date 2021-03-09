@@ -73,6 +73,7 @@
                             type="text"
                             icon="el-icon-edit"
                             @click="handleEdit(scope.$index, scope.row)"
+                            v-has="'JFSCJLBJ'"
                         >编辑</el-button>
                         <!-- <el-button
                             type="text"

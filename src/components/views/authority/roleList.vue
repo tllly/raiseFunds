@@ -39,7 +39,7 @@
                     <!-- <el-button>导出</el-button> -->
                   </el-form-item>
                   <el-form-item style="float: right;">
-                      <el-button type="primary" @click="addGoods">新增</el-button>
+                      <el-button type="primary" @click="addGoods" v-has="'JSYHTJ'">新增</el-button>
                   </el-form-item>
                 </el-form>
             </div>
@@ -68,20 +68,24 @@
                         <el-button
                             type="text"
                             @click="handleEdit(scope.$index, scope.row)"
+                            v-has="'JSYHBJ'"
                         >编辑</el-button>
                         <el-button
                             type="text"
                             @click="grant(scope.row)"
+                            v-has="'JSYHSQ'"
                         >授权</el-button>
                         <el-button
                             type="text"
                             :class="scope.row.status == 1 ? 'red' : ''"
                             @click="switchState(scope.row)"
+                            v-has="'JSYHBJ'"
                         >{{scope.row.status == 1 ? '禁用' : '启用'}}</el-button>
                         <el-button
                             type="text"
                             class="red"
                             @click="handleDelete(scope.$index, scope.row)"
+                            v-has="'JSYHSC'"
                         >删除</el-button>
                     </template>
                 </el-table-column>

@@ -12,7 +12,7 @@
         >
             <template v-for="item in items">
                 <template v-if="item.subs">
-                    <el-submenu :index="item.index" :key="item.index">
+                    <el-submenu :index="item.index" :key="item.index" v-has="item.code">
                         <template slot="title">
                             <i :class="item.icon"></i>
                             <span slot="title">{{ item.title }}</span>
@@ -33,12 +33,13 @@
                             <el-menu-item
                                 :index="subItem.index"
                                 :key="subItem.index"
+                                v-has="subItem.code"
                             >{{ subItem.title }}</el-menu-item>
                         </template>
                     </el-submenu>
                 </template>
                 <template v-else>
-                    <el-menu-item :index="item.index" :key="item.index">
+                    <el-menu-item :index="item.index" :key="item.index" v-has="item.code">
                         <i :class="item.icon"></i>
                         <span slot="title">{{ item.title }}</span>
                     </el-menu-item>
@@ -58,15 +59,18 @@ export default {
                 {
                     icon: 'el-icon-lx-home',
                     index: 'dashboard',
-                    title: '系统首页'
+                    title: '系统首页',
+                    code:'XXSY'
                 },
                 {
                     icon: 'el-icon-lx-calendar',
                     index: '1',
                     title: '会员管理',
+                    code:'HYGL',
                     subs: [
                         {
                             index: 'userList',
+                            code:'HYGLLB',
                             title: '会员列表'
                         },
                         // {
@@ -78,37 +82,50 @@ export default {
                 {
                     icon: 'el-icon-lx-calendar',
                     index: '2',
+                    code:'JYGL',
                     title: '交易管理',
                     subs: [
                         {
                             index: 'orderList',
+                            code:'DDLB',
                             title: '订单列表'
                         },
                         {
                             index: 'userRecharge',
+                            code:'CZGL',
                             title: '充值管理'
                         },
                         {
                             index: 'depositList',
+                            code:'TXGL',
                             title: '提现管理'
                         },
                         {
                             index: 'dealConsole',
+                            code:'JYKZ',
                             title: '交易控制'
+                        },
+                        {
+                            index: 'brokerageList',
+                            code:'YJGLLB',
+                            title: '佣金管理'
                         }
                     ]
                 },
                 {
                     icon: 'el-icon-lx-calendar',
                     index: '3',
+                    code:'SPGL',
                     title: '商品管理',
                     subs: [
                         {
                             index: 'goodsList',
+                            code:'SPGLLB',
                             title: '商品列表'
                         },
                         {
                             index: 'goodsCate',
+                            code:'SPGLFL',
                             title: '商品分类'
                         }
                     ]
@@ -116,14 +133,17 @@ export default {
                 {
                     icon: 'el-icon-lx-calendar',
                     index: '9',
+                    code:'JFSC',
                     title: '积分商城',
                     subs: [
                         {
                             index: 'integralGood',
+                            code:'JFSCLB',
                             title: '积分商品列表'
                         },
                         {
                             index: 'integralRecord',
+                            code:'JFSCJL',
                             title: '商品积分记录'
                         }
                     ]
@@ -131,14 +151,17 @@ export default {
                 {
                     icon: 'el-icon-lx-calendar',
                     index: '4',
+                    code:'SYWB',
                     title: '首页文本',
                     subs: [
                         {
                             index: 'noticeList',
+                            code:'WBGL',
                             title: '文本管理'
                         },
                         {
                             index: 'bannerList',
+                            code:'LBTLB',
                             title: '轮播图列表'
                         }
                     ]
@@ -146,14 +169,17 @@ export default {
                 {
                     icon: 'el-icon-lx-calendar',
                     index: '5',
+                    code:'HDGL',
                     title: '活动管理',
                     subs: [
                         {
                             index: 'activityRecord',
+                            code:'HDJLLB',
                             title: '活动记录列表'
                         },
                         {
                             index: 'activityType',
+                            code:'HDLXLB',
                             title: '活动类型'
                         }
                         // {
@@ -173,14 +199,17 @@ export default {
                 {
                     icon: 'el-icon-lx-calendar',
                     index: '6',
+                    code:'QXGL',
                     title: '权限管理',
                     subs: [
                         {
                             index: 'roleList',
+                            code:'JSLB',
                             title: '角色列表'
                         },
                         {
                             index: 'sUser',
+                            code:'JSYHLB',
                             title: '系统用户列表'
                         }
                     ]
@@ -188,10 +217,12 @@ export default {
                 {
                     icon: 'el-icon-lx-calendar',
                     index: '7',
+                    code:'BMDGL',
                     title: '白名单管理',
                     subs: [
                         {
                             index: 'whiteList',
+                            code:'BMDLB',
                             title: '白名单列表'
                         }
                     ]
@@ -199,10 +230,12 @@ export default {
                 {
                     icon: 'el-icon-lx-calendar',
                     index: '8',
+                    code:'XXGL',
                     title: '消息管理',
                     subs: [
                         {
                             index: 'messageList',
+                            code:'XXGLLB',
                             title: '消息列表'
                         }
                     ]
@@ -310,6 +343,7 @@ export default {
             this.collapse = msg;
             bus.$emit('collapse-content', msg);
         });
+        let aaa = this.$store.state
     }
 };
 </script>

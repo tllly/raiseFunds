@@ -169,6 +169,11 @@ export default new Router({
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/message/index.vue'),
                     meta: { title: '消息管理' }
                 },
+                {
+                    path: '/brokerageList',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/brokerage/index.vue'),
+                    meta: { title: '佣金管理' }
+                },
 
 
                 {

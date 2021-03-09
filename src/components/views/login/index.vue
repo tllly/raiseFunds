@@ -51,20 +51,25 @@ export default {
                         if(res.data && res.code == 200){
                             vue.$message.success('登录成功');
                             var curtime = new Date().getTime(); // 获取当前时间 ，转换成JSON字符串序列 
+                            var menus = [];
+                            for (var i = 0; i < res.data.roles.length; i++) {
+                                var role = res.data.roles[i];
+                                for (var j = 0; j < role.permissions.length; j++) {
+                                    menus.push(role.permissions[j].permission);
+                                }
+                            }
                             var valueDate = JSON.stringify({
                                 val: res.data,
-                                timer: curtime
+                                timer: curtime,
+                                permissions:menus
                             });
                             localStorage.setItem('userObj', valueDate);
+                            this.$store.state.authList = menus
                             vue.$router.push('/');
                         }else{
                             vue.$message.error(res.viewMsg);
                         }
                     })
-
-                    // this.$message.success('登录成功');
-                    // localStorage.setItem('ms_username', this.param.username);
-                    // this.$router.push('/');
                 } else {
                     this.$message.error('请输入账号和密码');
                     console.log('error submit!!');

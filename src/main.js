@@ -4,11 +4,14 @@ import router from './router';
 import ElementUI from 'element-ui';
 import VueI18n from 'vue-i18n';
 import { messages } from './components/common/i18n';
+import store from './store/index.js'
 import 'element-ui/lib/theme-chalk/index.css'; // 默认主题
 // import './assets/css/theme-green/index.css'; // 浅绿色主题
 import './assets/css/icon.css';
 import './components/common/directives';
 import 'babel-polyfill';
+
+import has from './utils/permissions.js'
 
 Vue.config.productionTip = false;
 Vue.use(VueI18n);
@@ -38,7 +41,12 @@ router.beforeEach((to, from, next) => {
                     confirmButtonText: '确定'
                 });
                 localStorage.removeItem('userObj');
+                store.state.authList = null
                 next('/login');
+            }else{
+                if(!store.state.authList){
+                    store.state.authList = dataObj.permissions
+                }
             }
         }
         // 简单的判断IE10及以下不进入富文本编辑器，该组件不兼容
@@ -55,5 +63,6 @@ router.beforeEach((to, from, next) => {
 new Vue({
     router,
     i18n,
+    store,
     render: h => h(App)
 }).$mount('#app');

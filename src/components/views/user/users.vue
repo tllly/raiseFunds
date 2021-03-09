@@ -42,7 +42,7 @@
                           <el-form-item>
                             <el-button type="primary" @click="handleSearch">搜索</el-button>
                             <el-button @click="resetSearch">重置</el-button>
-                            <!-- <el-button>导出</el-button> -->
+                            <el-button @click="exportExcel">导出</el-button>
                           </el-form-item>
                         </el-form>
                     </div>
@@ -58,8 +58,8 @@
                         <el-table-column prop="id" label="ID" width="55" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="username" label="账号" show-overflow-tooltip width="110"></el-table-column>
                         <el-table-column prop="nickname" label="用户名" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="allCount" label="人数" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="allHyCount" label="在线人数" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="childs" label="人数" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="activeCount" label="在线人数" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="balance" label="账号余额" show-overflow-tooltip>
                             <template slot-scope="scope">{{scope.row.balance}}</template>
                         </el-table-column>
@@ -67,7 +67,7 @@
                         <el-table-column prop="freezeBalance" label="冻结金额" show-overflow-tooltip></el-table-column>
                         <!-- <el-table-column prop="num" label="利息宝"></el-table-column> -->
                         <el-table-column prop="inviteCode" label="邀请码" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="parent_name" label="上级用户" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="parentName" label="上级用户" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="rechargeNum" label="当日充值" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="depositNum" label="当日提现" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="addtime" label="注册时间" show-overflow-tooltip></el-table-column>
@@ -86,38 +86,38 @@
                                     type="text"
                                     icon="el-icon-edit"
                                     @click="editInfo(scope.row)"
-                                    v-if="loginUserObj.agentId == 0"
+                                    v-has="'HYGLBJ'"
                                 >编辑</el-button>
                                 <el-button
                                     type="text"
                                     icon="el-icon-delete"
                                     class="red"
                                     @click="handleDelete(scope.$index, scope.row)"
-                                    v-if="loginUserObj.agentId == 0"
+                                    v-has="'HYGLSC'"
                                 >删除</el-button>
-                                <el-button size="text" type="primary" @click="checkBill(scope.row)">账单</el-button>
-                                <el-button size="text" type="primary" @click="checkTeam(scope.row)">查看团队</el-button>
+                                <el-button size="text" type="primary" @click="checkBill(scope.row)" v-has="'HYGLZD'">账单</el-button>
+                                <el-button size="text" type="primary" @click="checkTeam(scope.row)" v-has="'HYGLCKTD'">查看团队</el-button>
                                 <el-popover
                                   placement="top"
-                                  width="970"
+                                  width="815"
                                   :value="scope.row.visible">
                                   <div style="margin:0px;">
                                     
                                     <!-- <el-button size="mini" type="success" @click="deductEdit(scope.row)">暗扣设置</el-button> -->
-                                    <el-button size="mini" type="danger" @click="roleSwitch(scope.row)">{{scope.row.isJia == 0?'设为真人':'设为假人'}}</el-button>
-                                    <el-button size="mini" type="warning" @click="agentSet(scope.row)" v-if="scope.row.isAgent == 0">代理设置</el-button>
-                                    <el-button size="mini" type="warning" @click="agentCancel(scope.row)"  v-else>取消代理</el-button>
-                                    <el-button size="mini" type="primary" @click="accountDisable(scope.row)">{{scope.row.status == 1?'禁用':'启动'}}</el-button>
-                                    <el-button size="mini" type="success" @click="bankCardInfo(scope.row)">银行卡信息</el-button>
-                                    <el-button size="mini" type="danger" @click="addressSet(scope.row)">地址信息</el-button>
+                                    <el-button size="mini" type="danger" @click="roleSwitch(scope.row)" v-has="'HYGLSWJR'">{{scope.row.isJia == 0?'设为真人':'设为假人'}}</el-button>
+                                    <el-button size="mini" type="warning" @click="agentSet(scope.row)" v-if="scope.row.isAgent == 0" v-has="'HYGLDLSZ'">代理设置</el-button>
+                                    <el-button size="mini" type="warning" @click="agentCancel(scope.row)" v-has="'HYGLDLSZ'"  v-else>取消代理</el-button>
+                                    <el-button size="mini" type="primary" @click="accountDisable(scope.row)" v-has="'HYGLJY'">{{scope.row.status == 1?'禁用':'启动'}}</el-button>
+                                    <el-button size="mini" type="success" @click="bankCardInfo(scope.row)" v-has="'HYGLYHKXX'">银行卡信息</el-button>
+                                    <el-button size="mini" type="danger" @click="addressSet(scope.row)" v-has="'HYGLDZXX'">地址信息</el-button>
                                     <!-- <el-button size="mini" type="primary" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
-                                    <el-button size="mini" type="warning" @click="refreshQr">刷新二维码</el-button>
+                                    <el-button size="mini" type="warning" @click="refreshQr" v-has="'HYGLSXEWM'">刷新二维码</el-button>
                                     
-                                    <el-button size="mini" type="success" @click="checkAccount(scope.row)">账变</el-button>
-                                    <el-button size="mini" type="danger" @click="bindSysBank(scope.row)">绑定系统银行卡</el-button>
-                                    <el-button size="mini" type="warning" @click="balanceOperate(scope.row)">余额操作</el-button>
+                                    <el-button size="mini" type="success" @click="checkAccount(scope.row)" v-has="'HYGLZB'">账变</el-button>
+                                    <el-button size="mini" type="danger" @click="bindSysBank(scope.row)" v-has="'HYGLBDXTYHK'">绑定系统银行卡</el-button>
+                                    <el-button size="mini" type="warning" @click="balanceOperate(scope.row)" v-has="'HYGLYECZ'">余额操作</el-button>
                                   </div>
-                                  <el-button type="text" slot="reference" style="margin-left: 10px;" v-if="loginUserObj.agentId == 0">更多操作</el-button>
+                                  <el-button type="text" slot="reference" style="margin-left: 10px;">更多操作</el-button>
                                 </el-popover>
                             </template>
                         </el-table-column>
@@ -190,7 +190,7 @@
 </template>
 
 <script>
-import { fetchData , postData , deleteData , updateData} from '../../../api/index';
+import { fetchData , postData , deleteData , updateData , exportData} from '../../../api/index';
 import billPop from './components/billPop'
 import editPop from './components/editPop'
 import deductPop from './components/deductPop'
@@ -273,6 +273,10 @@ export default {
     mounted() {
     },
     methods: {
+        //导出数据
+        exportExcel(){
+            exportData(`/xy-users/exportUsersExcel/currentPage/${this.pageIndex}/pageSize/${this.pageTotal}`,this.query)
+        },
         //模拟关闭popOver
         closePopover(item){
             document.getElementById("listTable").click()

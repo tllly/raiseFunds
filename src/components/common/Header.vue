@@ -15,7 +15,7 @@
                     </el-tooltip>
                 </div> -->
                 <!-- 消息中心 -->
-                <div class="btn-bell">
+                <div class="btn-bell" v-has="'XXGLLB'">
                     <el-tooltip
                         effect="dark"
                         :content="message?`有${message}条未读消息`:`消息中心`"
@@ -28,7 +28,7 @@
                     </el-tooltip>
                     <span class="btn-bell-badge" v-if="message"></span>
                 </div>
-                <div class="btn-bell">
+                <div class="btn-bell" v-has="'CZGL'">
                     <el-tooltip
                         effect="dark"
                         :content="rechargeNum?`有${rechargeNum}条未读消息`:`消息中心`"
@@ -41,7 +41,7 @@
                     </el-tooltip>
                     <span class="btn-bell-badge" v-if="rechargeNum"></span>
                 </div>
-                <div class="btn-bell">
+                <div class="btn-bell" v-has="'TXGLLB'">
                     <el-tooltip
                         effect="dark"
                         :content="depositNum?`有${depositNum}条未读消息`:`消息中心`"
@@ -101,6 +101,7 @@ export default {
         handleCommand(command) {
             if (command == 'loginout') {
                 localStorage.removeItem('userObj');
+                this.$store.state.authList = null
                 this.$router.push('/login');
             }
         },

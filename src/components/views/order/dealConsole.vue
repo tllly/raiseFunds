@@ -13,7 +13,7 @@
                 <el-select v-model="form.bankId" placeholder="请选择" @change="selectBankChange">
                   <el-option v-for="(item,index) in bankList" :label="item.bankname" :value="item.id"></el-option>
                 </el-select>
-                <el-button style="margin-left: 20px;" type="primary" @click="addBankCard">添加银行卡</el-button>
+                <el-button style="margin-left: 20px;" type="primary" @click="addBankCard" v-has="'JYKZQR'">添加银行卡</el-button>
               </el-form-item>
               <el-form-item label="收款银行卡号">
                 <el-input v-model="curBank.cardnum" disabled></el-input>
@@ -27,7 +27,7 @@
               <el-form-item label="银行地址">
                 <el-input v-model="curBank.site" disabled></el-input>
               </el-form-item>
-              <el-form-item label="团队交易佣金" prop="content">
+              <el-form-item label="提现手续费比例" prop="content">
                 <el-input type="number" v-model="form.content"></el-input>
               </el-form-item>
               <!-- <el-form-item label="推荐好友返佣">
@@ -45,7 +45,7 @@
                 <i class="el-icon-circle-plus-outline" style="color: #409EFF;cursor: pointer;" v-if="ruleArr.length == 0" @click="addRule"></i>
               </el-form-item> -->
               <el-form-item>
-                <el-button type="primary" @click="onSubmit('form')" v-if="loginUserObj.agentId == 0">确认</el-button>
+                <el-button type="primary" @click="onSubmit('form')" v-if="loginUserObj.agentId == 0"  v-has="'JYKZQR'">确认</el-button>
                 <!-- <el-button @click="cancel">取消</el-button> -->
               </el-form-item>
             </el-form>

@@ -39,14 +39,14 @@
                   <el-form-item>
                     <el-button type="primary" @click="handleSearch">搜索</el-button>
                     <el-button @click="resetSearch">重置</el-button>
-                    <!-- <el-button>导出</el-button> -->
+                    <el-button @click="exportExcel">导出</el-button>
                   </el-form-item>
                   <!-- <el-form-item style="float: right;">
                       <el-button type="primary" @click="addGoods">新增</el-button>
                   </el-form-item> -->
                 </el-form>
             </div>
-            <div style="margin: -20px 0 10px;">
+            <div style="margin: -20px 0 10px;" v-has="'TXGLCZ'">
                 <!-- <el-button type="primary">批量通过</el-button> -->
                 <el-button type="danger" @click="checkList">批量驳回</el-button>
             </div>
@@ -106,13 +106,13 @@
                         <el-button
                             type="text"
                             @click="agree(scope.row)"
-                            v-if="loginUserObj.agentId == 0"
+                            v-has="'TXGLCZ'"
                         >通过</el-button>
                         <el-button
                             type="text"
                             class="red"
                             @click="refuse(scope.row)"
-                            v-if="loginUserObj.agentId == 0"
+                            v-has="'TXGLCZ'"
                         >驳回</el-button>
                     </template>
                 </el-table-column>
@@ -133,7 +133,7 @@
 </template>
 
 <script>
-import { fetchData , deleteData , updateData} from '../../../api/index';
+import { fetchData , deleteData , updateData , exportData} from '../../../api/index';
 export default {
     name: 'depositList',
     data() {
@@ -228,6 +228,10 @@ export default {
             this.query.startTime = ""
             this.query.endTime = ""
             this.getData();
+        },
+        //导出数据
+        exportExcel(){
+            exportData(`/xy-deposit/exportDepositExcel/currentPage/${this.pageIndex}/pageSize/${this.pageTotal}`,this.query)
         },
         addGoods(){
             this.addVisible = true

@@ -7,6 +7,7 @@ import request from '../utils/request';
 //         data: query
 //     })
 // }
+let baseUrl = "http://192.168.1.125:9200"
 
 export const fetchData = (url,query) => {
     var urlParams = [];
@@ -27,6 +28,25 @@ export const fetchData = (url,query) => {
         data: query
     })
 }
+
+export const exportData = (url,query) => {
+    var urlParams = [];
+    if(query){
+        let params = JSON.parse(JSON.stringify(query))
+        for (var key in params) {
+            if (params[key]) {
+                urlParams.push(`${key}=${encodeURIComponent(params[key])}`)
+            }
+        }
+        if(urlParams.length > 0){
+            url += '?' + urlParams.join('&');
+        }
+    }
+    let _url = `${baseUrl}${url}`
+    window.location.href = _url
+}
+
+
 
 export const postData = (url,query) => {
     return request({

@@ -97,13 +97,13 @@
                         <el-button
                             type="text"
                             @click="agree(scope.row)"
-                            v-if="loginUserObj.agentId == 0"
+                             v-has="'CZGLCZ'"
                         >通过</el-button>
                         <el-button
                             type="text"
                             class="red"
                             @click="refuse(scope.row)"
-                            v-if="loginUserObj.agentId == 0"
+                             v-has="'CZGLCZ'"
                         >驳回</el-button>
                     </template>
                 </el-table-column>
