@@ -36,7 +36,8 @@
                 ref="multipleTable"
                 header-cell-class-name="table-header"
             >
-                <el-table-column prop="uid" label="用户ID"></el-table-column>
+                <el-table-column prop="nickname" label="用户名"></el-table-column>
+                <el-table-column prop="tel" label="用户手机号"></el-table-column>
                 <el-table-column prop="atype" label="活动类型" align="center">
                     <template slot-scope="scope">
                         <span v-if="scope.row.atype == 1">签到</span>

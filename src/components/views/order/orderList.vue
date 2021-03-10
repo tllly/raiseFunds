@@ -50,7 +50,7 @@
                 ref="multipleTable"
                 header-cell-class-name="table-header"
             >
-                <el-table-column prop="code" label="订单号"  align="center"></el-table-column>
+                <el-table-column prop="code" label="订单号"  align="center" width="250" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="nickname" label="用户名"  show-overflow-tooltip></el-table-column>
                 <el-table-column prop="goodsName" label="商品名称" show-overflow-tooltip>
                     <template slot-scope="scope">{{scope.row.goodsName}}</template>

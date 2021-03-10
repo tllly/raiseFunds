@@ -7,13 +7,31 @@
           <el-form-item label="手机号码" prop="tel">
             <el-input v-model="form.tel"></el-input>
           </el-form-item>
+          <el-form-item label="用户密码">
+            <el-input v-model="form.pwd"></el-input>
+          </el-form-item>
           <el-form-item label="账号余额" prop="balance">
             <el-input type="number" v-model="form.balance"></el-input>
           </el-form-item>
           <el-form-item label="冻结金额" prop="freezeBalance">
             <el-input type="number" v-model="form.freezeBalance"></el-input>
           </el-form-item>
-          <el-form-item label="会员等级" prop="level">
+          <el-form-item label="开户银行">
+            <el-input v-model="bankInfo.bankname"></el-input>
+          </el-form-item>
+          <el-form-item label="开户电话">
+            <el-input v-model="bankInfo.tel"></el-input>
+          </el-form-item>
+          <el-form-item label="银行卡号">
+            <el-input v-model="bankInfo.cardnum"></el-input>
+          </el-form-item>
+          <el-form-item label="开户人">
+            <el-input v-model="bankInfo.username"></el-input>
+          </el-form-item>
+          <el-form-item label="开户地址">
+            <el-input v-model="bankInfo.address"></el-input>
+          </el-form-item>
+          <!-- <el-form-item label="会员等级" prop="level">
             <el-select v-model="form.level" placeholder="请选择" style="width: 100%">
               <el-option label="白银会员" :value="0"></el-option>
               <el-option label="黄金会员" :value="1"></el-option>
@@ -21,7 +39,7 @@
               <el-option label="钻石会员" :value="3"></el-option>
               <el-option label="蓝宝石会员" :value="4"></el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <!-- <el-form-item label="登录密码">
             <el-input v-model="form.pwd"></el-input>
           </el-form-item> -->
@@ -52,10 +70,18 @@ export default {
               balance:0,
               freezeBalance:0,
               level:'',
-              //pwd:'',
-              casePwd:'',
+              pwd:null,
+              //casePwd:'',
               parentId:'',
-              id:''
+              id:'',
+              bankInfo:''
+            },
+            bankInfo:{
+              bankname:'',
+              tel:'',
+              cardnum:'',
+              username:'',
+              address:'',
             },
             rules: {
               username:[
@@ -72,7 +98,7 @@ export default {
               ],
               level: [
                 { required: true, message: '请至少会员等级', trigger: 'change' }
-              ],
+              ]
             }
         };
     },
@@ -83,17 +109,29 @@ export default {
         this.form.freezeBalance = this.dataItem.freezeBalance
         this.form.level = this.dataItem.level
         //this.form.pwd = this.dataItem.pwd
-        this.form.casePwd = this.dataItem.casePwd
+        //this.form.casePwd = this.dataItem.casePwd
         this.form.parentId = this.dataItem.parentId
         this.form.id = this.dataItem.id
+
+        if(this.dataItem.bankInfo && this.dataItem.bankInfo.length > 0){
+          let row = this.dataItem.bankInfo[0]
+          
+          this.bankInfo.bankname = row.bankname
+          this.bankInfo.address = row.address
+          this.bankInfo.tel = row.tel
+          this.bankInfo.cardnum = row.cardnum
+          this.bankInfo.username = row.username
+        }
     },
     methods: {
       onSubmit(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            if(this.dataItem.casePwd && this.form.casePwd == this.dataItem.casePwd){
-              this.form.casePwd = null
-            }
+            // if(this.dataItem.casePwd && this.form.casePwd == this.dataItem.casePwd){
+            //   this.form.casePwd = null
+            // }
+            this.form.pwd = this.form.pwd?this.form.pwd:null
+            this.form.bankInfo = [this.bankInfo]
             updateData(`/xy-users/update`,this.form).then(res => {
               this.form.casePwd = this.dataItem.casePwd
               this.$emit('editSuccess')

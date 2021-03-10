@@ -261,11 +261,7 @@ export default {
             this.getData();
         },
         agree(row){
-            let data ={
-                id:row.id,
-                status:2
-            }
-            updateData(`/xy-deposit/update`,data).then(res => {
+            fetchData(`/xy-deposit/upDeposit?conId=${row.id}`).then(res => {
                 this.$message.success('操作成功');
                 this.getData();
             });

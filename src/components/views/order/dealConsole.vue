@@ -27,8 +27,17 @@
               <el-form-item label="银行地址">
                 <el-input v-model="curBank.site" disabled></el-input>
               </el-form-item>
-              <el-form-item label="提现手续费比例" prop="content">
-                <el-input type="number" v-model="form.content"></el-input>
+              <el-form-item label="免费次数" prop="param1">
+                <el-input type="number" v-model="form.param1"></el-input>
+              </el-form-item>
+              <el-form-item label="手续费比例" prop="param2">
+                <el-input type="number" v-model="form.param2"></el-input>
+              </el-form-item>
+              <el-form-item label="最小金额" prop="param3">
+                <el-input type="number" v-model="form.param3"></el-input>
+              </el-form-item>
+              <el-form-item label="最大金额" prop="param4">
+                <el-input type="number" v-model="form.param4"></el-input>
               </el-form-item>
               <!-- <el-form-item label="推荐好友返佣">
                 <div v-for="(item,index) in ruleArr" :key="index">
@@ -82,15 +91,27 @@ export default {
             loginUserObj:JSON.parse(localStorage.getItem('userObj')).val,//当前登录用户对象
             form:{
                 bankId:'',
-                content:''
+                param1:'',
+                param2:'',
+                param3:'',
+                param4:''
             },
             rules:{
                 bankId:[
                     { required: true, message: '请选择银行卡', trigger: 'change' },
                 ],
-                content: [
-                    { required: true, message: '请输入团队交易佣金', trigger: 'blur' }
+                param1: [
+                    //{ required: true, message: '请输入免费次数', trigger: 'blur' }
                 ],
+                param2: [
+                    //{ required: true, message: '请输入手续费比例', trigger: 'blur' }
+                ],
+                param3: [
+                    //{ required: true, message: '请输入最小金额', trigger: 'blur' }
+                ],
+                param4: [
+                    //{ required: true, message: '请输入最大金额', trigger: 'blur' }
+                ]
             },
             bankList:[],
             curBank:{},
@@ -147,8 +168,11 @@ export default {
         },
         //查询交易佣金
         checkYongJinSys(){
-            fetchData(`/xy-index-msg/find?id=14`).then(res => {
-                this.form.content = res.data.content
+            fetchData(`/sys-data/find?id=1`).then(res => {
+                this.form.param1 = res.data.param1
+                this.form.param2 = res.data.param2
+                this.form.param3 = res.data.param3
+                this.form.param4 = res.data.param4
             });
         },
         //选择银行
@@ -196,7 +220,16 @@ export default {
         onSubmit(formName){
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    fetchData(`/xy-bankinfo/upHomeBank?bankId=${this.form.bankId}&content=${this.form.content}`).then(res=>{
+                    let data = {
+                        bankId:this.form.bankId,
+                        depositConfig:{
+                            param1:this.form.param1,
+                            param2:this.form.param2,
+                            param3:this.form.param3,
+                            param4:this.form.param4
+                        }
+                    }
+                    postData(`/xy-bankinfo/upHomeBank`,data).then(res=>{
                         this.$message.success('操作成功')
                     })
                 }

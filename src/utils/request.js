@@ -1,5 +1,21 @@
 import axios from 'axios';
-import { Message } from 'element-ui';
+import { Message,Loading } from 'element-ui';
+
+//开始加载动画
+let loading;
+function startLoading() {
+    loading  = Loading.service({
+        //lock:true, //是否锁定
+        text:'Loading',//加载中需要显示的文字
+        spinner: 'el-icon-loading',
+        background:'rgba(0,0,0,.1)',//背景颜色
+    });
+}
+//结束加载动画
+function endLoading() {
+    loading.close();
+}
+
 const service = axios.create({
     // process.env.NODE_ENV === 'development' 来判断是否开发环境
     baseURL: '/api',
@@ -9,6 +25,7 @@ const service = axios.create({
 })
 
 service.interceptors.request.use( config => {
+    startLoading();//请求时的加载动画
     return config;
 }, error => {
     console.log(error);
@@ -16,6 +33,7 @@ service.interceptors.request.use( config => {
 })
 
 service.interceptors.response.use(response => {
+    endLoading();//结束加载动画
     if(response.status === 200){
         
         if(response.data.code == 200){
@@ -31,6 +49,7 @@ service.interceptors.response.use(response => {
         Promise.reject();
     }
 }, error => {
+    endLoading();//结束加载动画
     console.log(error);
     return Promise.reject();
 })

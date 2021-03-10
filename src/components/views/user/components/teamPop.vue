@@ -40,6 +40,16 @@
             <el-table-column prop="addtime" label="注册时间"></el-table-column>
             <el-table-column prop="value" label="操作"></el-table-column>
         </el-table>
+        <div class="pagination">
+            <el-pagination
+                background
+                layout="total, prev, pager, next"
+                :current-page="pageIndex"
+                :page-size="pageSize"
+                :total="pageTotal"
+                @current-change="handlePageChange"
+            ></el-pagination>
+        </div>
     </div>
 </template>
 
@@ -52,8 +62,11 @@ export default {
         return {
             tabActiveName:"0",
             childList:[{}],
-            layers:null,
-            dept:0,
+            layers: null,
+            dept: 0,
+            pageTotal: 0,
+            pageSize: 10,
+            pageIndex: 1
         };
     },
     created() {
@@ -63,17 +76,23 @@ export default {
         handleSearch(){
 
         },
+        handlePageChange(val) {
+            this.pageIndex = val
+            this.getGroup();
+        },
         handleClick(tab, event) {
+            this.pageIndex = 1
             let _index = tab.index
             this.dept = tab.index
             this.getGroup()
         },
         getGroup(){
-            fetchData(`/xy-users/getGroup?userId=${this.dataItem.id}&dept=${this.dept}`).then(res=>{
+            fetchData(`/xy-users/getGroup?currentPage=${this.pageIndex}&pageSize=10&userId=${this.dataItem.id}&dept=${this.dept}`).then(res=>{
                 if(this.dept == 0){
                     this.layers = res.data.layers
                 }
-              this.childList = res.data.allChild
+              this.childList = res.data.pageAllChild
+              this.pageTotal = res.data.allChild.length
             })
         },
     }

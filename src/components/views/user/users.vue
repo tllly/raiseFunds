@@ -99,7 +99,7 @@
                                 <el-button size="text" type="primary" @click="checkTeam(scope.row)" v-has="'HYGLCKTD'">查看团队</el-button>
                                 <el-popover
                                   placement="top"
-                                  width="815"
+                                  width="715"
                                   :value="scope.row.visible">
                                   <div style="margin:0px;">
                                     
@@ -108,7 +108,7 @@
                                     <el-button size="mini" type="warning" @click="agentSet(scope.row)" v-if="scope.row.isAgent == 0" v-has="'HYGLDLSZ'">代理设置</el-button>
                                     <el-button size="mini" type="warning" @click="agentCancel(scope.row)" v-has="'HYGLDLSZ'"  v-else>取消代理</el-button>
                                     <el-button size="mini" type="primary" @click="accountDisable(scope.row)" v-has="'HYGLJY'">{{scope.row.status == 1?'禁用':'启动'}}</el-button>
-                                    <el-button size="mini" type="success" @click="bankCardInfo(scope.row)" v-has="'HYGLYHKXX'">银行卡信息</el-button>
+                                    <!-- <el-button size="mini" type="success" @click="bankCardInfo(scope.row)" v-has="'HYGLYHKXX'">银行卡信息</el-button> -->
                                     <el-button size="mini" type="danger" @click="addressSet(scope.row)" v-has="'HYGLDZXX'">地址信息</el-button>
                                     <!-- <el-button size="mini" type="primary" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
                                     <el-button size="mini" type="warning" @click="refreshQr" v-has="'HYGLSXEWM'">刷新二维码</el-button>
@@ -228,7 +228,8 @@ export default {
                 tel:'',
                 startTime:'',
                 endTime:'',
-                status:''
+                status:'',
+                id:null
             },
             searchObj:{
                 nickname:'',
@@ -260,7 +261,9 @@ export default {
             defaultProps: {
               children: 'child',
               label: 'nickname'
-            }
+            },
+            checkTreeDataFlag:false,//查看树结构数据
+            treeDataArr:[]
         };
     },
     created() {
@@ -472,6 +475,7 @@ export default {
         },
         // 触发重置按钮
         resetSearch() {
+            this.query.id = null
             this.pageIndex = 1
             this.query.nickname = this.searchObj.nickname = ""
             this.query.tel = this.searchObj.tel = ""
@@ -492,15 +496,28 @@ export default {
         },
         //点击树
         handleNodeClick(data) {
-            this.tableData = []
-            let _arr = []
-            this.pageTotal=1
-            if (data.child && data.child.length > 0) {
-                _arr = data.child
-                this.pageTotal += data.child.length
+            if(this.query.id && this.query.id == data.id){
+                return
             }
-            _arr.push(data)
-            this.tableData = _arr
+            this.query.id = data.id
+            this.pageIndex = 1
+            this.query.nickname = this.searchObj.nickname = ""
+            this.query.tel = this.searchObj.tel = ""
+            this.query.status = this.searchObj.status = ""
+            this.daterangeValue = null
+            this.query.startTime = ""
+            this.query.endTime = ""
+            this.getData();
+
+            // this.tableData = []
+            // let _arr = []
+            // this.pageTotal=1
+            // if (data.child && data.child.length > 0) {
+            //     _arr = data.child
+            //     this.pageTotal += data.child.length
+            // }
+            // _arr.push(data)
+            // this.tableData = _arr
         }
     }
 };

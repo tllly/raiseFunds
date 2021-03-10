@@ -40,6 +40,7 @@
             </el-form-item>
             <el-form-item label="送达天数" prop="day">
               <el-input type="number" v-model="form.day"></el-input>
+              <!-- <el-date-picker v-model="form.day" type="date" :picker-options="pickerOptions" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd" placeholder="请选择"></el-date-picker> -->
             </el-form-item>
             <el-form-item label="商品图片" prop="goodsPic">
               <img v-if="form.goodsPic" @click="uploadImg" :src="form.goodsPic" style="width: 100px;height: 100px;">
@@ -76,6 +77,11 @@ export default {
             editId:null,
             editorOption: {
                 placeholder: '请输入商品描述'
+            },
+            pickerOptions: { //控制时间范围
+                disabledDate (time) {
+                    return time.getTime() < (Date.now() - (24 * 60 * 60 * 1000))
+                }
             },
             form: {
               cid:'',
@@ -117,7 +123,7 @@ export default {
                 { required: true, message: '请输入商品佣金比率', trigger: 'blur' }
               ],
               day:[
-                { required: true, message: '请输入送达天数', trigger: 'blur' }
+                { required: true, message: '请输入送达天数', trigger: 'change' }
               ],
               goodsPic: [
                 { required: true, message: '请上传商品图片', trigger: 'blur' }
