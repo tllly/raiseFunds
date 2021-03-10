@@ -65,7 +65,7 @@
                     <template slot-scope="scope">￥{{scope.row.num}}</template>
                 </el-table-column>
                 <el-table-column prop="shouxu" label="手续费"  show-overflow-tooltip>
-                    <template slot-scope="scope">{{scope.row.shouxu}}%</template>
+                    <template slot-scope="scope">￥{{scope.row.shouxu}}</template>
                 </el-table-column>
                 <el-table-column prop="realNum" label="实际到账"  show-overflow-tooltip>
                     <template slot-scope="scope">￥{{scope.row.realNum}}</template>

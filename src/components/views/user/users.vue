@@ -44,6 +44,9 @@
                             <el-button @click="resetSearch">重置</el-button>
                             <el-button @click="exportExcel">导出</el-button>
                           </el-form-item>
+                          <el-form-item style="float: right;">
+                              <el-button type="primary" @click="addUser"  v-has="'SPGLTJ'">新增</el-button>
+                          </el-form-item>
                         </el-form>
                     </div>
                     <el-table
@@ -185,6 +188,10 @@
         <el-dialog title="余额操作" :visible.sync="balanceVisible" width="50%">
             <balancePop v-if="balanceVisible" :balanceVisible="balanceVisible" @update:balanceVisible="val => balanceVisible = val" :dataItem="curDataObj" @balanceSuccess="balanceSuccess"></balancePop>
         </el-dialog>
+        <!-- 添加用户 -->
+        <el-dialog title="添加用户" :visible.sync="addVisible" width="50%">
+            <addPop v-if="addVisible" :addVisible="addVisible" @update:addVisible="val => addVisible = val" @addSuccess="addSuccess"></addPop>
+        </el-dialog>
 
     </div>
 </template>
@@ -200,6 +207,7 @@ import bankCardPop from './components/bankCardPop'
 import teamPop from './components/teamPop'
 import accountListPop from './components/accountListPop'
 import balancePop from './components/balancePop'
+import addPop from './components/addUser'
 export default {
     name: 'basetable',
     components:{
@@ -211,7 +219,8 @@ export default {
         bankCardPop,
         teamPop,
         accountListPop,
-        balancePop
+        balancePop,
+        addPop
     },
     data() {
         return {
@@ -251,6 +260,7 @@ export default {
             accountVisible: false,//账目变化
             sysBankVisible: false,//系统银行卡
             balanceVisible: false,//余额操作
+            addVisible:false, //添加用户
             bankList:[],//系统银行卡列表
             bankform:{
                 sysBankId:'',
@@ -283,6 +293,15 @@ export default {
         //模拟关闭popOver
         closePopover(item){
             document.getElementById("listTable").click()
+        },
+        addUser(){
+            this.addVisible = true
+        },
+        //添加用户成功
+        addSuccess(){
+            this.addVisible = false
+            this.$message.success('添加成功')
+            this.getData();
         },
         //查看账单
         checkBill(item){
