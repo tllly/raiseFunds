@@ -12,10 +12,10 @@
             <el-form-item label="分类名称" prop="name">
               <el-input v-model="form.name"></el-input>
             </el-form-item>
-            <el-form-item label="佣金比例" prop="bili">
+            <!-- <el-form-item label="佣金比例" prop="bili">
               <p>(不要设置百分比直接写0.01)</p>
               <el-input v-model="form.bili"></el-input>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="分类LOGO" prop="catePic">
               <!-- <el-input type="number" v-model="form.catePic"></el-input> -->
               <img v-if="form.catePic" @click="uploadImg" :src="form.catePic" style="width: 100px;height: 100px;">
@@ -54,7 +54,7 @@ export default {
             editId:null,
             form: {
               name:'',
-              bili:'',
+              //bili:'',
               min:0,
               catePic:null,
               backPic:null,
@@ -78,7 +78,7 @@ export default {
                 { required: true, message: '请上传分类背景图', trigger: 'change' }
               ],
               cateInfo: [
-                { required: true, message: '请输入分类简介', trigger: 'blur' }
+                //{ required: true, message: '请输入分类简介', trigger: 'blur' }
               ],
             }
         };

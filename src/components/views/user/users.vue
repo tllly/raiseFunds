@@ -45,7 +45,7 @@
                             <el-button @click="exportExcel">导出</el-button>
                           </el-form-item>
                           <el-form-item style="float: right;">
-                              <el-button type="primary" @click="addUser"  v-has="'SPGLTJ'">新增</el-button>
+                              <el-button type="primary" @click="addUser"  v-has="'HYGLBJ'">新增</el-button>
                           </el-form-item>
                         </el-form>
                     </div>

@@ -49,7 +49,8 @@
               <input type="hidden" v-model="form.goodsPic">
             </el-form-item>
             <el-form-item label="商品描述" prop="goodsInfo">
-              <quill-editor ref="myTextEditor" v-model="form.goodsInfo" :options="editorOption"></quill-editor>
+              <el-input type="textarea" v-model="form.goodsInfo"></el-input>
+              <!-- <quill-editor ref="myTextEditor" v-model="form.goodsInfo" :options="editorOption"></quill-editor> -->
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSubmit('form')">提交</el-button>
@@ -129,7 +130,7 @@ export default {
                 { required: true, message: '请上传商品图片', trigger: 'blur' }
               ],
               goodsInfo: [
-                { required: true, message: '请输入商品描述', trigger: 'blur' }
+                //{ required: true, message: '请输入商品描述', trigger: 'blur' }
               ],
             }
         };

@@ -16,7 +16,8 @@
              <el-date-picker v-model="form.createTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请选择发布时间"></el-date-picker>
             </el-form-item>
             <el-form-item label="公告内容" prop="content">
-              <quill-editor ref="myTextEditor" v-model="form.content" :options="editorOption"></quill-editor>
+              <!-- <quill-editor ref="myTextEditor" v-model="form.content" :options="editorOption"></quill-editor> -->
+              <el-input type="textarea" v-model="form.content"></el-input>
             </el-form-item>
             <el-form-item label="背景图片" prop="pic">
               <img v-if="form.pic" @click="uploadImg" :src="form.pic" style="width: 100px;height: 49px;">
@@ -36,14 +37,14 @@
 
 <script>
   import { fetchData , postData , updateData , imgUpload} from '../../../api/index';
-  import 'quill/dist/quill.core.css';
-  import 'quill/dist/quill.snow.css';
-  import 'quill/dist/quill.bubble.css';
-  import { quillEditor } from 'vue-quill-editor';
+  // import 'quill/dist/quill.core.css';
+  // import 'quill/dist/quill.snow.css';
+  // import 'quill/dist/quill.bubble.css';
+  // import { quillEditor } from 'vue-quill-editor';
 export default {
     name: 'noticeAdd',
     components: {
-        quillEditor
+        //quillEditor
     },
     data() {
         return {

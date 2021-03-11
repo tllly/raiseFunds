@@ -7,8 +7,11 @@
           <el-form-item label="手机号码" prop="tel">
             <el-input v-model="form.tel"></el-input>
           </el-form-item>
-          <el-form-item label="用户密码">
+          <el-form-item label="登录密码">
             <el-input v-model="form.pwd"></el-input>
+          </el-form-item>
+          <el-form-item label="交易密码">
+            <el-input v-model="form.casePwd"></el-input>
           </el-form-item>
           <el-form-item label="账号余额" prop="balance">
             <el-input type="number" v-model="form.balance"></el-input>
@@ -71,7 +74,7 @@ export default {
               freezeBalance:0,
               level:'',
               pwd:null,
-              //casePwd:'',
+              casePwd:null,
               parentId:'',
               id:'',
               bankInfo:''
@@ -131,6 +134,7 @@ export default {
             //   this.form.casePwd = null
             // }
             this.form.pwd = this.form.pwd?this.form.pwd:null
+            this.form.casePwd = this.form.casePwd?this.form.casePwd:null
             this.form.bankInfo = [this.bankInfo]
             updateData(`/xy-users/update`,this.form).then(res => {
               this.form.casePwd = this.dataItem.casePwd

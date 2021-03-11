@@ -16,6 +16,11 @@
                 header-cell-class-name="table-header"
             >
                 <el-table-column prop="activityName" label="活动类型"></el-table-column>
+                <el-table-column prop="pic" label="活动图片">
+                    <template slot-scope="scope">
+                        <img :src="scope.row.pic" style="width: 100px;height: 49px;" @click="onPreview(scope.row.pic)">
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button
@@ -40,6 +45,10 @@
         <el-dialog title="签到活动" :visible.sync="activeSignVisible" width="50%">
             <activeSign v-if="activeSignVisible" :activeSignVisible="activeSignVisible" @update:activeSignVisible="val => activeSignVisible = val" @signSuccess="signSuccess" :dataItem="curDataObj"></activeSign>
         </el-dialog>
+        <el-image-viewer 
+         v-if="showViewer" 
+         :on-close="closeViewer" 
+         :url-list="[url]" />
     </div>
 </template>
 
@@ -48,15 +57,19 @@ import { fetchData , deleteData } from '../../../api/index';
 import activeNew from './activeNew'
 import activeRecharge from './activeRecharge'
 import activeSign from './activeSign'
+import ElImageViewer from 'element-ui/packages/image/src/image-viewer';
 export default {
     name: 'activityType',
     components:{
         activeNew,
         activeRecharge,
-        activeSign
+        activeSign,
+        ElImageViewer
     },
     data() {
         return {
+            showViewer: false, // 显示查看器
+            url:'',
             formInline: {
               user: '',
               region: ''
@@ -90,6 +103,18 @@ export default {
             fetchData(`/activity-type/all`).then(res => {
                 this.tableData = res.data
             });
+        },
+        onPreview(val) {
+            if(!val){
+              this.$message.error('暂无图片')
+              return
+            }
+            this.url = val
+            this.showViewer = true
+        },
+          // 关闭查看器
+        closeViewer() {
+            this.showViewer = false
         },
         // 获取商品分类列表
         // getTypeList(){

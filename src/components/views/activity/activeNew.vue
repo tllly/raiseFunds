@@ -48,9 +48,12 @@
                 </el-input>
               </div>
             </el-form-item> -->
-            <!-- <el-form-item label="活动说明">
-              <el-input type="textarea" v-model="form.min"></el-input>
-            </el-form-item> -->
+            <el-form-item label="活动图片">
+              <img v-if="form.pic" @click="uploadImg" :src="form.pic" style="width: 100px;height: 100px;">
+              <el-button v-else type="primary" @click="uploadImg">上传图片</el-button>
+              <input type="file" name="" style="display: none" id="uploadFile" @change="imgSelect">
+              <input type="hidden" v-model="form.pic">
+            </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSubmit('form')">确定</el-button>
               <el-button @click="cancel">取消</el-button>
@@ -73,6 +76,7 @@ export default {
             isOpen:'',
             type:'',
             days:'',
+            pic:'',
             status:'',
             id:'',
           },
@@ -84,7 +88,7 @@ export default {
       this.form.id = this.dataItem.id
       this.form.award = this.dataItem.award
       this.form.count = this.dataItem.count
-      //this.form.isOpen = this.dataItem.isOpen = 1?true:false
+      this.form.pic = this.dataItem.pic
       this.isOpen = this.dataItem.isOpen == 1?true:false
       this.form.type = this.dataItem.type
       this.form.days = this.dataItem.days
@@ -97,6 +101,20 @@ export default {
           
       //   });
       // },
+      //选择图片
+      uploadImg(){
+        document.getElementById('uploadFile').click()
+      },
+      imgSelect(obj){
+        let file = obj.currentTarget.files[0]
+        let fileParam = new FormData()
+        fileParam.append('file', file)
+        imgUpload(`/api/addCommonUpload`,fileParam).then(res => {
+          if(res.code == 200){
+            this.form.pic = res.data
+          }
+        })
+      },
       onSubmit(formName){
         this.form.isOpen = this.isOpen ? 1 : 0
         if(this.form.days == "" || this.form.days == 0){

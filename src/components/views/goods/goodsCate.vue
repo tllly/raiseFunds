@@ -38,9 +38,9 @@
             >
                 <el-table-column prop="id" label="分类ID" width="90" align="center"></el-table-column>
                 <el-table-column prop="name" label="分类名称"  width="500" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="bili" label="比例">
+                <!-- <el-table-column prop="bili" label="比例">
                     <template slot-scope="scope">￥{{scope.row.bili}}</template>
-                </el-table-column>
+                </el-table-column> -->
                 <el-table-column prop="cateInfo" label="简介" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="createTime" label="添加时间"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">

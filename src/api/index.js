@@ -7,7 +7,7 @@ import request from '../utils/request';
 //         data: query
 //     })
 // }
-let baseUrl = "http://192.168.1.125:9200"
+let baseUrl = "http://156.234.211.62:9200"
 
 export const fetchData = (url,query) => {
     var urlParams = [];

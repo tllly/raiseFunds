@@ -27,7 +27,7 @@
               <el-form-item label="银行地址">
                 <el-input v-model="curBank.site" disabled></el-input>
               </el-form-item>
-              <el-form-item label="免费次数" prop="param1">
+              <el-form-item label="提现次数" prop="param1">
                 <el-input type="number" v-model="form.param1"></el-input>
               </el-form-item>
               <el-form-item label="手续费比例" prop="param2">

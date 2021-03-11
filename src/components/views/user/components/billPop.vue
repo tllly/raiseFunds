@@ -3,17 +3,20 @@
         <el-tabs v-model="activeIndex" @tab-click="handleClick">
             <el-tab-pane label="近3天" name="3"></el-tab-pane>
             <el-tab-pane label="近7天" name="7"></el-tab-pane>
+            <el-tab-pane label="近60天" name="60"></el-tab-pane>
         </el-tabs>
-        <el-table :data="tableData" style="width: 100%">
-            <el-table-column prop="time" label="时间"></el-table-column>
-            <el-table-column prop="integral" label="积分"></el-table-column>
-            <el-table-column prop="newPeople" label="新人红包"> </el-table-column>
-            <el-table-column prop="reserveNum" label="已预订金额"> </el-table-column>
-            <el-table-column prop="commission" label="佣金"> </el-table-column>
-            <el-table-column prop="recharge" label="充值"> </el-table-column>
-            <el-table-column prop="deposit" label="提现"> </el-table-column>
-            <el-table-column prop="balance" label="账号余额" width="200"> </el-table-column>
-        </el-table>
+        <div class="tableBox">
+            <el-table :data="tableData" style="width: 100%">
+                <el-table-column prop="time" label="时间"></el-table-column>
+                <el-table-column prop="integral" label="积分"></el-table-column>
+                <el-table-column prop="newPeople" label="新人红包"> </el-table-column>
+                <el-table-column prop="reserveNum" label="已预订金额"> </el-table-column>
+                <el-table-column prop="commission" label="佣金"> </el-table-column>
+                <el-table-column prop="recharge" label="充值"> </el-table-column>
+                <el-table-column prop="deposit" label="提现"> </el-table-column>
+                <el-table-column prop="balance" label="账号余额" width="200"> </el-table-column>
+            </el-table>
+        </div>
     </div>
 </template>
 
@@ -77,5 +80,8 @@ export default {
 </script>
 
 <style scoped>
-
+    .tableBox{
+        max-height: 500px;
+        overflow-y: scroll;
+    }
 </style>
