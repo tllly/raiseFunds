@@ -3,7 +3,7 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-lx-cascades"></i> 订单列表列表
+                    <i class="el-icon-lx-cascades"></i> 充值列表
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -68,7 +68,7 @@
                 </el-table-column> -->
                 <el-table-column prop="num" label="交易数额"  show-overflow-tooltip></el-table-column>
                 <el-table-column prop="pic" label="打款凭证"  show-overflow-tooltip>
-                    <template slot-scope="scope"><img :src="scope.row.pic" style="width: 100px;height: 49;"></template>
+                    <template slot-scope="scope"><img :src="scope.row.pic" style="width: 100px;height: 49px;" @click="onPreview(scope.row.pic)"></template>
                 </el-table-column>
                 <el-table-column prop="addtime" label="添加时间 "  show-overflow-tooltip></el-table-column>
                 <el-table-column prop="type" label="支付方式"  show-overflow-tooltip>
@@ -119,14 +119,21 @@
                 ></el-pagination>
             </div>
         </div>
-        
+        <el-image-viewer 
+         v-if="showViewer" 
+         :on-close="closeViewer" 
+         :url-list="[url]" />
     </div>
 </template>
 
 <script>
 import { fetchData , deleteData , updateData } from '../../../api/index';
+import ElImageViewer from 'element-ui/packages/image/src/image-viewer';
 export default {
     name: 'userRecharge',
+    components: {
+        ElImageViewer
+    },
     data() {
         return {
             loginUserObj:JSON.parse(localStorage.getItem('userObj')).val,//当前登录用户对象
@@ -134,6 +141,8 @@ export default {
               user: '',
               region: ''
             },
+            showViewer: false, // 显示查看器
+            url:'',
             pageIndex: 1,
             pageSize: 10,
             pageTotal: 0,
@@ -160,6 +169,18 @@ export default {
         //this.getTypeList();
     },
     methods: {
+        onPreview(val) {
+            if(!val){
+              this.$message.error('暂无图片')
+              return
+            }
+            this.url = val
+            this.showViewer = true
+        },
+          // 关闭查看器
+        closeViewer() {
+            this.showViewer = false
+        },
         // 获取 easy-mock 的模拟数据
         getData() {
             fetchData(`/xy-recharge/XyRecharge/currentPage/${this.pageIndex}/pageSize/10`,this.query).then(res => {
@@ -224,11 +245,15 @@ export default {
             this.getData();
         },
         agree(row){
-            let data ={
-                id:row.id,
-                status:2
-            }
-            updateData(`/xy-recharge/update`,data).then(res => {
+            // let data ={
+            //     id:row.id,
+            //     status:2
+            // }
+            // updateData(`/xy-recharge/update`,data).then(res => {
+            //     this.$message.success('操作成功');
+            //     this.getData();
+            // });
+            fetchData(`/xy-recharge/upRecharge?rechargeId=${row.id}`).then(res => {
                 this.$message.success('操作成功');
                 this.getData();
             });
