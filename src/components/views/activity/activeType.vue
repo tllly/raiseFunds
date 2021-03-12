@@ -15,7 +15,13 @@
                 ref="multipleTable"
                 header-cell-class-name="table-header"
             >
-                <el-table-column prop="activityName" label="活动类型"></el-table-column>
+                <el-table-column prop="activityName" label="活动名称"></el-table-column>
+                <el-table-column label="状态">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.status == 1">启用</span>
+                        <span v-if="scope.row.status == 2">禁用</span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="pic" label="活动图片">
                     <template slot-scope="scope">
                         <img :src="scope.row.pic" style="width: 100px;height: 49px;" @click="onPreview(scope.row.pic)">
@@ -45,6 +51,10 @@
         <el-dialog title="签到活动" :visible.sync="activeSignVisible" width="50%">
             <activeSign v-if="activeSignVisible" :activeSignVisible="activeSignVisible" @update:activeSignVisible="val => activeSignVisible = val" @signSuccess="signSuccess" :dataItem="curDataObj"></activeSign>
         </el-dialog>
+        <!-- 助力活动弹出框 -->
+        <el-dialog title="助力活动" :visible.sync="helpVisible" width="50%">
+            <activeHelp v-if="helpVisible" :helpVisible="helpVisible" @update:helpVisible="val => helpVisible = val" @helpSuccess="helpSuccess" :dataItem="curDataObj"></activeHelp>
+        </el-dialog>
         <el-image-viewer 
          v-if="showViewer" 
          :on-close="closeViewer" 
@@ -57,6 +67,7 @@ import { fetchData , deleteData } from '../../../api/index';
 import activeNew from './activeNew'
 import activeRecharge from './activeRecharge'
 import activeSign from './activeSign'
+import activeHelp from './activeHelp'
 import ElImageViewer from 'element-ui/packages/image/src/image-viewer';
 export default {
     name: 'activityType',
@@ -64,7 +75,8 @@ export default {
         activeNew,
         activeRecharge,
         activeSign,
-        ElImageViewer
+        ElImageViewer,
+        activeHelp
     },
     data() {
         return {
@@ -91,7 +103,8 @@ export default {
             editVisible: false,
             activeNewVisible: false,
             activeRechargeVisible: false,
-            activeSignVisible: false
+            activeSignVisible: false,
+            helpVisible: false
         };
     },
     created() {
@@ -149,10 +162,17 @@ export default {
             }else if(row.id == 3){
                 this.activeRechargeVisible = true
             }
+            else if(row.id == 4){
+                this.helpVisible = true
+            }
         },
         //签到活动编辑成功
         signSuccess(){
             this.activeSignVisible = false
+            this.getData()
+        },
+        helpSuccess(){
+            this.helpVisible = false
             this.getData()
         },
         //充值活动编辑成功

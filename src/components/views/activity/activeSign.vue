@@ -9,6 +9,9 @@
         </div> -->
         <div style="margin-top: -20px;">
           <el-form ref="form">
+            <el-form-item label="是否启用">
+              <el-switch v-model="statusOpen"></el-switch>
+            </el-form-item>
             <el-form-item label="每日签到固定奖励">
               <div>
                 <el-radio v-model="form.type" :label="1">积分</el-radio> &nbsp;&nbsp;&nbsp; 
@@ -76,6 +79,7 @@ export default {
             id:'',
           },
           isOpen:'',
+          statusOpen:'',
           countTemp:''
         };
     },
@@ -87,7 +91,7 @@ export default {
       this.isOpen = this.dataItem.isOpen == 1?true:false
       this.form.type = this.dataItem.type
       this.form.days = this.dataItem.days
-      this.form.status = this.dataItem.status
+      this.statusOpen = this.dataItem.status == 1?true:false
     },
     methods: {
       //获取上详情
@@ -112,6 +116,7 @@ export default {
       },
       onSubmit(formName){
         this.form.isOpen = this.isOpen ? 1 : 0
+        this.form.status = this.statusOpen ? 1 : 2
         updateData(`/activity-type/update`,this.form).then(res => {
           this.$message.success('操作成功')
           this.$emit('signSuccess')

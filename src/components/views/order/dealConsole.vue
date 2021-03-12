@@ -13,7 +13,7 @@
                 <el-select v-model="form.bankId" placeholder="请选择" @change="selectBankChange">
                   <el-option v-for="(item,index) in bankList" :label="item.bankname" :value="item.id"></el-option>
                 </el-select>
-                <el-button style="margin-left: 20px;" type="primary" @click="addBankCard" v-has="'JYKZQR'">添加银行卡</el-button>
+                <el-button style="margin-left: 20px;" type="primary" @click="addBankCard" v-has="'JYKZQR'">银行卡管理</el-button>
               </el-form-item>
               <el-form-item label="收款银行卡号">
                 <el-input v-model="curBank.cardnum" disabled></el-input>
@@ -59,33 +59,20 @@
               </el-form-item>
             </el-form>
         </div>
-        <el-dialog title="添加银行卡" :visible.sync="bankVisible" width="50%">
-            <el-form ref="formBank" :model="formBank" :rules="rulesBank" label-width="120px">
-              <el-form-item label="收款银行卡号" prop="cardnum">
-                <el-input v-model="formBank.cardnum"></el-input>
-              </el-form-item>
-              <el-form-item label="收款人姓名" prop="username">
-                <el-input v-model="formBank.username"></el-input>
-              </el-form-item>
-              <el-form-item label="所属银行" prop="bankname">
-                <el-input v-model="formBank.bankname"></el-input>
-              </el-form-item>
-              <el-form-item label="银行地址" prop="site">
-                <el-input v-model="formBank.site"></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" @click="confirmAddBank('formBank')">确认</el-button>
-                <el-button @click="cancelAddbank">取消</el-button>
-              </el-form-item>
-            </el-form>
+        <el-dialog title="银行卡管理" :visible.sync="bankVisible" width="80%">
+            <bankList v-if="bankVisible" @updateBankList="getData"></bankList>
         </el-dialog>
     </div>
 </template>
 
 <script>
 import { fetchData , postData } from '../../../api/index';
+import bankList from './bankList'
 export default {
     name: 'dealConsole',
+    components:{
+        bankList
+    },
     data() {
         return {
             loginUserObj:JSON.parse(localStorage.getItem('userObj')).val,//当前登录用户对象
@@ -154,6 +141,8 @@ export default {
     methods: {
         // 获取银行卡列表数据数据
         getData() {
+            this.curBank = {}
+            this.form.bankId = ''
             fetchData(`/xy-bankinfo/XyBankinfo/currentPage/1/pageSize/100?userId=0`).then(res => {
                 let dataArr = res.data.records
                 for (var i = 0; i < dataArr.length; i++) {
@@ -200,20 +189,7 @@ export default {
         addBankCard(){
             this.bankVisible = true
         },
-        confirmAddBank(formName){
-            this.$refs[formName].validate((valid) => {
-                if (valid) {
-                    postData('/xy-bankinfo/add',this.formBank).then(res=>{
-                        this.bankVisible = false
-                        this.getData()
-                    })
-                }
-            })
-        },
-        cancelAddbank(){
-            this.$refs['formBank'].resetFields()
-            this.bankVisible = false
-        },
+        
         cancel(){
             this.$router.go(-1)
         },

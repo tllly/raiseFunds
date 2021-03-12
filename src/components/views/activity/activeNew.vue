@@ -9,18 +9,21 @@
         </div> -->
         <div style="margin-top: -20px;">
           <el-form ref="form">
+            <el-form-item label="是否启用">
+              <el-switch v-model="statusOpen"></el-switch>
+            </el-form-item>
             <el-form-item label="新用户红包奖励">
               <div>
                 <el-radio v-model="form.type" :label="1">积分</el-radio> &nbsp;&nbsp;&nbsp; 
                 送
-                <el-input v-if="form.type==1" v-model="form.count" size="mini" style="width: 150px;"></el-input>
+                <el-input type="number" v-if="form.type==1" v-model="form.count" size="mini" style="width: 150px;" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input>
                 <el-input v-else v-model="countTemp" size="mini" style="width: 150px;" disabled></el-input>
                 积分
               </div>
               <div>
                 <el-radio v-model="form.type" :label="2">余额</el-radio> &nbsp;&nbsp;&nbsp; 
                 送
-                <el-input v-if="form.type==2" v-model="form.count" size="mini" style="width: 150px;"></el-input>
+                <el-input type="number" v-if="form.type==2" v-model="form.count" size="mini" style="width: 150px;"  @keyup.native="form.count = oninput(form.count)"></el-input>
                 <el-input v-else v-model="countTemp" size="mini" style="width: 150px;" disabled></el-input>
                 元
               </div>
@@ -81,8 +84,16 @@ export default {
             id:'',
           },
           isOpen:'',
+          statusOpen:'',
           countTemp:''
         };
+    },
+    watch: {
+     'form.type' (newval,oldval) {
+        if(oldval){
+          this.form.count = ""
+        }
+      }
     },
     created(){
       this.form.id = this.dataItem.id
@@ -93,6 +104,7 @@ export default {
       this.form.type = this.dataItem.type
       this.form.days = this.dataItem.days
       this.form.status = this.dataItem.status
+      this.statusOpen = this.dataItem.status == 1?true:false
     },
     methods: {
       //获取上详情
@@ -102,6 +114,14 @@ export default {
       //   });
       // },
       //选择图片
+      oninput(num) {
+        num = num.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
+        num = num.replace(/^\./g,""); //验证第一个字符是数字
+        num = num.replace(/\.{2,}/g,"."); //只保留第一个, 清除多余的
+        num = num.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+        num = num.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3'); //只能输入两个小数
+        return num
+      },
       uploadImg(){
         document.getElementById('uploadFile').click()
       },
@@ -117,6 +137,11 @@ export default {
       },
       onSubmit(formName){
         this.form.isOpen = this.isOpen ? 1 : 0
+        this.form.status = this.statusOpen ? 1 : 2
+        if(!this.form.count){
+          this.$message.error('请输入红包奖励值')
+          return
+        }
         if(this.form.days == "" || this.form.days == 0){
           this.$message.error('请输入红包领取次数')
           return

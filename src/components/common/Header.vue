@@ -26,7 +26,7 @@
                             <i class="el-icon-bell"></i>
                         </router-link>
                     </el-tooltip>
-                    <span class="btn-bell-badge" v-if="message"></span>
+                    <span class="btn-bell-badge" v-if="message">{{message}}</span>
                 </div>
                 <div class="btn-bell" v-has="'CZGL'">
                     <el-tooltip
@@ -39,7 +39,7 @@
                             <i class="el-icon-bell"></i>
                         </router-link>
                     </el-tooltip>
-                    <span class="btn-bell-badge" v-if="rechargeNum"></span>
+                    <span class="btn-bell-badge" v-if="rechargeNum">{{rechargeNum}}</span>
                 </div>
                 <div class="btn-bell" v-has="'TXGLLB'">
                     <el-tooltip
@@ -52,7 +52,7 @@
                             <i class="el-icon-bell"></i>
                         </router-link>
                     </el-tooltip>
-                    <span class="btn-bell-badge" v-if="depositNum"></span>
+                    <span class="btn-bell-badge" v-if="depositNum">{{depositNum}}</span>
                 </div>
                 <!-- 用户头像 -->
                 <div class="user-avator">
@@ -208,11 +208,16 @@ export default {
 }
 .btn-bell-badge {
     position: absolute;
-    right: 0;
-    top: -2px;
-    width: 8px;
-    height: 8px;
-    border-radius: 4px;
+    bottom: 20px;
+    left: 45px;
+    padding: 0 3px;
+    min-width: 14px;
+    min-height: 20px;
+    text-align: center;
+    line-height: 20px;
+    display: block;
+    font-size: 12px;
+    border-radius: 20px;
     background: #f56c6c;
     color: #fff;
 }

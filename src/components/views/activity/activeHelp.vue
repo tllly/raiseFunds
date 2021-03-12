@@ -14,17 +14,18 @@
             </el-form-item>
             <el-form-item label="奖励类型">
               <el-radio v-model="form.type" :label="1">积分</el-radio>
-              <el-radio v-model="form.type" :label="2">余额</el-radio>
+              <!-- <el-radio v-model="form.type" :label="2">余额</el-radio> -->
             </el-form-item>
-            <el-form-item label="充值奖励规则">
+            <el-form-item label="助力规则">
               <div v-for="(item,index) in ruleArr" :key="index">
-                当日单次充值达
-                <el-input v-model="item.min" size="mini" style="width: 80px;"></el-input> 至
-                <el-input v-model="item.max" size="mini" style="width: 80px;"></el-input>
+                充值金额达
+                <el-input v-model="item.min" size="mini" style="width: 80px;"></el-input>
                 元&nbsp;&nbsp;&nbsp;
-                奖励彩金
-                <el-input v-model="item.count" size="mini" style="width: 150px;"></el-input>
+                奖励
+                <el-input v-model="item.count" size="mini" style="width: 80px;"></el-input>
                 {{form.type == 1 ? '积分' : '元'}}&nbsp;&nbsp;&nbsp;
+                助力次数
+                <el-input v-model="item.num" size="mini" style="width: 80px;"></el-input>
                 <i class="el-icon-delete" style="color: red;cursor: pointer;" v-if="index != 0" @click="reduceRule(index)"></i>&nbsp;
                 <i class="el-icon-circle-plus-outline" style="color: #409EFF;cursor: pointer;" @click="addRule"></i>
               </div>
@@ -100,15 +101,15 @@ export default {
         let list = []
         for(let i = 0 ; i < this.ruleArr.length ; i++){
           let row = this.ruleArr[i]
-          if(!row.min || !row.max || !row.count){
+          if(!row.min || !row.num || !row.count){
             this.$message.error('请填写完整的奖励规则')
             flag = true
             break;
           }
           let tempObj = {}
           tempObj.min = row.min
-          tempObj.max = row.max
           tempObj.count = row.count
+          tempObj.num = row.num
           tempObj.activityId = this.form.id
           list.push(tempObj)
         }
@@ -124,7 +125,7 @@ export default {
         }
         updateData(`/activity-type/upRecharge`,data).then(res => {
           this.$message.success('操作成功')
-          this.$emit('rechargeSuccess')
+          this.$emit('helpSuccess')
         });
       },
       //添加规则
@@ -146,6 +147,7 @@ export default {
                 id:item.id,
                 min:item.min,
                 max:item.max,
+                num:item.num,
                 activityId:item.activityId,
                 count:item.count
               })
@@ -159,7 +161,7 @@ export default {
         this.ruleArr.splice(index, 1);
       },
       cancel(){
-        this.$emit('update:activeRechargeVisible',false)
+        this.$emit('update:helpVisible',false)
       }
     }
 };

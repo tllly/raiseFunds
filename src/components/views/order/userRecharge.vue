@@ -67,7 +67,7 @@
                     <template slot-scope="scope">{{scope.row.goodsCount}}</template>
                 </el-table-column> -->
                 <el-table-column prop="num" label="交易数额"  show-overflow-tooltip></el-table-column>
-                <el-table-column prop="pic" label="打款凭证"  show-overflow-tooltip>
+                <el-table-column prop="pic" label="打款凭证" >
                     <template slot-scope="scope"><img :src="scope.row.pic" style="width: 100px;height: 49px;" @click="onPreview(scope.row.pic)"></template>
                 </el-table-column>
                 <el-table-column prop="addtime" label="添加时间 "  show-overflow-tooltip></el-table-column>
