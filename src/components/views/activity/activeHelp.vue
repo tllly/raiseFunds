@@ -132,7 +132,7 @@ export default {
       addRule(){
         this.ruleArr.push({
           min:'',
-          max:'',
+          num:'',
           count:''
         })
       },
@@ -146,7 +146,6 @@ export default {
               _arr.push({
                 id:item.id,
                 min:item.min,
-                max:item.max,
                 num:item.num,
                 activityId:item.activityId,
                 count:item.count
