@@ -43,6 +43,7 @@
                         <span v-if="scope.row.atype == 1">签到</span>
                         <span v-if="scope.row.atype == 2">新人红包</span>
                         <span v-if="scope.row.atype == 3">充值活动</span>
+                        <span v-if="scope.row.atype == 4">助力活动</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="btype" label="奖励类型" show-overflow-tooltip>

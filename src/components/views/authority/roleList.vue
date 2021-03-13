@@ -10,10 +10,10 @@
         <div class="container">
             <div class="handle-box">
                 <el-form :inline="true" :model="formInline" class="demo-form-inline">
-                  <el-form-item label="权限名称">
+                  <el-form-item label="角色名称">
                     <el-input placeholder="请输入权限名称" v-model="searchObj.RoleName"></el-input>
                   </el-form-item>
-                  <el-form-item label="权限描述">
+                  <el-form-item label="角色描述">
                     <el-input placeholder="请输入权限描述" v-model="searchObj.des"></el-input>
                   </el-form-item>
                   <el-form-item label="使用状态">
@@ -69,6 +69,7 @@
                             type="text"
                             @click="handleEdit(scope.$index, scope.row)"
                             v-has="'JSYHBJ'"
+                            v-if="scope.row.id != 2"
                         >编辑</el-button>
                         <el-button
                             type="text"
@@ -80,12 +81,14 @@
                             :class="scope.row.status == 1 ? 'red' : ''"
                             @click="switchState(scope.row)"
                             v-has="'JSYHBJ'"
+                            v-if="scope.row.id != 2"
                         >{{scope.row.status == 1 ? '禁用' : '启用'}}</el-button>
                         <el-button
                             type="text"
                             class="red"
                             @click="handleDelete(scope.$index, scope.row)"
                             v-has="'JSYHSC'"
+                            v-if="scope.row.id != 2"
                         >删除</el-button>
                     </template>
                 </el-table-column>
@@ -128,6 +131,7 @@ export default {
     },
     data() {
         return {
+            //loginUserObj:JSON.parse(localStorage.getItem('userObj')).val,//当前登录用户对象
             formInline: {
               user: '',
               region: ''

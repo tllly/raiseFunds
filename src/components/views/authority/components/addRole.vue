@@ -1,10 +1,10 @@
 <template>
     <div>
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-          <el-form-item label="权限名称" prop="roleName">
+          <el-form-item label="角色名称" prop="roleName">
             <el-input v-model="form.roleName"></el-input>
           </el-form-item>
-          <el-form-item label="权限描述" prop="des">
+          <el-form-item label="角色描述" prop="des">
             <el-input v-model="form.des"></el-input>
           </el-form-item>
           <el-form-item>

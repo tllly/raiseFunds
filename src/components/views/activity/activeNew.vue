@@ -14,18 +14,18 @@
             </el-form-item>
             <el-form-item label="新用户红包奖励">
               <div>
-                <el-radio v-model="form.type" :label="1">积分</el-radio> &nbsp;&nbsp;&nbsp; 
+                <el-radio v-model="form.type" :label="1">余额</el-radio> &nbsp;&nbsp;&nbsp; 
                 送
-                <el-input type="number" v-if="form.type==1" v-model="form.count" size="mini" style="width: 150px;" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input>
-                <el-input v-else v-model="countTemp" size="mini" style="width: 150px;" disabled></el-input>
-                积分
-              </div>
-              <div>
-                <el-radio v-model="form.type" :label="2">余额</el-radio> &nbsp;&nbsp;&nbsp; 
-                送
-                <el-input type="number" v-if="form.type==2" v-model="form.count" size="mini" style="width: 150px;"  @keyup.native="form.count = oninput(form.count)"></el-input>
+                <el-input type="number" v-if="form.type==1" v-model="form.count" size="mini" style="width: 150px;"  @keyup.native="form.count = oninput(form.count)"></el-input>
                 <el-input v-else v-model="countTemp" size="mini" style="width: 150px;" disabled></el-input>
                 元
+              </div>
+              <div>
+                <el-radio v-model="form.type" :label="2">积分</el-radio> &nbsp;&nbsp;&nbsp; 
+                送
+                <el-input type="number" v-if="form.type==2" v-model="form.count" size="mini" style="width: 150px;" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input>
+                <el-input v-else v-model="countTemp" size="mini" style="width: 150px;" disabled></el-input>
+                积分
               </div>
             </el-form-item>
             <el-form-item label="领取次数">

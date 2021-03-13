@@ -14,35 +14,35 @@
             </el-form-item>
             <el-form-item label="每日签到固定奖励">
               <div>
-                <el-radio v-model="form.type" :label="1">积分</el-radio> &nbsp;&nbsp;&nbsp; 
+                <el-radio v-model="form.type" :label="1">余额</el-radio> &nbsp;&nbsp;&nbsp; 
                 送
                 <el-input v-if="form.type==1" v-model="form.count" size="mini" style="width: 150px;"></el-input>
                 <el-input v-else v-model="countTemp" size="mini" style="width: 150px;" disabled></el-input>
-                积分
+                元
               </div>
               <div>
-                <el-radio v-model="form.type" :label="2">余额</el-radio> &nbsp;&nbsp;&nbsp; 
+                <el-radio v-model="form.type" :label="2">积分</el-radio> &nbsp;&nbsp;&nbsp; 
                 送
                 <el-input v-if="form.type==2" v-model="form.count" size="mini" style="width: 150px;"></el-input>
                 <el-input v-else v-model="countTemp" size="mini" style="width: 150px;" disabled></el-input>
-                元
+                积分
               </div>
             </el-form-item>
             <el-form-item label="连续签到额外奖励">
               <div v-if="form.type == 1">
-                <el-checkbox v-model="isOpen">积分</el-checkbox> &nbsp;&nbsp;&nbsp; 
+                <el-checkbox v-model="isOpen">余额</el-checkbox> &nbsp;&nbsp;&nbsp; 
                 第二天起递增奖励
                 <el-input v-model="form.award" size="mini" :disabled="!isOpen" style="width: 150px;"></el-input>
-                积分&nbsp;&nbsp;&nbsp;
+                元&nbsp;&nbsp;&nbsp;
                 <el-input v-model="form.days" style="width: 180px;" :disabled="!isOpen">
                   <template slot="append">天后不再递增</template>
                 </el-input>
               </div>
               <div v-if="form.type == 2">
-                <el-checkbox v-model="isOpen">余额</el-checkbox> &nbsp;&nbsp;&nbsp; 
+                <el-checkbox v-model="isOpen">积分</el-checkbox> &nbsp;&nbsp;&nbsp; 
                 第二天起递增奖励
                 <el-input v-model="form.award" size="mini" :disabled="!isOpen" style="width: 150px;"></el-input>
-                元&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                积分&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <el-input v-model="form.days" style="width: 180px;" :disabled="!isOpen">
                   <template slot="append">天后不再递增</template>
                 </el-input>

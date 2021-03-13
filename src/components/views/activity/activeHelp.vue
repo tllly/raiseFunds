@@ -13,8 +13,8 @@
               <el-switch v-model="statusOpen"></el-switch>
             </el-form-item>
             <el-form-item label="奖励类型">
-              <el-radio v-model="form.type" :label="1">积分</el-radio>
-              <!-- <el-radio v-model="form.type" :label="2">余额</el-radio> -->
+              <!-- <el-radio v-model="form.type" :label="1">金钱</el-radio> -->
+              <el-radio v-model="form.type" :label="2">积分</el-radio>
             </el-form-item>
             <el-form-item label="助力规则">
               <div v-for="(item,index) in ruleArr" :key="index">
@@ -23,7 +23,7 @@
                 元&nbsp;&nbsp;&nbsp;
                 奖励
                 <el-input v-model="item.count" size="mini" style="width: 80px;"></el-input>
-                {{form.type == 1 ? '积分' : '元'}}&nbsp;&nbsp;&nbsp;
+                {{form.type == 1 ? '元' : '积分'}}&nbsp;&nbsp;&nbsp;
                 助力次数
                 <el-input v-model="item.num" size="mini" style="width: 80px;"></el-input>
                 <i class="el-icon-delete" style="color: red;cursor: pointer;" v-if="index != 0" @click="reduceRule(index)"></i>&nbsp;

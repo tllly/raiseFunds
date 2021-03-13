@@ -32,9 +32,14 @@
         </div>
         <el-table :data="tableData" style="width: 100%">
             <el-table-column prop="id" label="ID"></el-table-column>
-            <el-table-column prop="oid" label="账号"></el-table-column>
+            <!-- <el-table-column prop="oid" label="账号"></el-table-column> -->
             <el-table-column prop="oid" label="订单编号"></el-table-column>
-            <el-table-column prop="num" label="金额"></el-table-column>
+            <el-table-column prop="num" label="金额">
+                <template slot-scope="scope">
+                    <span v-if="scope.row.activity == 1">{{scope.row.num}} 元</span>
+                    <span v-if="scope.row.activity == 2">{{scope.row.num}} 积分</span>
+                </template>
+            </el-table-column>
             <el-table-column prop="type" label="类型">
                 <template slot-scope="scope">
                     <span v-if="scope.row.type == 0">系统</span>

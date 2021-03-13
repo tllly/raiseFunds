@@ -45,7 +45,9 @@ export default {
     },
     methods: {
       onSubmit(){
-        let TreeArr =  this.$refs.tree.getCheckedKeys()
+        let TreeArr1 =  this.$refs.tree.getCheckedKeys()
+        let TreeArr2 =this.$refs.tree.getHalfCheckedKeys()
+        let TreeArr = TreeArr1.concat(TreeArr2)
         let data = {
           roleId:this.dataItem.id,
           roleName:this.dataItem.roleName,

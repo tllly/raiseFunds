@@ -73,12 +73,12 @@
                         <el-table-column prop="parentName" label="上级用户" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="rechargeNum" label="当日充值" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="depositNum" label="当日提现" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="addtime" label="注册时间" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="addtime" label="注册地址" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="ip" label="最后登录IP" show-overflow-tooltip width="110"></el-table-column>
+                        <el-table-column prop="addtime" label="注册时间"   width="150"></el-table-column>
+                        <el-table-column prop="addtime" label="注册地址"   width="150"></el-table-column>
+                        <el-table-column prop="ip" label="最后登录IP"  width="150"></el-table-column>
                         <el-table-column prop="isJia" label="状态" align="center" width="150">
                             <template slot-scope="scope">
-                                <el-tag type="success" v-if="scope.row.isJia == 1">真人</el-tag>
+                                <el-tag type="success" v-if="scope.row.isJia == 0">真人</el-tag>
                                 <el-tag v-else type="danger">假人</el-tag>
                                 <el-tag style="margin-left: 5px;" type="" effect="dark" v-if="scope.row.isAgent == 1">代理</el-tag>
                             </template>
@@ -359,7 +359,7 @@ export default {
                 id:item.id,
                 isAgent:0
             }
-            updateData(`/xy-users/update`,data).then(res => {
+            postData(`/xy-users/upgradeAgency?id=${item.id}&isAgent=0`).then(res => {
               this.closePopover()
               this.$message.success('操作成功')
               this.getData()

@@ -6,6 +6,7 @@
             <i v-else class="el-icon-s-unfold"></i>
         </div>
         <div class="logo">后台管理系统</div>
+        <audio ref="audio" src="../../assets/mp3/634.wav"></audio>
         <div class="header-right">
             <div class="header-user-con">
                 <!-- 全屏显示 -->
@@ -110,6 +111,9 @@ export default {
               this.message = res.data[0]
               this.rechargeNum = res.data[1]
               this.depositNum = res.data[2]
+              if(this.rechargeNum || this.depositNum){
+                this.startPlay()
+              }
             });
         },
         // 侧边栏折叠
@@ -143,6 +147,9 @@ export default {
                 }
             }
             this.fullscreen = !this.fullscreen;
+        },
+        startPlay() {
+            this.$refs.audio.play()
         }
     },
     created(){
