@@ -9,7 +9,7 @@
             <el-table :data="tableData" style="width: 100%">
                 <el-table-column prop="time" label="时间"></el-table-column>
                 <el-table-column prop="integral" label="积分"></el-table-column>
-                <el-table-column prop="newPeople" label="新人红包"> </el-table-column>
+                <el-table-column prop="newPeople" label="活动奖励"> </el-table-column>
                 <el-table-column prop="reserveNum" label="已预订金额"> </el-table-column>
                 <el-table-column prop="commission" label="佣金"> </el-table-column>
                 <el-table-column prop="recharge" label="充值"> </el-table-column>
