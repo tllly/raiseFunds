@@ -1,8 +1,8 @@
 <template>
     <div>
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-          <el-form-item label="用户名称" prop="username">
-            <el-input v-model="form.username"></el-input>
+          <el-form-item label="用户名称" prop="nickname">
+            <el-input v-model="form.nickname"></el-input>
           </el-form-item>
           <el-form-item label="手机号码" prop="tel">
             <el-input v-model="form.tel"></el-input>
@@ -22,7 +22,7 @@
           <el-form-item label="开户银行">
             <el-input v-model="bankInfo.bankname"></el-input>
           </el-form-item>
-          <el-form-item label="开户电话">
+          <el-form-item label="开户手机">
             <el-input v-model="bankInfo.tel"></el-input>
           </el-form-item>
           <el-form-item label="银行卡号">
@@ -66,9 +66,21 @@ export default {
     name: 'editPop',
     props:['dataItem'],
     data() {
+        var checkPhone = (rule,value,callback) => {
+            if(!value) {
+                    return callback(new Error('手机号不能为空'));
+                }else{
+                    const reg = /^1[3|4|5|7|8|9][0-9]\d{8}$/
+                if(reg.test(value)) {
+                    callback();
+                }else{
+                    return callback(new Error('请输入正确的手机号'));
+                }
+            }
+        }
         return {
             form: {
-              username:'',
+              nickname:'',
               tel:'',
               balance:0,
               freezeBalance:0,
@@ -87,11 +99,11 @@ export default {
               address:'',
             },
             rules: {
-              username:[
+              nickname:[
                 { required: true, message: '请输入用户名称', trigger: 'blur' },
               ],
               tel: [
-                { required: true, message: '请输入手机号码', trigger: 'blur' }
+                { required: true, validator: checkPhone, trigger: 'blur' }
               ],
               balance: [
                 { required: true, message: '请输入账号余额', trigger: 'blur' }
@@ -106,7 +118,7 @@ export default {
         };
     },
     created() {
-        this.form.username = this.dataItem.username
+        this.form.nickname = this.dataItem.nickname
         this.form.tel = this.dataItem.tel
         this.form.balance = this.dataItem.balance
         this.form.freezeBalance = this.dataItem.freezeBalance
@@ -133,6 +145,13 @@ export default {
             // if(this.dataItem.casePwd && this.form.casePwd == this.dataItem.casePwd){
             //   this.form.casePwd = null
             // }
+            if(this.bankInfo.tel){
+              let reg = /^1[3|4|5|7|8|9][0-9]\d{8}$/
+              if(!reg.test(this.bankInfo.tel)){
+                this.$message.error('开户手机格式不正确');
+                return
+              }
+            }
             this.form.pwd = this.form.pwd?this.form.pwd:null
             this.form.casePwd = this.form.casePwd?this.form.casePwd:null
             this.form.bankInfo = [this.bankInfo]

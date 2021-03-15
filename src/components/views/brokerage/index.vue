@@ -3,7 +3,7 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-lx-cascades"></i> 白名单列表
+                    <i class="el-icon-lx-cascades"></i> 好友推荐佣金列表
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -22,11 +22,11 @@
                 ref="multipleTable"
                 header-cell-class-name="table-header"
             >
-                <el-table-column prop="max" label="目标金额">
-                    <template slot-scope="scope">￥{{scope.row.max}}</template>
+                <el-table-column prop="max" label="推荐人数">
+                    <template slot-scope="scope">{{scope.row.max}}</template>
                 </el-table-column>
-                <el-table-column prop="money" label="佣金">
-                    <template slot-scope="scope">￥{{scope.row.money}}</template>
+                <el-table-column prop="money" label="佣金比例">
+                    <template slot-scope="scope">{{scope.row.money}}</template>
                 </el-table-column>
                 <el-table-column prop="status" label="状态">
                     <template slot-scope="scope">
@@ -66,10 +66,10 @@
         <!-- 添加白名单弹出框 -->
         <el-dialog :title="eidtId?'修改佣金规则':'添加佣金规则'" :visible.sync="addVisible" width="50%" :before-close="handleClose">
             <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-                <el-form-item label="目标金额" prop="max">
+                <el-form-item label="推荐人数" prop="max">
                   <el-input type="number" v-model="form.max"></el-input>
                 </el-form-item>
-                <el-form-item label="佣金" prop="money">
+                <el-form-item label="佣金比例" prop="money">
                   <el-input type="number" v-model="form.money"></el-input>
                 </el-form-item>
                 <el-form-item label="是否发布">

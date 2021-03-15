@@ -83,10 +83,11 @@
                             type="text"
                             @click="checkwl(scope.row)"
                         >查看物流</el-button>
+
                         <el-button
                             type="text"
                             @click="editTime(scope.row)"
-                            v-if="scope.row.status == 1 && scope.row.isCheck == 1"
+                            v-if="scope.row.status == 1 && scope.row.isCheck == 1 && loginUserObj.agentId == 0"
                             v-has="'DDXG'"
                         >修改到货时间</el-button>
                         <!-- <el-button

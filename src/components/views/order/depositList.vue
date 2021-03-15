@@ -59,7 +59,7 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" label="全选" width="55" :selectable="checkSelect"></el-table-column>
-                <el-table-column prop="code" label="订单号"  align="center"></el-table-column>
+                <el-table-column prop="code" label="订单号"  align="center" width="240"></el-table-column>
                 <el-table-column prop="username" label="提现用户"  show-overflow-tooltip></el-table-column>
                 <el-table-column prop="num" label="提现金额"  show-overflow-tooltip>
                     <template slot-scope="scope">￥{{scope.row.num}}</template>

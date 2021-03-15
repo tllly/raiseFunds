@@ -74,7 +74,7 @@
                         <el-table-column prop="rechargeNum" label="当日充值" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="depositNum" label="当日提现" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="addtime" label="注册时间"   width="150"></el-table-column>
-                        <el-table-column prop="addtime" label="注册地址"   width="150"></el-table-column>
+                        <el-table-column prop="regIp" label="注册地址"   width="150"></el-table-column>
                         <el-table-column prop="ip" label="最后登录IP"  width="150"></el-table-column>
                         <el-table-column prop="isJia" label="状态" align="center" width="150">
                             <template slot-scope="scope">
@@ -107,7 +107,7 @@
                                   <div style="margin:0px;">
                                     
                                     <!-- <el-button size="mini" type="success" @click="deductEdit(scope.row)">暗扣设置</el-button> -->
-                                    <el-button size="mini" type="danger" @click="roleSwitch(scope.row)" v-has="'HYGLSWJR'">{{scope.row.isJia == 0?'设为真人':'设为假人'}}</el-button>
+                                    <el-button size="mini" type="danger" @click="roleSwitch(scope.row)" v-has="'HYGLSWJR'">{{scope.row.isJia == 0?'设为假人':'设为真人'}}</el-button>
                                     <el-button size="mini" type="warning" @click="agentSet(scope.row)" v-if="scope.row.isAgent == 0" v-has="'HYGLDLSZ'">代理设置</el-button>
                                     <el-button size="mini" type="warning" @click="agentCancel(scope.row)" v-has="'HYGLDLSZ'"  v-else>取消代理</el-button>
                                     <el-button size="mini" type="primary" @click="accountDisable(scope.row)" v-has="'HYGLJY'">{{scope.row.status == 1?'禁用':'启动'}}</el-button>

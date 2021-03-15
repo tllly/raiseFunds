@@ -24,6 +24,18 @@ export default {
     name: 'deductPop',
     props:['dataItem'],
     data() {
+      var checkPhone = (rule,value,callback) => {
+            if(!value) {
+                    return callback(new Error('手机号不能为空'));
+                }else{
+                    const reg = /^1[3|4|5|7|8|9][0-9]\d{8}$/
+                if(reg.test(value)) {
+                    callback();
+                }else{
+                    return callback(new Error('请输入正确的手机号'));
+                }
+            }
+        }
         return {
            form: {
               username: '',
@@ -41,7 +53,7 @@ export default {
                   { required: true, message: '请输入密码', trigger: 'blur' },
               ],
               tel:[
-                  { required: true, message: '请输入手机号码', trigger: 'blur' },
+                  { required: true, validator: checkPhone, trigger: 'blur' },
               ]
             },
         };

@@ -6,6 +6,7 @@
           ref="tree"
           show-checkbox
           node-key="id"
+          check-strictly
           :default-checked-keys="selectedArr"
           :props="defaultProps">
         </el-tree>
@@ -66,7 +67,9 @@ export default {
               let _arr = [] 
               if(res.data && res.data.permissions && res.data.permissions.length > 0){
                 res.data.permissions.forEach(item => {
-                  _arr.push(item.id)
+                  //if(item.isParent == 2){
+                    _arr.push(item.id)
+                  //}
                 })
               }
               this.selectedArr = _arr

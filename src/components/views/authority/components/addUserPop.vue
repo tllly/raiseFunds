@@ -41,6 +41,16 @@ export default {
     name: 'addUserPop',
     props:['dataItem'],
     data() {
+      var checkPhone = (rule,value,callback) => {
+            if(value){
+                const reg = /^1[3|4|5|7|8|9][0-9]\d{8}$/
+                if(reg.test(value)) {
+                    callback();
+                }else{
+                    return callback(new Error('请输入正确的手机号'));
+                }
+            }
+        }
         return {
             form: {
               account:'',
@@ -64,6 +74,9 @@ export default {
               repassword:[
                 { required: true, message: '请输入确认密码', trigger: 'blur' },
               ],
+              phone:[
+                { validator: checkPhone, trigger: 'blur' }
+              ]
             }
         };
     },
