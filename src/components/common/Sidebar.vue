@@ -211,6 +211,11 @@ export default {
                             index: 'sUser',
                             code:'JSYHLB',
                             title: '系统用户列表'
+                        },
+                        {
+                            index: 'dataClear',
+                            code:'XTYHSCSYSJ',
+                            title: '数据清理'
                         }
                     ]
                 },

@@ -54,7 +54,7 @@
                 header-cell-class-name="table-header"
             >
                 <el-table-column prop="code" label="订单号"  align="center"></el-table-column>
-                <el-table-column prop="username" label="用户名"  show-overflow-tooltip></el-table-column>
+                <el-table-column prop="nickname" label="用户名"  show-overflow-tooltip></el-table-column>
                 <el-table-column prop="tel" label="手机号"  show-overflow-tooltip></el-table-column>
                 <el-table-column prop="realName" label="真实姓名"  show-overflow-tooltip></el-table-column>
                 <!-- <el-table-column prop="goodsName" label="商品名称">

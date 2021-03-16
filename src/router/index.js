@@ -115,6 +115,11 @@ export default new Router({
                     meta: { title: '系统用户' }
                 },
                 {
+                    path: '/dataClear',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/authority/dataClear.vue'),
+                    meta: { title: '系统用户' }
+                },
+                {
                     path: '/activityRecord',
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/views/activity/recordList.vue'),
                     meta: { title: '活动记录' }
