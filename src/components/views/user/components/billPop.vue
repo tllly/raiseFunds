@@ -14,7 +14,7 @@
                 <el-table-column prop="commission" label="佣金"> </el-table-column>
                 <el-table-column prop="recharge" label="充值"> </el-table-column>
                 <el-table-column prop="deposit" label="提现"> </el-table-column>
-                <el-table-column prop="balance" label="账号余额" width="200"> </el-table-column>
+                <el-table-column prop="balance" label="当日收入" width="200"> </el-table-column>
             </el-table>
         </div>
     </div>
@@ -64,7 +64,7 @@ export default {
                 // }]
                 let arr = res.data.list
                 arr.push({})
-                res.data.sumBill.balance = ("总计余额：" + res.data.sumBill.balance)
+                res.data.sumBill.balance = ("总收入：" + res.data.sumBill.balance)
                 arr.push(res.data.sumBill)
                 this.tableData = arr
             });
