@@ -17,17 +17,19 @@
               <el-radio v-model="form.type" :label="2">积分</el-radio>
             </el-form-item>
             <el-form-item label="助力规则">
-              <div v-for="(item,index) in ruleArr" :key="index">
-                充值金额达
-                <el-input v-model="item.min" size="mini" style="width: 80px;"></el-input>
-                元&nbsp;&nbsp;&nbsp;
-                奖励
-                <el-input v-model="item.count" size="mini" style="width: 80px;"></el-input>
-                {{form.type == 1 ? '元' : '积分'}}&nbsp;&nbsp;&nbsp;
-                助力次数
-                <el-input v-model="item.num" size="mini" style="width: 80px;"></el-input>
-                <i class="el-icon-delete" style="color: red;cursor: pointer;" v-if="index != 0" @click="reduceRule(index)"></i>&nbsp;
-                <i class="el-icon-circle-plus-outline" style="color: #409EFF;cursor: pointer;" @click="addRule"></i>
+              <div class="ruleBoxScrool">
+                <div v-for="(item,index) in ruleArr" :key="index">
+                  充值金额达
+                  <el-input v-model="item.min" size="mini" style="width: 80px;"></el-input>
+                  元&nbsp;&nbsp;&nbsp;
+                  奖励
+                  <el-input v-model="item.count" size="mini" style="width: 80px;"></el-input>
+                  {{form.type == 1 ? '元' : '积分'}}&nbsp;&nbsp;&nbsp;
+                  助力次数
+                  <el-input v-model="item.num" size="mini" style="width: 80px;"></el-input>
+                  <i class="el-icon-delete" style="color: red;cursor: pointer;" v-if="index != 0" @click="reduceRule(index)"></i>&nbsp;
+                  <i class="el-icon-circle-plus-outline" style="color: #409EFF;cursor: pointer;" @click="addRule"></i>
+                </div>
               </div>
               <i v-if="ruleArr.length == 0" class="el-icon-circle-plus-outline" style="color: #409EFF;cursor: pointer;" @click="addRule"></i>
             </el-form-item>
@@ -171,5 +173,24 @@ export default {
   float: initial !important;
   font-weight: bold;
   font-size: 14px;
+}
+.ruleBoxScrool{
+  overflow-y: scroll;
+  max-height: 200px;
+}
+.ruleBoxScrool::-webkit-scrollbar {
+    width: 4px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+.ruleBoxScrool::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: rgba(19, 210, 219, .5);
+    cursor: pointer;
+}
+.ruleBoxScrool::-webkit-scrollbar-track {
+    border-radius: 4px;
+    background: rgba(255,255,255, 0.2);
+    cursor: pointer;
 }
 </style>
