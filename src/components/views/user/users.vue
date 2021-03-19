@@ -114,7 +114,7 @@
                                     <!-- <el-button size="mini" type="success" @click="bankCardInfo(scope.row)" v-has="'HYGLYHKXX'">银行卡信息</el-button> -->
                                     <el-button size="mini" type="danger" @click="addressSet(scope.row)" v-has="'HYGLDZXX'">地址信息</el-button>
                                     <!-- <el-button size="mini" type="primary" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
-                                    <el-button size="mini" type="warning" @click="refreshQr" v-has="'HYGLSXEWM'">刷新二维码</el-button>
+                                    <el-button size="mini" type="warning" @click="refreshQr(scope.row)" v-has="'HYGLSXEWM'">刷新二维码</el-button>
                                     
                                     <el-button size="mini" type="success" @click="checkAccount(scope.row)" v-has="'HYGLZB'">账变</el-button>
                                     <el-button size="mini" type="danger" @click="bindSysBank(scope.row)" v-has="'HYGLBDXTYHK'">绑定系统银行卡</el-button>
@@ -430,8 +430,10 @@ export default {
             }).catch(() => {});
         },
         //刷新二维码
-        refreshQr(){
-            this.$message.success('刷新成功');
+        refreshQr(item){
+            fetchData(`/xy-users/refreshQrCode?id=${item.id}`).then(res => {
+                this.$message.success('刷新二维码成功');
+            });
         },
         //查看团队
         checkTeam(item){
