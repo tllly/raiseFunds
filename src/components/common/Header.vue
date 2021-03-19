@@ -69,11 +69,31 @@
                         <!-- <a href="https://github.com/lin-xin/vue-manage-system" target="_blank">
                             <el-dropdown-item>项目仓库</el-dropdown-item>
                         </a> -->
+                        <el-dropdown-item command="editPaw">修改密码</el-dropdown-item>
                         <el-dropdown-item command="loginout">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
         </div>
+        <!-- 修改密码 -->
+        <el-dialog title="修改密码" :visible.sync="pawVisible" width="30%">
+            <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+              <el-form-item label="原密码" prop="oldPwd">
+                <el-input type="password" v-model="form.oldPwd"></el-input>
+              </el-form-item>
+              <el-form-item label="新密码" prop="newPwdOne">
+                <el-input type="password" v-model="form.newPwdOne"></el-input>
+              </el-form-item>
+              <el-form-item label="确认密码" prop="newPwdTwo">
+                <el-input type="password" v-model="form.newPwdTwo"></el-input>
+              </el-form-item>
+
+              <el-form-item>
+                <el-button type="primary" @click="onSubmit('form')">提交</el-button>
+                <el-button @click="cancel">取消</el-button>
+              </el-form-item>
+            </el-form>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -88,7 +108,26 @@ export default {
             message: 0,
             depositNum:0,
             rechargeNum:0,
-            timeer:null
+            pawVisible:false,
+            timeer:null,
+            form: {
+              oldPwd:'',
+              newPwdOne:'',
+              newPwdTwo:'',
+              userId:'',
+              type:1
+            },
+            rules: {
+                oldPwd:[
+                    { required: true, message: '请输入原密码', trigger: 'blur' },
+                ],
+              newPwdOne:[
+                { required: true, message: '请输入新密码', trigger: 'blur' },
+              ],
+              newPwdTwo:[
+                { required: true, message: '请输入确认密码', trigger: 'blur' },
+              ],
+            }
         };
     },
     computed: {
@@ -105,6 +144,9 @@ export default {
                 this.$store.state.authList = null
                 this.$router.push('/login');
             }
+            if (command == 'editPaw') {
+                this.pawVisible = true
+            }
         },
         getHeadData(){
             fetchData(`/home/getHeadCount`).then(res => {
@@ -115,6 +157,29 @@ export default {
                 this.startPlay()
               }
             });
+        },
+        onSubmit(formName){
+            this.$refs[formName].validate((valid) => {
+              if (valid) {
+                if(this.form.newPwdOne != this.form.newPwdTwo){
+                  this.$message.error('密码不一致');
+                  return
+                }
+                updateData(`/sysUser/upPassword`,this.form).then(res => {
+                  if(res.code == 200){
+                    this.$message.success('操作成功')
+                    localStorage.removeItem('userObj');
+                    this.$store.state.authList = null
+                    this.$router.push('/login');
+                  }else{
+                    this.$message.error(res.viewMsg);
+                  }
+                });
+              }
+            });
+        },
+        cancel(){
+            this.pawVisible = false
         },
         // 侧边栏折叠
         collapseChage() {
@@ -153,6 +218,8 @@ export default {
         }
     },
     created(){
+        let loginUserObj = JSON.parse(localStorage.getItem('userObj')).val//当前登录用户对象
+        this.form.userId = loginUserObj.id
         this.getHeadData()
     },
     mounted() {
