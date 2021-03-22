@@ -289,7 +289,7 @@ export default {
             this.getData();
         },
         checkwl(row){
-            fetchData(`/xy-express-log/all?id=${row.id}`,this.query).then(res => {
+            fetchData(`/xy-express-log/all?id=${row.id}`).then(res => {
                 this.TracesList = res.data.reverse()
                 this.wuliuVisible = true
             });
